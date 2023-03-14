@@ -304,5 +304,21 @@ function _hprentals_civix_fixNavigationMenuItems(&$nodes, &$maxNavID, $parentID)
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
  */
 function _hprentals_civix_civicrm_entityTypes(&$entityTypes) {
-  $entityTypes = array_merge($entityTypes, []);
+  $entityTypes = array_merge($entityTypes, [
+    'CRM_Hprentals_DAO_Invoice' => [
+      'name' => 'Invoice',
+      'class' => 'CRM_Hprentals_DAO_Invoice',
+      'table' => 'civicrm_o8_rental_invoice',
+    ],
+    'CRM_Hprentals_DAO_Payment' => [
+      'name' => 'Payment',
+      'class' => 'CRM_Hprentals_DAO_Payment',
+      'table' => 'civicrm_o8_rental_payment',
+    ],
+    'CRM_Hprentals_DAO_Rental' => [
+      'name' => 'Rental',
+      'class' => 'CRM_Hprentals_DAO_Rental',
+      'table' => 'civicrm_o8_rental',
+    ],
+  ]);
 }
