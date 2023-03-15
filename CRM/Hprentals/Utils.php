@@ -4,12 +4,34 @@ use CRM_Hprentals_ExtensionUtil as E;
 
 class CRM_Hprentals_Utils
 {
+
+    //SETTINGS
+
+    public const SETTINGS_NAME = "Hprentals Settings";
+    public const SETTINGS_SLUG = 'hprentals_settings';
+
     public const SAVE_LOG = [
         'slug' => 'save_log',
         'name' => 'Save Log',
         'description' => "Write debugging output to CiviCRM log file"];
-    public const SETTINGS_NAME = "Hprentals Settings";
-    public const SETTINGS_SLUG = 'hprentals_settings';
+
+    //PATHS
+    public const PATH_DASHBOARD = "civicrm/hprentals/dashboard";
+    public const PATH_SETUP = "civicrm/hprentals/setup";
+    public const PATH_RENTAL = "civicrm/hprentals/rental";
+    public const PATH_RENTALS = "civicrm/hprentals/rentals";
+    public const PATH_TYPE = "civicrm/hprentals/type";
+    public const PATH_TYPES = "civicrm/hprentals/types";
+    public const PATH_METHOD = "civicrm/hprentals/method";
+    public const PATH_METHODS = "civicrm/hprentals/methods";
+    public const PATH_INVOICE = "civicrm/hprentals/invoice";
+    public const PATH_INVOICES = "civicrm/hprentals/invoices";
+    public const PATH_PAYMENT = "civicrm/hprentals/payment";
+    public const PATH_PAYMENTS = "civicrm/hprentals/payments";
+    public const PATH_REPORTS = 'civicrm/hprentals/reports';
+
+
+    //MENU
 
     public const MAIN_MENU = [
         'path' => '',
@@ -26,7 +48,7 @@ class CRM_Hprentals_Utils
         'menu' => [
             'label' => 'Configuration',
             'name' => 'hprentals_settings',
-            'url' => 'civicrm/hprentals/setup',
+            'url' => self::PATH_SETUP,
             'permission' => 'adminster CiviCRM',
             'operator' => 'OR',
             //'separator' => 1,
@@ -37,7 +59,7 @@ class CRM_Hprentals_Utils
         'menu' => [
             'label' => 'Dashboard',
             'name' => 'hprentals_dashboard',
-            'url' => 'civicrm/hprentals/dashboard',
+            'url' => self::PATH_DASHBOARD,
             'permission' => 'adminster CiviCRM',
             'operator' => 'OR',
             //'separator' => 1,
@@ -48,7 +70,7 @@ class CRM_Hprentals_Utils
         'menu' => [
             'label' => 'Types',
             'name' => 'hprentals_types',
-            'url' => 'civicrm/hprentals/types',
+            'url' => self::PATH_TYPES,
             'permission' => 'adminster CiviCRM',
             'operator' => 'OR',
             //'separator' => 1,
@@ -59,7 +81,7 @@ class CRM_Hprentals_Utils
         'menu' => [
             'label' => 'Methods',
             'name' => 'hprentals_methods',
-            'url' => 'civicrm/hprentals/methods',
+            'url' => self::PATH_METHODS,
             'permission' => 'adminster CiviCRM',
             'operator' => 'OR',
             //'separator' => 1,
@@ -70,7 +92,7 @@ class CRM_Hprentals_Utils
         'menu' => [
             'label' => 'Invoices',
             'name' => 'hprentals_invoices',
-            'url' => 'civicrm/hprentals/invoices',
+            'url' => self::PATH_INVOICES,
             'permission' => 'adminster CiviCRM',
             'operator' => 'OR',
             //'separator' => 1,
@@ -81,7 +103,7 @@ class CRM_Hprentals_Utils
         'menu' => [
             'label' => 'Reports',
             'name' => 'hprentals_reports',
-            'url' => 'civicrm/hprentals/reports',
+            'url' => self::PATH_REPORTS,
             'permission' => 'adminster CiviCRM',
             'operator' => 'OR',
             //'separator' => 1,
@@ -89,6 +111,7 @@ class CRM_Hprentals_Utils
 
     public const MENU = [
         self::MAIN_MENU,
+        self::DASHBOARD_MENU,
         self::SETUP_MENU,
         self::TYPES_MENU,
         self::METHODS_MENU,

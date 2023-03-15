@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <menu>
   <item>
-    <path>civicrm/hprentals/rental/form</path>
+    <path>civicrm/hprentals/rental</path>
     <page_callback>CRM_Hprentals_Form_Rental</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/invoice/form</path>
+    <path>civicrm/hprentals/invoice</path>
     <page_callback>CRM_Hprentals_Form_Rental</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/payment/form</path>
+    <path>civicrm/hprentals/payment</path>
     <page_callback>CRM_Hprentals_Form_Rental</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>

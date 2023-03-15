@@ -7,10 +7,10 @@
   <comment>Rental</comment>
   <log>true</log>
   <paths>
-    <add>=civicrm/hprentals/rental/form?reset=1&amp;action=add</add>
-    <view>=civicrm/hprentals/rental/form?reset=1&amp;action=view&amp;id=[id]</view>
-    <update>=civicrm/hprentals/rental/form?reset=1&amp;action=update&amp;id=[id]</update>
-    <delete>=civicrm/hprentals/rental/form?reset=1&amp;action=delete&amp;id=[id]</delete>
+    <add>=civicrm/hprentals/rental?reset=1&amp;action=add</add>
+    <view>=civicrm/hprentals/rental?reset=1&amp;action=view&amp;id=[id]</view>
+    <update>=civicrm/hprentals/rental?reset=1&amp;action=update&amp;id=[id]</update>
+    <delete>=civicrm/hprentals/rental?reset=1&amp;action=delete&amp;id=[id]</delete>
   </paths>
   <field>
     <name>id</name>
