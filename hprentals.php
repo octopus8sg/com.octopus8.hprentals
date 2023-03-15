@@ -3,6 +3,7 @@
 require_once 'hprentals.civix.php';
 // phpcs:disable
 use CRM_Hprentals_ExtensionUtil as E;
+use CRM_Hprentals_Utils as U;
 // phpcs:enable
 
 /**
@@ -95,14 +96,15 @@ function hprentals_civicrm_entityTypes(&$entityTypes) {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_navigationMenu
  */
-//function hprentals_civicrm_navigationMenu(&$menu) {
-//  _hprentals_civix_insert_navigation_menu($menu, 'Mailings', [
-//    'label' => E::ts('New subliminal message'),
-//    'name' => 'mailing_subliminal_message',
-//    'url' => 'civicrm/mailing/subliminal',
-//    'permission' => 'access CiviMail',
-//    'operator' => 'OR',
-//    'separator' => 0,
-//  ]);
-//  _hprentals_civix_navigationMenu($menu);
-//}
+function hprentals_civicrm_navigationMenu(&$menu)
+{
+    $menu_items = U::MENU;
+    foreach ($menu_items as $menu_item){
+        _hprentals_civix_insert_navigation_menu($menu,
+            $menu_item['path'],
+            $menu_item['menu']);
+    }
+
+    _hprentals_civix_navigationMenu($menu);
+
+}

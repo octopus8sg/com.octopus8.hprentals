@@ -6,6 +6,12 @@
   <name>civicrm_o8_rental_invoice</name>
   <comment>FIXME</comment>
   <log>true</log>
+  <paths>
+    <add>=civicrm/hprentals/invoice/form?reset=1&amp;action=add</add>
+    <view>=civicrm/hprentals/invoice/form?reset=1&amp;action=view&amp;id=[id]</view>
+    <update>=civicrm/hprentals/invoice/form?reset=1&amp;action=update&amp;id=[id]</update>
+    <delete>=civicrm/hprentals/invoice/form?reset=1&amp;action=delete&amp;id=[id]</delete>
+  </paths>
 
   <field>
     <name>id</name>

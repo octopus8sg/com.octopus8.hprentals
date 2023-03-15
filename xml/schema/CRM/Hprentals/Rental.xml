@@ -4,9 +4,14 @@
   <base>CRM/Hprentals</base>
   <class>Rental</class>
   <name>civicrm_o8_rental</name>
-  <comment>FIXME</comment>
+  <comment>Rental</comment>
   <log>true</log>
-
+  <paths>
+    <add>=civicrm/hprentals/rental/form?reset=1&amp;action=add</add>
+    <view>=civicrm/hprentals/rental/form?reset=1&amp;action=view&amp;id=[id]</view>
+    <update>=civicrm/hprentals/rental/form?reset=1&amp;action=update&amp;id=[id]</update>
+    <delete>=civicrm/hprentals/rental/form?reset=1&amp;action=delete&amp;id=[id]</delete>
+  </paths>
   <field>
     <name>id</name>
     <type>int unsigned</type>
@@ -32,5 +37,6 @@
     <key>id</key>
     <onDelete>CASCADE</onDelete>
   </foreignKey>
+
 
 </table>

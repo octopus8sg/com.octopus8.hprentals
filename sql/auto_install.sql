@@ -62,7 +62,7 @@ ENGINE=InnoDB;
 -- *
 -- * civicrm_o8_rental
 -- *
--- * FIXME
+-- * Rental
 -- *
 -- *******************************************************/
 CREATE TABLE `civicrm_o8_rental` (

@@ -1,21 +1,57 @@
 <?xml version="1.0"?>
 <menu>
   <item>
-    <path>civicrm/hprental/rental/form</path>
+    <path>civicrm/hprentals/rental/form</path>
     <page_callback>CRM_Hprentals_Form_Rental</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprental/invoice/form</path>
+    <path>civicrm/hprentals/invoice/form</path>
     <page_callback>CRM_Hprentals_Form_Rental</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprental/payment/form</path>
+    <path>civicrm/hprentals/payment/form</path>
     <page_callback>CRM_Hprentals_Form_Rental</page_callback>
     <title>Rental</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/setup</path>
+    <page_callback>CRM_Hprentals_Form_Setup</page_callback>
+    <title>Setup</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/dashboard</path>
+    <page_callback>CRM_Hprentals_Page_Dashboard</page_callback>
+    <title>Dashboard</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/types</path>
+    <page_callback>CRM_Hprentals_Page_Types</page_callback>
+    <title>Types</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/methods</path>
+    <page_callback>CRM_Hprentals_Page_Methods</page_callback>
+    <title>Methods</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/invoices</path>
+    <page_callback>CRM_Hprentals_Page_Invoices</page_callback>
+    <title>Invoices</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/reports</path>
+    <page_callback>CRM_Hprentals_Page_Reports</page_callback>
+    <title>Reports</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
 </menu>
