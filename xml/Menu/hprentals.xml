@@ -54,4 +54,22 @@
     <title>Reports</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/hprental/type</path>
+    <page_callback>CRM_Hprentals_Form_Type</page_callback>
+    <title>Type</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprental/service</path>
+    <page_callback>CRM_Hprentals_Form_Service</page_callback>
+    <title>Service</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/services</path>
+    <page_callback>CRM_Hprentals_Page_Services</page_callback>
+    <title>Services</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>

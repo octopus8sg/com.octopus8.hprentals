@@ -20,6 +20,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `civicrm_o8_rental`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_payment`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_invoice`;
+DROP TABLE IF EXISTS `civicrm_o8_rental_service`;
 
 SET FOREIGN_KEY_CHECKS=1;
 -- /*******************************************************
@@ -27,6 +28,27 @@ SET FOREIGN_KEY_CHECKS=1;
 -- * Create new tables
 -- *
 -- *******************************************************/
+
+-- /*******************************************************
+-- *
+-- * civicrm_o8_rental_service
+-- *
+-- * FIXME
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_o8_rental_service` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique Service ID',
+  `is_refund` tinyint DEFAULT 0 COMMENT 'Refund?',
+  `is_prorate` tinyint DEFAULT 1 COMMENT 'Is this prorate?',
+  `created_id` int unsigned COMMENT 'FK to civicrm_contact, who created this',
+  `created_date` datetime COMMENT 'Date and time this was created.',
+  `modified_id` int unsigned COMMENT 'FK to civicrm_contact, who modified this',
+  `modified_date` datetime COMMENT 'Date and time this was modified.',
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_o8_rental_service_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
+  CONSTRAINT FK_civicrm_o8_rental_service_modified_id FOREIGN KEY (`modified_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL
+)
+ENGINE=InnoDB;
 
 -- /*******************************************************
 -- *

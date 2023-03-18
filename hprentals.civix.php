@@ -320,5 +320,10 @@ function _hprentals_civix_civicrm_entityTypes(&$entityTypes) {
       'class' => 'CRM_Hprentals_DAO_Rental',
       'table' => 'civicrm_o8_rental',
     ],
+    'CRM_Hprentals_DAO_Service' => [
+      'name' => 'Service',
+      'class' => 'CRM_Hprentals_DAO_Service',
+      'table' => 'civicrm_o8_rental_service',
+    ],
   ]);
 }
