@@ -1,20 +1,44 @@
 <?xml version="1.0"?>
 <menu>
   <item>
+    <path>civicrm/hprentals/service</path>
+    <page_callback>CRM_Hprentals_Form_Service</page_callback>
+    <title>Service</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/services</path>
+    <page_callback>CRM_Hprentals_Page_Services</page_callback>
+    <title>Services</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/invoice</path>
+    <page_callback>CRM_Hprentals_Form_Invoice</page_callback>
+    <title>Invoice</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/invoices</path>
+    <page_callback>CRM_Hprentals_Page_Invoices</page_callback>
+    <title>Invoices</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
     <path>civicrm/hprentals/rental</path>
     <page_callback>CRM_Hprentals_Form_Rental</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/invoice</path>
-    <page_callback>CRM_Hprentals_Form_Rental</page_callback>
-    <title>Rental</title>
+    <path>civicrm/hprentals/rentals</path>
+    <page_callback>CRM_Hprentals_Page_Rentals</page_callback>
+    <title>Rentals</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
     <path>civicrm/hprentals/payment</path>
-    <page_callback>CRM_Hprentals_Form_Rental</page_callback>
+    <page_callback>CRM_Hprentals_Form_Payment</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
@@ -31,45 +55,9 @@
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/types</path>
-    <page_callback>CRM_Hprentals_Page_Types</page_callback>
-    <title>Types</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/hprentals/methods</path>
-    <page_callback>CRM_Hprentals_Page_Methods</page_callback>
-    <title>Methods</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/hprentals/invoices</path>
-    <page_callback>CRM_Hprentals_Page_Invoices</page_callback>
-    <title>Invoices</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
     <path>civicrm/hprentals/reports</path>
     <page_callback>CRM_Hprentals_Page_Reports</page_callback>
     <title>Reports</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/hprental/type</path>
-    <page_callback>CRM_Hprentals_Form_Type</page_callback>
-    <title>Type</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/hprental/service</path>
-    <page_callback>CRM_Hprentals_Form_Service</page_callback>
-    <title>Service</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/hprentals/services</path>
-    <page_callback>CRM_Hprentals_Page_Services</page_callback>
-    <title>Services</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
 </menu>

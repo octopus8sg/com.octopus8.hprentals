@@ -20,8 +20,8 @@ class CRM_Hprentals_Utils
     public const PATH_SETUP = "civicrm/hprentals/setup";
     public const PATH_RENTAL = "civicrm/hprentals/rental";
     public const PATH_RENTALS = "civicrm/hprentals/rentals";
-    public const PATH_TYPE = "civicrm/hprentals/type";
-    public const PATH_TYPES = "civicrm/hprentals/types";
+    public const PATH_SERVICE = "civicrm/hprentals/service";
+    public const PATH_SERVICES = "civicrm/hprentals/services";
     public const PATH_METHOD = "civicrm/hprentals/method";
     public const PATH_METHODS = "civicrm/hprentals/methods";
     public const PATH_INVOICE = "civicrm/hprentals/invoice";
@@ -29,6 +29,11 @@ class CRM_Hprentals_Utils
     public const PATH_PAYMENT = "civicrm/hprentals/payment";
     public const PATH_PAYMENTS = "civicrm/hprentals/payments";
     public const PATH_REPORTS = 'civicrm/hprentals/reports';
+    public const SERVICE_FREQUENCY = [
+        "once_off" => "Once Off",
+        "every_month" => "Every Month",
+        "less_than_6_m" => "Less than 6 months"
+        ];
 
 
     //MENU
@@ -70,7 +75,7 @@ class CRM_Hprentals_Utils
         'menu' => [
             'label' => 'Types',
             'name' => 'hprentals_types',
-            'url' => self::PATH_TYPES,
+            'url' => self::PATH_SERVICES,
             'permission' => 'adminster CiviCRM',
             'operator' => 'OR',
             //'separator' => 1,
@@ -119,6 +124,10 @@ class CRM_Hprentals_Utils
         self::REPORTS_MENU
     ];
 
+
+    public static function getServiceFrequency(){
+        return self::SERVICE_FREQUENCY;
+    }
     /**
      * @param $input
      * @param $preffix_log
@@ -156,7 +165,7 @@ class CRM_Hprentals_Utils
      */
     public static function getSaveLog(): bool
     {
-        $result = false;
+        $result = true;
         try {
             $result_ = self::getSettings(self::SAVE_LOG['slug']);
             if ($result_ == 1) {
