@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Hprentals</base>
+  <class>RentalsService</class>
+  <name>civicrm_o8_rental_service</name>
+  <comment>Rental Service (Type)</comment>
+  <log>true</log>
+  <paths>
+    <add>civicrm/hprentals/expense?reset=1&amp;action=add</add>
+    <view>civicrm/hprentals/expense?reset=1&amp;action=view&amp;id=[id]</view>
+    <update>civicrm/hprentals/type?reset=1&amp;action=update&amp;id=[id]</update>
+    <delete>civicrm/hprentals/type?reset=1&amp;action=delete&amp;id=[id]</delete>
+  </paths>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique Rental Service ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>name</name>
+    <type>varchar</type>
+    <length>255</length>
+    <label>Name</label>
+    <comment>Name</comment>
+    <required>true</required>
+    <import>true</import>
+    <export>true</export>
+    <html>
+      <type>Text</type>
+      <label>Name</label>
+    </html>
+  </field>
+
+  <index>
+    <name>index_name</name>
+    <fieldName>name</fieldName>
+    <unique>true</unique>
+  </index>
+
+
+  <field>
+    <name>frequency</name>
+    <title>Frequency</title>
+    <type>varchar</type>
+    <length>25</length>
+    <default>"once_off"</default>
+    <required>true</required>
+    <import>true</import>
+    <export>true</export>
+    <pseudoconstant>
+      <callback>CRM_Hprentals_Utils::getServiceFrequency</callback>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+  </field>
+
+
+  <field>
+    <name>is_refund</name>
+    <type>boolean</type>
+    <title>Refund</title>
+    <default>0</default>
+    <comment>Is Refund?</comment>
+  </field>
+
+  <field>
+    <name>is_prorate</name>
+    <type>boolean</type>
+    <title>Prorate</title>
+    <default>1</default>
+    <comment>Is prorate?</comment>
+  </field>
+
+  <field>
+    <name>amount</name>
+    <type>decimal</type>
+    <required>true</required>
+    <import>true</import>
+    <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
+    <comment>Amount</comment>
+    <html>
+      <type>Text</type>
+      <label>Amount</label>
+    </html>
+  </field>
+
+  <field>
+    <name>created_id</name>
+    <type>int unsigned</type>
+    <title>Created By Contact ID</title>
+    <comment>FK to civicrm_contact, who created this</comment>
+    <html>
+      <label>Created By</label>
+    </html>
+  </field>
+  <foreignKey>
+    <name>created_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>
+    <name>created_date</name>
+    <type>datetime</type>
+    <title>Created Date</title>
+    <comment>Date and time this was created.</comment>
+    <add>3.0</add>
+  </field>
+  <field>
+    <name>modified_id</name>
+    <type>int unsigned</type>
+    <title>Modified By Contact ID</title>
+    <comment>FK to civicrm_contact, who modified this</comment>
+    <html>
+      <label>Modified By</label>
+    </html>
+  </field>
+  <foreignKey>
+    <name>modified_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>
+    <name>modified_date</name>
+    <type>datetime</type>
+    <title>Modified Date</title>
+    <comment>Date and time this was modified.</comment>
+    <add>3.0</add>
+  </field>
+
+</table>
