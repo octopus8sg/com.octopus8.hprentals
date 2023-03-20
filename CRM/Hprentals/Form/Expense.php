@@ -9,7 +9,7 @@ use CRM_Hprentals_Utils as U;
  *
  * @see https://docs.civicrm.org/dev/en/latest/framework/quickform/
  */
-class CRM_Hprentals_Form_Service extends CRM_Core_Form
+class CRM_Hprentals_Form_Expense extends CRM_Core_Form
 {
     protected $_id;
 
@@ -17,17 +17,17 @@ class CRM_Hprentals_Form_Service extends CRM_Core_Form
 
     public function getDefaultEntity()
     {
-        return 'RentalsService';
+        return 'RentalsExpense';
     }
 
     public function getDefaultEntityName()
     {
-        return 'Rental Service';
+        return 'Rentals Expense';
     }
 
     public function getDefaultEntityTable()
     {
-        return 'civicrm_o8_rental_service';
+        return 'civicrm_o8_rental_expense';
     }
 
     public function getEntityId()
@@ -67,7 +67,7 @@ class CRM_Hprentals_Form_Service extends CRM_Core_Form
 
         $this->assign('action', $this->_action);
 
-        U::writeLog($id, "RentalService id");
+        U::writeLog($id, "RentalExpense id");
 
         $myEntity = null;
         $entityName = $this->getDefaultEntityName();
@@ -76,14 +76,14 @@ class CRM_Hprentals_Form_Service extends CRM_Core_Form
         $session = CRM_Core_Session::singleton();
         if ($id) {
             $myEntity = $this->getMyEntity($id, $entityClass);
-//            U::writeLog($myEntity, "RentalService Entity");
+//            U::writeLog($myEntity, "RentalExpense Entity");
 
             if($myEntity){
                 $this->_myentity = $myEntity;
                 $this->_id = $id;
                 $title = 'Edit ' . $entityName;
                 $this->assign('myEntity', $myEntity);
-                $session->replaceUserContext(CRM_Utils_System::url(U::PATH_SERVICE,
+                $session->replaceUserContext(CRM_Utils_System::url(U::PATH_EXPENSE,
                     ['id' => $this->getEntityId(),
                         'action' => 'update']));
             }
@@ -103,7 +103,7 @@ class CRM_Hprentals_Form_Service extends CRM_Core_Form
         $id_value = $this->add('text', 'id', E::ts('ID'), ['class' => 'huge'],)->freeze();
         $name = $this->add('text', 'name', E::ts('Name'), ['class' => 'huge']);
 //
-        $frequencies = U::getServiceFrequency();
+        $frequencies = U::getExpenseFrequency();
         $frequency = $this->add('select', 'frequency',
             E::ts('Frequency'),
             $frequencies,
@@ -171,7 +171,7 @@ class CRM_Hprentals_Form_Service extends CRM_Core_Form
         if ($this->_myentity) {
             $defaults = $this->_myentity;
         }
-        U::writeLog($defaults, "RentalsService Defaults");
+        U::writeLog($defaults, "RentalsExpense Defaults");
         return $defaults;
     }
 
@@ -214,15 +214,15 @@ class CRM_Hprentals_Form_Service extends CRM_Core_Form
 
             case CRM_Core_Action::DELETE:
                 $apiAction = 'delete';
-                civicrm_api4('RentalsService', 'delete', ['where' => [['id', '=', $id]]]);
-                CRM_Core_Session::setStatus(E::ts('Removed Service'), E::ts('Service'), 'success');
+                civicrm_api4('RentalsExpense', 'delete', ['where' => [['id', '=', $id]]]);
+                CRM_Core_Session::setStatus(E::ts('Removed Expense'), E::ts('Expense'), 'success');
                 break;
         }
         if(($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)){
             $session = CRM_Core_Session::singleton();
-            $result = civicrm_api4('RentalsService', $apiAction, ['values' => $params]);
+            $result = civicrm_api4('RentalsExpense', $apiAction, ['values' => $params]);
             U::writeLog($result);
-            $session->replaceUserContext(CRM_Utils_System::url(U::PATH_SERVICE,
+            $session->replaceUserContext(CRM_Utils_System::url(U::PATH_EXPENSE,
                 ['id' => $this->getEntityId(),
                     'action' => 'update']));
         }

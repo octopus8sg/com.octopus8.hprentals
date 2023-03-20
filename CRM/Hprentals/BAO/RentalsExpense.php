@@ -1,17 +1,17 @@
 <?php
 use CRM_Hprentals_ExtensionUtil as E;
 
-class CRM_Hprentals_BAO_RentalsService extends CRM_Hprentals_DAO_RentalsService {
+class CRM_Hprentals_BAO_RentalsExpense extends CRM_Hprentals_DAO_RentalsExpense {
 
   /**
-   * Create a new RentalsService based on array-data
+   * Create a new RentalsExpense based on array-data
    *
    * @param array $params key-value pairs
-   * @return CRM_Hprentals_DAO_RentalsService|NULL
+   * @return CRM_Hprentals_DAO_RentalsExpense|NULL
    *
   public static function create($params) {
-    $className = 'CRM_Hprentals_DAO_RentalsService';
-    $entityName = 'RentalsService';
+    $className = 'CRM_Hprentals_DAO_RentalsExpense';
+    $entityName = 'RentalsExpense';
     $hook = empty($params['id']) ? 'create' : 'edit';
 
     CRM_Utils_Hook::pre($hook, $entityName, CRM_Utils_Array::value('id', $params), $params);

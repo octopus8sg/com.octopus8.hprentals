@@ -3,8 +3,8 @@
 // https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
 return [
   [
-    'name' => 'RentalsService',
-    'class' => 'CRM_Hprentals_DAO_RentalsService',
-    'table' => 'civicrm_o8_rentals_service',
+    'name' => 'RentalsExpense',
+    'class' => 'CRM_Hprentals_DAO_RentalsExpense',
+    'table' => 'civicrm_o8_rentals_expense',
   ],
 ];

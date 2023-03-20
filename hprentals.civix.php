@@ -305,10 +305,10 @@ function _hprentals_civix_fixNavigationMenuItems(&$nodes, &$maxNavID, $parentID)
  */
 function _hprentals_civix_civicrm_entityTypes(&$entityTypes) {
   $entityTypes = array_merge($entityTypes, [
-    'CRM_Hprentals_DAO_RentalsService' => [
-      'name' => 'RentalsService',
-      'class' => 'CRM_Hprentals_DAO_RentalsService',
-      'table' => 'civicrm_o8_rentals_service',
+    'CRM_Hprentals_DAO_RentalsExpense' => [
+      'name' => 'RentalsExpense',
+      'class' => 'CRM_Hprentals_DAO_RentalsExpense',
+      'table' => 'civicrm_o8_rentals_expense',
     ],
   ]);
 }

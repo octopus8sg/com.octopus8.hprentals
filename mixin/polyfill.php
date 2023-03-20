@@ -16,9 +16,9 @@
  * @param string $basePath
  */
 return function ($longName, $shortName, $basePath) {
-  // Construct imitations of the mixin services. These cannot work as well (e.g. with respect to
+  // Construct imitations of the mixin expenses. These cannot work as well (e.g. with respect to
   // number of file-reads, deduping, upgrading)... but they should be OK for a few months while
-  // the mixin services become available.
+  // the mixin expenses become available.
 
   // List of active mixins; deduped by version
   $mixinVers = [];

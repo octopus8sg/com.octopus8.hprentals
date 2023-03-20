@@ -2,12 +2,12 @@
 namespace Civi\Api4;
 
 /**
- * RentalsService entity.
+ * RentalsExpense entity.
  *
  * Provided by the FIXME extension.
  *
  * @package Civi\Api4
  */
-class RentalsService extends Generic\DAOEntity {
+class RentalsExpense extends Generic\DAOEntity {
 
 }

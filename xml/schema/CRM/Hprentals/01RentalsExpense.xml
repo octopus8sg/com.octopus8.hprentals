@@ -2,9 +2,9 @@
 
 <table>
   <base>CRM/Hprentals</base>
-  <class>RentalsService</class>
-  <name>civicrm_o8_rental_service</name>
-  <comment>Rental Service (Type)</comment>
+  <class>RentalsExpense</class>
+  <name>civicrm_o8_rental_expense</name>
+  <comment>Rental expense (Type)</comment>
   <log>true</log>
   <paths>
     <add>civicrm/hprentals/expense?reset=1&amp;action=add</add>
@@ -17,7 +17,7 @@
     <name>id</name>
     <type>int unsigned</type>
     <required>true</required>
-    <comment>Unique Rental Service ID</comment>
+    <comment>Unique Rental expense ID</comment>
     <html>
       <type>Number</type>
     </html>
@@ -59,7 +59,7 @@
     <import>true</import>
     <export>true</export>
     <pseudoconstant>
-      <callback>CRM_Hprentals_Utils::getServiceFrequency</callback>
+      <callback>CRM_Hprentals_Utils::getexpenseFrequency</callback>
     </pseudoconstant>
     <html>
       <type>Select</type>

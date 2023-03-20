@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <menu>
   <item>
-    <path>civicrm/hprentals/service</path>
-    <page_callback>CRM_Hprentals_Form_Service</page_callback>
-    <title>Service</title>
+    <path>civicrm/hprentals/expense</path>
+    <page_callback>CRM_Hprentals_Form_expense</page_callback>
+    <title>expense</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/services</path>
-    <page_callback>CRM_Hprentals_Page_Services</page_callback>
-    <title>Services</title>
+    <path>civicrm/hprentals/expenses</path>
+    <page_callback>CRM_Hprentals_Page_expenses</page_callback>
+    <title>expenses</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
