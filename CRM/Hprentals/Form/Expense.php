@@ -49,7 +49,7 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
         parent::preProcess();
 
         $action = $this->getAction();
-        U::writeLog($action, 'action');
+        U::writeLog($action, 'action before');
         $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
         if(!$action){
             if(!$id){
@@ -64,8 +64,9 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
                 $action = CRM_Core_Action::ADD;
             }
         }
-
-        $this->assign('action', $this->_action);
+        $this->_action = $action;
+        U::writeLog($action, 'action after');
+        $this->assign('action', $action);
 
         U::writeLog($id, "RentalExpense id");
 
@@ -88,6 +89,9 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
                         'action' => 'update']));
             }
         }
+        if($this->_action = CRM_Core_Action::DELETE){
+            $title = 'Delete ' . $entityName;
+        }
         CRM_Utils_System::setTitle($title);
 
     }
@@ -98,41 +102,49 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
 
         $id = $this->getEntityId();
         $this->assign('id', $id);
-//        $this->add('hidden', 'id');
-//        $this->setDefaults(['id_value' => $id]);
-        $id_value = $this->add('text', 'id', E::ts('ID'), ['class' => 'huge'],)->freeze();
-        $name = $this->add('text', 'name', E::ts('Name'), ['class' => 'huge']);
+        if($this->_action = CRM_Core_Action::DELETE){
+            $this->add('hidden', 'id');
+            $this->addButtons([
+                ['type' => 'submit', 'name' => E::ts('Delete'), 'isDefault' => TRUE],
+                ['type' => 'cancel', 'name' => E::ts('Cancel')]
+            ]);
+        }
+        if($this->_action != CRM_Core_Action::DELETE) {
+
+
+            $id_field = $this->add('text', 'id', E::ts('ID'), ['class' => 'huge'],)->freeze();
+            $name = $this->add('text', 'name', E::ts('Name'), ['class' => 'huge']);
 //
-        $frequencies = U::getExpenseFrequency();
-        $frequency = $this->add('select', 'frequency',
-            E::ts('Frequency'),
-            $frequencies,
-            TRUE, ['class' => 'huge crm-select2']);
-        $amount = $this->add('text', 'amount', ts('Amount'), ['size' => 8, 'maxlength' => 8], TRUE);
-        $this->addRule('amount', ts('Amount should be a decimal number, like "100.25" or "-100.25"'), 'regex', '/^[+-]?((\d+(\.\d{0,2})?)|(\.\d{0,2}))$/');
+            $frequencies = U::getExpenseFrequency();
+            $frequency = $this->add('select', 'frequency',
+                E::ts('Frequency'),
+                $frequencies,
+                TRUE, ['class' => 'huge crm-select2']);
+            $amount = $this->add('text', 'amount', ts('Amount'), ['size' => 8, 'maxlength' => 8], TRUE);
+            $this->addRule('amount', ts('Amount should be a decimal number, like "100.25" or "-100.25"'), 'regex', '/^[+-]?((\d+(\.\d{0,2})?)|(\.\d{0,2}))$/');
 
 
-        $is_refund = $this->addElement('checkbox', 'is_refund', 'Is Refund?');
+            $is_refund = $this->addElement('checkbox', 'is_refund', 'Is Refund?');
 
-        $is_prorate = $this->addElement('checkbox', 'is_prorate', 'Is Prorate?');
-        $created_id = $this->addEntityRef('created_id', E::ts('Created By'),
-            false);
-        $created_id->freeze();
-        $created_at = $this->add('datepicker', 'created_date', E::ts('Created At'));
-        $created_at->freeze();
-        $modified_id = $this->addEntityRef('modified_id', E::ts('Updated By'),
-            false);
-        $modified_id->freeze();
-        $modified_at = $this->add('datepicker', 'modified_date', E::ts('Updated At'));
-        $modified_at->freeze();
-        $this->addButtons(array(
-            array(
-                'type' => 'submit',
-                'name' => E::ts('Submit'),
-                'isDefault' => TRUE,
-            ),
-        ));
-
+            $is_prorate = $this->addElement('checkbox', 'is_prorate', 'Is Prorate?');
+            $created_id = $this->addEntityRef('created_id', E::ts('Created By'),
+                false);
+            $created_id->freeze();
+            $created_at = $this->add('datepicker', 'created_date', E::ts('Created At'));
+            $created_at->freeze();
+            $modified_id = $this->addEntityRef('modified_id', E::ts('Updated By'),
+                false);
+            $modified_id->freeze();
+            $modified_at = $this->add('datepicker', 'modified_date', E::ts('Updated At'));
+            $modified_at->freeze();
+            $this->addButtons(array(
+                array(
+                    'type' => 'submit',
+                    'name' => E::ts('Submit'),
+                    'isDefault' => TRUE,
+                ),
+            ));
+        }
         // export form elements
         $this->assign('elementNames', $this->getRenderableElementNames());
         parent::buildQuickForm();
@@ -183,7 +195,7 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
      */
     public function postProcess()
     {
-
+        $session = CRM_Core_Session::singleton();
         $userId = CRM_Core_Session::singleton()->getLoggedInContactID();
         $now = date('YmdHis');
         $action = $this->_action;
@@ -196,14 +208,14 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
         $id = $this->getEntityId();
         switch ($action) {
             case CRM_Core_Action::ADD:
-                $params['created_by'] = $userId;
-                $params['created_at'] = $now;
+                $params['created_id'] = $userId;
+                $params['created_date'] = $now;
                 $apiAction = "create";
                 break;
 
             case CRM_Core_Action::UPDATE:
-                $params['modified_by'] = $userId;
-                $params['modified_at'] = $now;
+                $params['modified_id'] = $userId;
+                $params['modified_date'] = $now;
                 $params['id'] = $id;
                 $apiAction = "update";
                 break;
@@ -216,15 +228,28 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
                 $apiAction = 'delete';
                 civicrm_api4('RentalsExpense', 'delete', ['where' => [['id', '=', $id]]]);
                 CRM_Core_Session::setStatus(E::ts('Removed Expense'), E::ts('Expense'), 'success');
+                $url = (CRM_Utils_System::url(U::PATH_EXPENSES,
+                    "reset=1"));
+                U::writeLog($url);
+                $session->replaceUserContext($url);
+                CRM_Utils_System::redirect($url);
                 break;
         }
+//        U::writeLog($params, 'after switch 1');
+//        U::writeLog($apiAction, 'apiAction switch 1');
         if(($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)){
-            $session = CRM_Core_Session::singleton();
+
             $result = civicrm_api4('RentalsExpense', $apiAction, ['values' => $params]);
-            U::writeLog($result);
-            $session->replaceUserContext(CRM_Utils_System::url(U::PATH_EXPENSE,
-                ['id' => $this->getEntityId(),
-                    'action' => 'update']));
+            if(sizeof($result) == 1){
+                $myentity=$result[0];
+                $id = $myentity['id'];
+
+            }
+            $url = (CRM_Utils_System::url(U::PATH_EXPENSE,
+                "reset=1&id={$id}"));
+            U::writeLog($url);
+            $session->replaceUserContext($url);
+            CRM_Utils_System::redirect($url);
         }
 
         parent::postProcess();

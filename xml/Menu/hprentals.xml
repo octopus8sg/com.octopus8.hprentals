@@ -2,14 +2,20 @@
 <menu>
   <item>
     <path>civicrm/hprentals/expense</path>
-    <page_callback>CRM_Hprentals_Form_expense</page_callback>
-    <title>expense</title>
+    <page_callback>CRM_Hprentals_Form_Expense</page_callback>
+    <title>Expense</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
     <path>civicrm/hprentals/expenses</path>
-    <page_callback>CRM_Hprentals_Page_expenses</page_callback>
-    <title>expenses</title>
+    <page_callback>CRM_Hprentals_Page_Expenses</page_callback>
+    <title>Expenses</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/rentals/expenses_ajax</path>
+    <page_callback>CRM_Hprentals_Page_Expenses::getAjax</page_callback>
+    <title>Expenses Ajax</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
