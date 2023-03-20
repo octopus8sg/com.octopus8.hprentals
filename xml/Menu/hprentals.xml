@@ -19,6 +19,24 @@
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
+    <path>civicrm/hprentals/method</path>
+    <page_callback>CRM_Hprentals_Form_Method</page_callback>
+    <title>Payment Method</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/hprentals/methods</path>
+    <page_callback>CRM_Hprentals_Page_Methods</page_callback>
+    <title>Payment Methods</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/rentals/methods_ajax</path>
+    <page_callback>CRM_Hprentals_Page_Methods::getAjax</page_callback>
+    <title>Payment Methods Ajax</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
     <path>civicrm/hprentals/invoice</path>
     <page_callback>CRM_Hprentals_Form_Invoice</page_callback>
     <title>Invoice</title>

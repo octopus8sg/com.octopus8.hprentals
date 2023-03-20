@@ -2,22 +2,22 @@
 
 <table>
   <base>CRM/Hprentals</base>
-  <class>RentalsExpense</class>
-  <name>civicrm_o8_rental_expense</name>
-  <comment>Rental expense (Type)</comment>
+  <class>RentalsMethod</class>
+  <name>civicrm_o8_rentals_method</name>
+  <comment>Rental Payment Method</comment>
   <log>true</log>
   <paths>
-    <add>civicrm/hprentals/expense?reset=1&amp;action=add</add>
-    <view>civicrm/hprentals/expense?reset=1&amp;action=view&amp;id=[id]</view>
-    <update>civicrm/hprentals/expense?reset=1&amp;action=update&amp;id=[id]</update>
-    <delete>civicrm/hprentals/expense?reset=1&amp;action=delete&amp;id=[id]</delete>
+    <add>civicrm/hprentals/method?reset=1&amp;action=add</add>
+    <view>civicrm/hprentals/method?reset=1&amp;action=view&amp;id=[id]</view>
+    <update>civicrm/hprentals/method?reset=1&amp;action=update&amp;id=[id]</update>
+    <delete>civicrm/hprentals/method?reset=1&amp;action=delete&amp;id=[id]</delete>
   </paths>
 
   <field>
     <name>id</name>
     <type>int unsigned</type>
     <required>true</required>
-    <comment>Unique Rental Expense ID</comment>
+    <comment>Unique Rental Payment Method ID</comment>
     <html>
       <type>Number</type>
     </html>
@@ -47,54 +47,6 @@
     <fieldName>name</fieldName>
     <unique>true</unique>
   </index>
-
-
-  <field>
-    <name>frequency</name>
-    <title>Frequency</title>
-    <type>varchar</type>
-    <length>25</length>
-    <default>"once_off"</default>
-    <required>true</required>
-    <import>true</import>
-    <export>true</export>
-    <pseudoconstant>
-      <callback>CRM_Hprentals_Utils::getexpenseFrequency</callback>
-    </pseudoconstant>
-    <html>
-      <type>Select</type>
-    </html>
-  </field>
-
-
-  <field>
-    <name>is_refund</name>
-    <type>boolean</type>
-    <title>Refund</title>
-    <default>0</default>
-    <comment>Is Refund?</comment>
-  </field>
-
-  <field>
-    <name>is_prorate</name>
-    <type>boolean</type>
-    <title>Prorate</title>
-    <default>1</default>
-    <comment>Is prorate?</comment>
-  </field>
-
-  <field>
-    <name>amount</name>
-    <type>decimal</type>
-    <required>true</required>
-    <import>true</import>
-    <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
-    <comment>Amount</comment>
-    <html>
-      <type>Text</type>
-      <label>Amount</label>
-    </html>
-  </field>
 
   <field>
     <name>created_id</name>

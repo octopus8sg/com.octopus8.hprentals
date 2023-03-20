@@ -17,6 +17,7 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
+DROP TABLE IF EXISTS `civicrm_o8_rentals_method`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_expense`;
 
 SET FOREIGN_KEY_CHECKS=1;
@@ -34,7 +35,7 @@ SET FOREIGN_KEY_CHECKS=1;
 -- *
 -- *******************************************************/
 CREATE TABLE `civicrm_o8_rental_expense` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique Rental expense ID',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique Rental Expense ID',
   `name` varchar(255) NOT NULL COMMENT 'Name',
   `frequency` varchar(25) NOT NULL DEFAULT "once_off",
   `is_refund` tinyint DEFAULT 0 COMMENT 'Is Refund?',
@@ -48,5 +49,26 @@ CREATE TABLE `civicrm_o8_rental_expense` (
   UNIQUE INDEX `index_name`(name),
   CONSTRAINT FK_civicrm_o8_rental_expense_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
   CONSTRAINT FK_civicrm_o8_rental_expense_modified_id FOREIGN KEY (`modified_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_o8_rentals_method
+-- *
+-- * Rental Payment Method
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_o8_rentals_method` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique Rental Payment Method ID',
+  `name` varchar(255) NOT NULL COMMENT 'Name',
+  `created_id` int unsigned COMMENT 'FK to civicrm_contact, who created this',
+  `created_date` datetime COMMENT 'Date and time this was created.',
+  `modified_id` int unsigned COMMENT 'FK to civicrm_contact, who modified this',
+  `modified_date` datetime COMMENT 'Date and time this was modified.',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `index_name`(name),
+  CONSTRAINT FK_civicrm_o8_rentals_method_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
+  CONSTRAINT FK_civicrm_o8_rentals_method_modified_id FOREIGN KEY (`modified_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL
 )
 ENGINE=InnoDB;
