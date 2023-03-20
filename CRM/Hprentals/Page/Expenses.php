@@ -122,11 +122,6 @@ class CRM_Hprentals_Page_Expenses extends CRM_Core_Page
         $frequencies = U::getExpenseFrequency();
         $yesNo = [0 => "No", 1 => "Yes"];
         while ($dao->fetch()) {
-            if (!empty($dao->contact_id)) {
-                $contact = '<a target="_blank" href="' . CRM_Utils_System::url('civicrm/contact/view',
-                        ['reset' => 1, 'cid' => $dao->contact_id, 'action' => 'view']) . '">' .
-                    $dao->organization_name . '</a>';
-            }
 
             $r_update = CRM_Utils_System::url(U::PATH_EXPENSE,
                 ['action' => 'update', 'id' => $dao->id]);

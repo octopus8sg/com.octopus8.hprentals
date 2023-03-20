@@ -89,7 +89,7 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
                         'action' => 'update']));
             }
         }
-        if($this->_action = CRM_Core_Action::DELETE){
+        if($this->_action == CRM_Core_Action::DELETE){
             $title = 'Delete ' . $entityName;
         }
         CRM_Utils_System::setTitle($title);
@@ -102,7 +102,7 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
 
         $id = $this->getEntityId();
         $this->assign('id', $id);
-        if($this->_action = CRM_Core_Action::DELETE){
+        if($this->_action == CRM_Core_Action::DELETE){
             $this->add('hidden', 'id');
             $this->addButtons([
                 ['type' => 'submit', 'name' => E::ts('Delete'), 'isDefault' => TRUE],
