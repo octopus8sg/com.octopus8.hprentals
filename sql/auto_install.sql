@@ -17,7 +17,7 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
-DROP TABLE IF EXISTS `civicrm_o8_rentals_method`;
+DROP TABLE IF EXISTS `civicrm_o8_rental_method`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_expense`;
 
 SET FOREIGN_KEY_CHECKS=1;
@@ -54,12 +54,12 @@ ENGINE=InnoDB;
 
 -- /*******************************************************
 -- *
--- * civicrm_o8_rentals_method
+-- * civicrm_o8_rental_method
 -- *
 -- * Rental Payment Method
 -- *
 -- *******************************************************/
-CREATE TABLE `civicrm_o8_rentals_method` (
+CREATE TABLE `civicrm_o8_rental_method` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique Rental Payment Method ID',
   `name` varchar(255) NOT NULL COMMENT 'Name',
   `created_id` int unsigned COMMENT 'FK to civicrm_contact, who created this',
@@ -68,7 +68,7 @@ CREATE TABLE `civicrm_o8_rentals_method` (
   `modified_date` datetime COMMENT 'Date and time this was modified.',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_name`(name),
-  CONSTRAINT FK_civicrm_o8_rentals_method_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
-  CONSTRAINT FK_civicrm_o8_rentals_method_modified_id FOREIGN KEY (`modified_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL
+  CONSTRAINT FK_civicrm_o8_rental_method_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
+  CONSTRAINT FK_civicrm_o8_rental_method_modified_id FOREIGN KEY (`modified_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL
 )
 ENGINE=InnoDB;

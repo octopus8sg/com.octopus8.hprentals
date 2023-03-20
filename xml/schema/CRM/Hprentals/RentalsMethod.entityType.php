@@ -5,6 +5,6 @@ return [
   [
     'name' => 'RentalsMethod',
     'class' => 'CRM_Hprentals_DAO_RentalsMethod',
-    'table' => 'civicrm_o8_rentals_method',
+    'table' => 'civicrm_o8_rental_method',
   ],
 ];

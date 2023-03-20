@@ -3,7 +3,7 @@
 <table>
   <base>CRM/Hprentals</base>
   <class>RentalsMethod</class>
-  <name>civicrm_o8_rentals_method</name>
+  <name>civicrm_o8_rental_method</name>
   <comment>Rental Payment Method</comment>
   <log>true</log>
   <paths>
