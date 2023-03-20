@@ -37,10 +37,10 @@ class CRM_Hprentals_DAO_RentalsMethod extends CRM_Core_DAO {
    * @var string[]
    */
   protected static $_paths = [
-    'add' => 'civicrm/hprentals/method?reset=1&action=add',
-    'view' => 'civicrm/hprentals/method?reset=1&action=view&id=[id]',
-    'update' => 'civicrm/hprentals/method?reset=1&action=update&id=[id]',
-    'delete' => 'civicrm/hprentals/method?reset=1&action=delete&id=[id]',
+    'add' => 'civicrm/rentals/method?reset=1&action=add',
+    'view' => 'civicrm/rentals/method?reset=1&action=view&id=[id]',
+    'update' => 'civicrm/rentals/method?reset=1&action=update&id=[id]',
+    'delete' => 'civicrm/rentals/method?reset=1&action=delete&id=[id]',
   ];
 
   /**

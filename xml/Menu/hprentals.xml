@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <menu>
   <item>
-    <path>civicrm/hprentals/expense</path>
+    <path>civicrm/rentals/expense</path>
     <page_callback>CRM_Hprentals_Form_Expense</page_callback>
     <title>Expense</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/expenses</path>
+    <path>civicrm/rentals/expenses</path>
     <page_callback>CRM_Hprentals_Page_Expenses</page_callback>
     <title>Expenses</title>
     <access_arguments>access CiviCRM</access_arguments>
@@ -19,13 +19,13 @@
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/method</path>
+    <path>civicrm/rentals/method</path>
     <page_callback>CRM_Hprentals_Form_Method</page_callback>
     <title>Payment Method</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/methods</path>
+    <path>civicrm/rentals/methods</path>
     <page_callback>CRM_Hprentals_Page_Methods</page_callback>
     <title>Payment Methods</title>
     <access_arguments>access CiviCRM</access_arguments>
@@ -37,49 +37,49 @@
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/invoice</path>
+    <path>civicrm/rentals/invoice</path>
     <page_callback>CRM_Hprentals_Form_Invoice</page_callback>
     <title>Invoice</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/invoices</path>
+    <path>civicrm/rentals/invoices</path>
     <page_callback>CRM_Hprentals_Page_Invoices</page_callback>
     <title>Invoices</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/rental</path>
+    <path>civicrm/rentals/rental</path>
     <page_callback>CRM_Hprentals_Form_Rental</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/rentals</path>
+    <path>civicrm/rentals/rentals</path>
     <page_callback>CRM_Hprentals_Page_Rentals</page_callback>
     <title>Rentals</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/payment</path>
+    <path>civicrm/rentals/payment</path>
     <page_callback>CRM_Hprentals_Form_Payment</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/setup</path>
+    <path>civicrm/rentals/setup</path>
     <page_callback>CRM_Hprentals_Form_Setup</page_callback>
     <title>Setup</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/dashboard</path>
+    <path>civicrm/rentals/dashboard</path>
     <page_callback>CRM_Hprentals_Page_Dashboard</page_callback>
     <title>Dashboard</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/hprentals/reports</path>
+    <path>civicrm/rentals/reports</path>
     <page_callback>CRM_Hprentals_Page_Reports</page_callback>
     <title>Reports</title>
     <access_arguments>access CiviCRM</access_arguments>

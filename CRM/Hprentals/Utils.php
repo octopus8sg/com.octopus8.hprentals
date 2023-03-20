@@ -16,19 +16,19 @@ class CRM_Hprentals_Utils
         'description' => "Write debugging output to CiviCRM log file"];
 
     //PATHS
-    public const PATH_DASHBOARD = "civicrm/hprentals/dashboard";
-    public const PATH_SETUP = "civicrm/hprentals/setup";
-    public const PATH_RENTAL = "civicrm/hprentals/rental";
-    public const PATH_RENTALS = "civicrm/hprentals/rentals";
-    public const PATH_EXPENSE = "civicrm/hprentals/expense";
-    public const PATH_EXPENSES = "civicrm/hprentals/expenses";
-    public const PATH_METHOD = "civicrm/hprentals/method";
-    public const PATH_METHODS = "civicrm/hprentals/methods";
-    public const PATH_INVOICE = "civicrm/hprentals/invoice";
-    public const PATH_INVOICES = "civicrm/hprentals/invoices";
-    public const PATH_PAYMENT = "civicrm/hprentals/payment";
-    public const PATH_PAYMENTS = "civicrm/hprentals/payments";
-    public const PATH_REPORTS = 'civicrm/hprentals/reports';
+    public const PATH_DASHBOARD = "civicrm/rentals/dashboard";
+    public const PATH_SETUP = "civicrm/rentals/setup";
+    public const PATH_RENTAL = "civicrm/rentals/rental";
+    public const PATH_RENTALS = "civicrm/rentals/rentals";
+    public const PATH_EXPENSE = "civicrm/rentals/expense";
+    public const PATH_EXPENSES = "civicrm/rentals/expenses";
+    public const PATH_METHOD = "civicrm/rentals/method";
+    public const PATH_METHODS = "civicrm/rentals/methods";
+    public const PATH_INVOICE = "civicrm/rentals/invoice";
+    public const PATH_INVOICES = "civicrm/rentals/invoices";
+    public const PATH_PAYMENT = "civicrm/rentals/payment";
+    public const PATH_PAYMENTS = "civicrm/rentals/payments";
+    public const PATH_REPORTS = 'civicrm/rentals/reports';
     public const EXPENSE_FREQUENCY = [
         "once_off" => "Once Off",
         "every_month" => "Every Month",
@@ -225,6 +225,21 @@ class CRM_Hprentals_Utils
             }
             return $return_setting;
         }
+    }
+
+    /**
+     * @param $id
+     * @return mixed|null
+     */
+    public static function getMyEntity($id, $entityName)
+    {
+        $myentity = null;
+        $entities = civicrm_api4($entityName, 'get', ['where' => [['id', '=', $id]], 'limit' => 1]);
+        if (!empty($entities)) {
+            $myentity = $entities[0];
+        }
+
+        return $myentity;
     }
 
 

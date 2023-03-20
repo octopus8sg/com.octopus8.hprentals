@@ -2,7 +2,7 @@
     <div class="crm-content-block">
         <div class="action-link">
             {*                    {debug}*}
-            <a class="button add-expense" href="{crmURL p="civicrm/hprentals/expense" q="reset=1&action=add" }">
+            <a class="button add-expense" href="{crmURL p="civicrm/rentals/expense" q="reset=1&action=add" }">
                 <i class="crm-i fa-plus-circle">&nbsp;</i>
                 {ts}Add Expense{/ts}
             </a>

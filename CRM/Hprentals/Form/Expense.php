@@ -76,7 +76,7 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
         $entityClass = $this->getDefaultEntity();
         $session = CRM_Core_Session::singleton();
         if ($id) {
-            $myEntity = $this->getMyEntity($id, $entityClass);
+            $myEntity = U::getMyEntity($id, $entityClass);
 //            U::writeLog($myEntity, "RentalExpense Entity");
 
             if($myEntity){
@@ -197,6 +197,7 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
     {
         $session = CRM_Core_Session::singleton();
         $userId = CRM_Core_Session::singleton()->getLoggedInContactID();
+        $entity = $this->getDefaultEntity();
         $now = date('YmdHis');
         $action = $this->_action;
         $values = $this->controller->exportValues();
@@ -226,7 +227,7 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
 
             case CRM_Core_Action::DELETE:
                 $apiAction = 'delete';
-                civicrm_api4('RentalsExpense', 'delete', ['where' => [['id', '=', $id]]]);
+                civicrm_api4($entity, 'delete', ['where' => [['id', '=', $id]]]);
                 CRM_Core_Session::setStatus(E::ts('Removed Expense'), E::ts('Expense'), 'success');
                 $url = (CRM_Utils_System::url(U::PATH_EXPENSES,
                     "reset=1"));
@@ -239,7 +240,7 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
 //        U::writeLog($apiAction, 'apiAction switch 1');
         if(($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)){
 
-            $result = civicrm_api4('RentalsExpense', $apiAction, ['values' => $params]);
+            $result = civicrm_api4($entity, $apiAction, ['values' => $params]);
             if(sizeof($result) == 1){
                 $myentity=$result[0];
                 $id = $myentity['id'];
@@ -253,21 +254,6 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
         }
 
         parent::postProcess();
-    }
-
-    /**
-     * @param $id
-     * @return mixed|null
-     */
-    public function getMyEntity($id, $entityName)
-    {
-        $myentity = null;
-        $entities = civicrm_api4($entityName, 'get', ['where' => [['id', '=', $id]], 'limit' => 1]);
-        if (!empty($entities)) {
-            $myentity = $entities[0];
-        }
-
-        return $myentity;
     }
 
 }

@@ -7,10 +7,10 @@
   <comment>Rental expense (Type)</comment>
   <log>true</log>
   <paths>
-    <add>civicrm/hprentals/expense?reset=1&amp;action=add</add>
-    <view>civicrm/hprentals/expense?reset=1&amp;action=view&amp;id=[id]</view>
-    <update>civicrm/hprentals/expense?reset=1&amp;action=update&amp;id=[id]</update>
-    <delete>civicrm/hprentals/expense?reset=1&amp;action=delete&amp;id=[id]</delete>
+    <add>civicrm/rentals/expense?reset=1&amp;action=add</add>
+    <view>civicrm/rentals/expense?reset=1&amp;action=view&amp;id=[id]</view>
+    <update>civicrm/rentals/expense?reset=1&amp;action=update&amp;id=[id]</update>
+    <delete>civicrm/rentals/expense?reset=1&amp;action=delete&amp;id=[id]</delete>
   </paths>
 
   <field>
