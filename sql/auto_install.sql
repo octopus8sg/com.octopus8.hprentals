@@ -17,6 +17,7 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
+DROP TABLE IF EXISTS `civicrm_o8_rental_rental`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_method`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_expense`;
 
@@ -70,5 +71,29 @@ CREATE TABLE `civicrm_o8_rental_method` (
   UNIQUE INDEX `index_name`(name),
   CONSTRAINT FK_civicrm_o8_rental_method_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
   CONSTRAINT FK_civicrm_o8_rental_method_modified_id FOREIGN KEY (`modified_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_o8_rental_rental
+-- *
+-- * FIXME
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_o8_rental_rental` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique ID',
+  `tenant_id` int unsigned COMMENT 'FK to Contact',
+  `admission` date NOT NULL COMMENT 'Admission date',
+  `discharge` date NOT NULL COMMENT 'Discharge date',
+  `created_id` int unsigned COMMENT 'FK to civicrm_contact, who created this',
+  `created_date` datetime COMMENT 'Date and time this was created.',
+  `modified_id` int unsigned COMMENT 'FK to civicrm_contact, who modified this',
+  `modified_date` datetime COMMENT 'Date and time this was modified.',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `idx_tenant_admission_discharge`(tenant_id, admission, discharge),
+  CONSTRAINT FK_civicrm_o8_rental_rental_tenant_id FOREIGN KEY (`tenant_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_o8_rental_rental_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
+  CONSTRAINT FK_civicrm_o8_rental_rental_modified_id FOREIGN KEY (`modified_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL
 )
 ENGINE=InnoDB;
