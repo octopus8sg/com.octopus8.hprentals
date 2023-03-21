@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Hprentals</base>
+  <class>RentalsRental</class>
+  <name>civicrm_o8_rental_rental</name>
+  <comment>FIXME</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>tenant_id</name>
+    <type>int unsigned</type>
+    <comment>FK to Contact</comment>
+  </field>
+  <foreignKey>
+    <name>tenant_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>admission</name>
+    <type>date</type>
+    <comment>Admission date</comment>
+    <required>true</required>
+    <html>
+      <type>Date</type>
+    </html>
+  </field>
+
+  <field>
+    <name>discharge</name>
+    <type>date</type>
+    <comment>Discharge date</comment>
+    <required>true</required>
+    <html>
+      <type>Date</type>
+    </html>
+  </field>
+
+  <index>
+    <name>idx_tenant_admission_discharge</name>
+    <fieldName>tenant_id</fieldName>
+    <fieldName>admission</fieldName>
+    <fieldName>discharge</fieldName>
+    <unique>true</unique>
+  </index>
+
+
+  <field>
+    <name>created_id</name>
+    <type>int unsigned</type>
+    <title>Created By Contact ID</title>
+    <comment>FK to civicrm_contact, who created this</comment>
+    <html>
+      <label>Created By</label>
+    </html>
+  </field>
+  <foreignKey>
+    <name>created_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>
+    <name>created_date</name>
+    <type>datetime</type>
+    <title>Created Date</title>
+    <comment>Date and time this was created.</comment>
+    <add>3.0</add>
+  </field>
+  <field>
+    <name>modified_id</name>
+    <type>int unsigned</type>
+    <title>Modified By Contact ID</title>
+    <comment>FK to civicrm_contact, who modified this</comment>
+    <html>
+      <label>Modified By</label>
+    </html>
+  </field>
+  <foreignKey>
+    <name>modified_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>
+    <name>modified_date</name>
+    <type>datetime</type>
+    <title>Modified Date</title>
+    <comment>Date and time this was modified.</comment>
+    <add>3.0</add>
+  </field>
+
+</table>
