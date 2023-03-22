@@ -9,18 +9,20 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page {
 
       // link for datatables
       $urlQry['snippet'] = 4;
-      $funding_source_url = CRM_Utils_System::url('civicrm/fund/dashboard_ajax_funding', $urlQry, FALSE, NULL, FALSE);
-      $contact_source_url = CRM_Utils_System::url('civicrm/fund/dashboard_ajax_contact', $urlQry, FALSE, NULL, FALSE);
+      $invoice_source_url = CRM_Utils_System::url('civicrm/rentals/dashboard_ajax_invoice', $urlQry, FALSE, NULL, FALSE);
+      $payment_source_url = CRM_Utils_System::url('civicrm/rentals/dashboard_ajax_payment', $urlQry, FALSE, NULL, FALSE);
+      $rental_source_url = CRM_Utils_System::url('civicrm/rentals/dashboard_ajax_rental', $urlQry, FALSE, NULL, FALSE);
 //        $funds_source_url = "";
-      $sourceUrl['funding_source_url'] = $funding_source_url;
-      $sourceUrl['contact_source_url'] = $contact_source_url;
+      $sourceUrl['invoice_source_url'] = $invoice_source_url;
+      $sourceUrl['payment_source_url'] = $payment_source_url;
+      $sourceUrl['rental_source_url'] = $rental_source_url;
       $this->assign('useAjax', true);
       CRM_Core_Resources::singleton()->addVars('source_url', $sourceUrl);
 
       // controller form for ajax search
       $controller_data = new CRM_Core_Controller_Simple(
-          'CRM_Funds_Form_CommonSearch',
-          ts('Funds Filter'),
+          'CRM_Hprentals_Form_DashboardFilter',
+          ts('Tenant Filter'),
           NULL,
           FALSE, FALSE, TRUE
       );

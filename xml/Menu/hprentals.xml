@@ -79,6 +79,24 @@
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
+    <path>civicrm/rentals/dashboard_ajax_invoice</path>
+    <page_callback>CRM_Hprentals_Page_Dashboard::getInvoices</page_callback>
+    <title>Dashboard Invoices</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/rentals/dashboard_ajax_payment</path>
+    <page_callback>CRM_Hprentals_Page_Dashboard::getPayments</page_callback>
+    <title>Dashboard Payments</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/rentals/dashboard_ajax_rental</path>
+    <page_callback>CRM_Hprentals_Page_Dashboard::getRentals</page_callback>
+    <title>Dashboard Rentals</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
     <path>civicrm/rentals/reports</path>
     <page_callback>CRM_Hprentals_Page_Reports</page_callback>
     <title>Reports</title>
