@@ -14,6 +14,8 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
 
     protected $_myentity;
 
+    protected $_dialog;
+
     public function getDefaultEntity()
     {
         return 'RentalsRental';
@@ -50,6 +52,15 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         $action = $this->getAction();
         U::writeLog($action, 'action before');
         $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
+        $dialog = CRM_Utils_Request::retrieve('dialogue', 'Json', $this, FALSE);
+        if($dialog){
+            $this->_dialog = TRUE;
+            U::writeLog($dialog, "is dialog");
+        }
+        if(!$dialog){
+            $this->_dialog = FALSE;
+            U::writeLog($dialog, "no is dialog");
+        }
         if(!$action){
             if(!$id){
                 $action = CRM_Core_Action::ADD;

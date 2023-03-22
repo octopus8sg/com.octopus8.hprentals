@@ -3,6 +3,7 @@ CRM.$(function ($) {
     $("a.add-expense").click(function( event ) {
         event.preventDefault();
         var href = $(this).attr('href');
+        href = href + "&dialogue=1"
         // alert(href);
         var $el =CRM.loadForm(href, {
             dialog: {width: '50%', height: '50%'}
@@ -10,7 +11,7 @@ CRM.$(function ($) {
             var hm_tab = $('.selector-expenses');
             var hm_table = hm_tab.DataTable();
             hm_table.draw();
-        });
+        }).close;
     });
 
 
@@ -35,39 +36,42 @@ CRM.$(function ($) {
             $("a.view-expense").off("click").click(function (event) {
                 event.preventDefault();
                 var href = $(this).attr('href');
+                href = href + "&dialogue=1"
                 // alert(href);
-                var $el = CRM.loadForm(href, {
+                var $el =CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
-                }).on('crmFormSuccess', function () {
+                }).on('crmFormSuccess', function() {
                     var hm_tab = $('.selector-expenses');
                     var hm_table = hm_tab.DataTable();
                     hm_table.draw();
-                });
+                }).close;
             });
             // $("a.update-expense").css('background','blue');
             $("a.update-expense").off("click").click(function (event) {
                 event.preventDefault();
                 var href = $(this).attr('href');
+                href = href + "&dialogue=1"
                 // alert(href);
-                var $el = CRM.loadForm(href, {
+                var $el =CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
-                }).on('crmFormSuccess', function () {
+                }).on('crmFormSuccess', function() {
                     var hm_tab = $('.selector-expenses');
                     var hm_table = hm_tab.DataTable();
                     hm_table.draw();
-                });
+                }).close;
             });
             $("a.delete-expense").off("click").click(function (event) {
                 event.preventDefault();
                 var href = $(this).attr('href');
+                href = href + "&dialogue=1"
                 // alert(href);
-                var $el = CRM.loadForm(href, {
+                var $el =CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
-                }).on('crmFormSuccess', function () {
+                }).on('crmFormSuccess', function() {
                     var hm_tab = $('.selector-expenses');
                     var hm_table = hm_tab.DataTable();
                     hm_table.draw();
-                });
+                }).close;
             });
         };
         expenses_dtsettings.fnServerData = function ( sSource, aoData, fnCallback ) {

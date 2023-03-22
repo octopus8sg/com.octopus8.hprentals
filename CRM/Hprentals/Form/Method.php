@@ -14,6 +14,8 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
 
     protected $_myentity;
 
+    protected $_dialog;
+
     public function getDefaultEntity()
     {
         return 'RentalsMethod';
@@ -65,6 +67,16 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
         }
         $this->_action = $action;
         U::writeLog($action, 'action after');
+        $dialog = CRM_Utils_Request::retrieve('dialogue', 'Json', $this, FALSE);
+        if($dialog){
+            $this->_dialog = TRUE;
+            U::writeLog($dialog, "is dialog");
+        }
+        if(!$dialog){
+            $this->_dialog = FALSE;
+            U::writeLog($dialog, "no is dialog");
+        }
+
         $this->assign('action', $action);
 
         U::writeLog($id, "Rental Payment Method id");
