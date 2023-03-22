@@ -52,27 +52,27 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
         $action = $this->getAction();
         U::writeLog($action, 'action before');
         $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-        if(!$action){
-            if(!$id){
+        if (!$action) {
+            if (!$id) {
                 $action = CRM_Core_Action::ADD;
             }
-            if($id){
+            if ($id) {
                 $action = CRM_Core_Action::UPDATE;
             }
         }
-        if($action == CRM_Core_Action::UPDATE) {
+        if ($action == CRM_Core_Action::UPDATE) {
             if (!$id) {
                 $action = CRM_Core_Action::ADD;
             }
         }
         $this->_action = $action;
         U::writeLog($action, 'action after');
-        $dialog = CRM_Utils_Request::retrieve('dialogue', 'Json', $this, FALSE);
-        if($dialog){
+        $dialog = CRM_Utils_Request::retrieve('dialogue', 'Boolean', $this, FALSE);
+        if ($dialog) {
             $this->_dialog = TRUE;
             U::writeLog($dialog, "is dialog");
         }
-        if(!$dialog){
+        if (!$dialog) {
             $this->_dialog = FALSE;
             U::writeLog($dialog, "no is dialog");
         }
@@ -90,7 +90,7 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
             $myEntity = U::getMyEntity($id, $entityClass);
 //            U::writeLog($myEntity, "RentalExpense Entity");
 
-            if($myEntity){
+            if ($myEntity) {
                 $this->_myentity = $myEntity;
                 $this->_id = $id;
                 $title = 'Edit ' . $entityName;
@@ -100,7 +100,7 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
                         'action' => 'update']));
             }
         }
-        if($this->_action == CRM_Core_Action::DELETE){
+        if ($this->_action == CRM_Core_Action::DELETE) {
             $title = 'Delete ' . $entityName;
         }
         CRM_Utils_System::setTitle($title);
@@ -113,14 +113,14 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
 
         $id = $this->getEntityId();
         $this->assign('id', $id);
-        if($this->_action == CRM_Core_Action::DELETE){
+        if ($this->_action == CRM_Core_Action::DELETE) {
             $this->add('hidden', 'id');
             $this->addButtons([
                 ['type' => 'submit', 'name' => E::ts('Delete'), 'isDefault' => TRUE],
                 ['type' => 'cancel', 'name' => E::ts('Cancel')]
             ]);
         }
-        if($this->_action != CRM_Core_Action::DELETE) {
+        if ($this->_action != CRM_Core_Action::DELETE) {
 
 
             $id_field = $this->add('text', 'id', E::ts('ID'), ['class' => 'huge'],)->freeze();
@@ -148,12 +148,14 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
         $this->assign('elementNames', $this->getRenderableElementNames());
         parent::buildQuickForm();
     }
+
     /**
      * Get the fields/elements defined in this form.
      *
      * @return array (string)
      */
-    public function getRenderableElementNames() {
+    public function getRenderableElementNames()
+    {
         // The _elements list includes some items which should not be
         // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
         // items don't have labels.  We'll identify renderable by filtering on
@@ -199,6 +201,7 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
         $entity = $this->getDefaultEntity();
         $now = date('YmdHis');
         $action = $this->_action;
+        $dialog = $this->_dialog;
         $values = $this->controller->exportValues();
         $params['name'] = $values['name'];
         $id = $this->getEntityId();
@@ -228,16 +231,18 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
                     "reset=1"));
                 U::writeLog($url);
                 $session->replaceUserContext($url);
-                CRM_Utils_System::redirect($url);
+                if (!$dialog) {
+                    CRM_Utils_System::redirect($url);
+                }
                 break;
         }
 //        U::writeLog($params, 'after switch 1');
 //        U::writeLog($apiAction, 'apiAction switch 1');
-        if(($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)){
+        if (($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)) {
 
             $result = civicrm_api4($entity, $apiAction, ['values' => $params]);
-            if(sizeof($result) == 1){
-                $myentity=$result[0];
+            if (sizeof($result) == 1) {
+                $myentity = $result[0];
                 $id = $myentity['id'];
 
             }
@@ -245,7 +250,9 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
                 "reset=1&id={$id}"));
             U::writeLog($url);
             $session->replaceUserContext($url);
-            CRM_Utils_System::redirect($url);
+            if (!$dialog) {
+                CRM_Utils_System::redirect($url);
+            }
         }
 
         parent::postProcess();

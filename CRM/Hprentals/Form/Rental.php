@@ -52,7 +52,7 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         $action = $this->getAction();
         U::writeLog($action, 'action before');
         $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-        $dialog = CRM_Utils_Request::retrieve('dialogue', 'Json', $this, FALSE);
+        $dialog = CRM_Utils_Request::retrieve('dialogue', 'Boolean', $this, FALSE);
         if($dialog){
             $this->_dialog = TRUE;
             U::writeLog($dialog, "is dialog");
@@ -235,6 +235,7 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         $entity = $this->getDefaultEntity();
         $now = date('YmdHis');
         $action = $this->_action;
+        $dialog = $this->_dialog;
         $values = $this->controller->exportValues();
         U::writeLog($values);
         $params['tenant_id'] = $values['tenant_id'];
@@ -267,7 +268,9 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
                     "reset=1"));
                 U::writeLog($url);
                 $session->replaceUserContext($url);
-                CRM_Utils_System::redirect($url);
+                if(!$dialog){
+                    CRM_Utils_System::redirect($url);
+                }
                 break;
         }
         U::writeLog($params, 'after switch 1');
@@ -284,7 +287,9 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
                 "reset=1&id={$id}"));
             U::writeLog($url);
             $session->replaceUserContext($url);
-            CRM_Utils_System::redirect($url);
+            if(!$dialog){
+                CRM_Utils_System::redirect($url);
+            }
         }
 
         parent::postProcess();

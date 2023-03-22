@@ -3,7 +3,7 @@ CRM.$(function ($) {
     $("a.add-method").click(function( event ) {
         event.preventDefault();
         var href = $(this).attr('href');
-        // alert(href);
+        href = href + "&dialogue=1"
         var $el =CRM.loadForm(href, {
             dialog: {width: '50%', height: '50%'}
         }).on('crmFormSuccess', function() {
@@ -35,7 +35,7 @@ CRM.$(function ($) {
             $("a.view-method").off("click").click(function (event) {
                 event.preventDefault();
                 var href = $(this).attr('href');
-                // alert(href);
+                href = href + "&dialogue=1"
                 var $el = CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
                 }).on('crmFormSuccess', function () {
@@ -48,7 +48,7 @@ CRM.$(function ($) {
             $("a.update-method").off("click").click(function (event) {
                 event.preventDefault();
                 var href = $(this).attr('href');
-                // alert(href);
+                href = href + "&dialogue=1"
                 var $el = CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
                 }).on('crmFormSuccess', function () {
@@ -60,7 +60,7 @@ CRM.$(function ($) {
             $("a.delete-method").off("click").click(function (event) {
                 event.preventDefault();
                 var href = $(this).attr('href');
-                // alert(href);
+                href = href + "&dialogue=1"
                 var $el = CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
                 }).on('crmFormSuccess', function () {

@@ -3,7 +3,7 @@ CRM.$(function ($) {
     $("a.add-rental").click(function( event ) {
         event.preventDefault();
         var href = $(this).attr('href');
-        // alert(href);
+        href = href + "&dialogue=1";
         var $el =CRM.loadForm(href, {
             dialog: {width: '50%', height: '50%'}
         }).on('crmFormSuccess', function() {
@@ -35,7 +35,7 @@ CRM.$(function ($) {
             $("a.view-rental").off("click").click(function (event) {
                 event.preventDefault();
                 var href = $(this).attr('href');
-                // alert(href);
+                href = href + "&dialogue=1";
                 var $el = CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
                 }).on('crmFormSuccess', function () {
@@ -48,7 +48,7 @@ CRM.$(function ($) {
             $("a.update-rental").off("click").click(function (event) {
                 event.preventDefault();
                 var href = $(this).attr('href');
-                // alert(href);
+                href = href + "&dialogue=1";
                 var $el = CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
                 }).on('crmFormSuccess', function () {
@@ -60,7 +60,7 @@ CRM.$(function ($) {
             $("a.delete-rental").off("click").click(function (event) {
                 event.preventDefault();
                 var href = $(this).attr('href');
-                // alert(href);
+                href = href + "&dialogue=1";
                 var $el = CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
                 }).on('crmFormSuccess', function () {
@@ -71,10 +71,8 @@ CRM.$(function ($) {
             });
         };
         rentals_dtsettings.fnServerData = function ( sSource, aoData, fnCallback ) {
-            aoData.push({ "name": "rental_id",
-                "value": $('#rental_id').val() });
-            aoData.push({ "name": "rental_name",
-                "value": $('#rental_name').val() });
+            aoData.push({ "name": "tenant_id",
+                "value": $('#tenant_id').val() });
             $.ajax( {
                 "dataType": 'json',
                 "type": "POST",
@@ -86,7 +84,7 @@ CRM.$(function ($) {
         rentals_table.destroy();
         var new_rentals_table = rentals_tab.DataTable(rentals_dtsettings);
         //End Reset Table
-        $('.rental-filter :input').keyup(function(){
+        $('.dashboard-filter :input').keyup(function(){
             // alert('Filter Changed!');
             new_rentals_table.draw();
         });
