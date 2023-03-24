@@ -20,15 +20,10 @@ class CRM_Hprentals_Upgrader extends CRM_Hprentals_Upgrader_Base
      * created during the installation (e.g., a setting or a managed entity), do
      * so here to avoid order of operation problems.
      */
-    // public function postInstall() {
-    //  $customFieldId = civicrm_api3('CustomField', 'getvalue', array(
-    //    'return' => array("id"),
-    //    'name' => "customFieldCreatedViaManagedHook",
-    //  ));
-    //  civicrm_api3('Setting', 'create', array(
-    //    'myWeirdFieldSetting' => array('id' => $customFieldId, 'weirdness' => 1),
-    //  ));
-    // }
+     public function postInstall() {
+        U::createDefaultExpenses();
+        U::createDefaultMethods();
+     }
 
     /**
      * Example: Run an external SQL script when the module is uninstalled.
@@ -46,6 +41,7 @@ class CRM_Hprentals_Upgrader extends CRM_Hprentals_Upgrader_Base
         $settings[U::SAVE_LOG['slug']] = 1;
         $settings[U::TEST_MODE['slug']] = 0;
         CRM_Core_BAO_Setting::setItem($settings, U::SETTINGS_NAME, U::SETTINGS_SLUG);
+
     }
 
     /**

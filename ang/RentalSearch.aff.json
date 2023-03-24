@@ -1,0 +1,21 @@
+{
+  "type": "search",
+  "name": "RentalSearch",
+  "requires": [],
+  "title": "Total Rentals",
+  "description": "",
+  "is_dashlet": "",
+  "is_public": "",
+  "is_token": "",
+  "permission": "access CiviCRM",
+  "type": "search",
+  "entity_type": "",
+  "join_entity": "",
+  "icon": "fa-home",
+  "server_route": "civicrm/rentals/search",
+  "redirect": "",
+  "create_submission": "",
+  "navigation": "",
+  "module_name": "RentalSearch",
+  "id": "RentalSearch"
+}

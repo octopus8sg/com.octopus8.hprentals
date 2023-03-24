@@ -6,7 +6,11 @@
   <name>civicrm_o8_rental_rental</name>
   <comment>FIXME</comment>
   <log>true</log>
-
+  <paths>
+    <add>civicrm/rentals/rental?reset=1&amp;action=add</add>
+    <update>civicrm/rentals/rental?reset=1&amp;action=update&amp;id=[id]</update>
+    <delete>civicrm/rentals/rental?reset=1&amp;action=delete&amp;id=[id]</delete>
+  </paths>
   <field>
     <name>id</name>
     <type>int unsigned</type>
@@ -61,6 +65,12 @@
     <unique>true</unique>
   </index>
 
+  <field>
+    <name>first_invoice_id</name>
+    <type>int unsigned</type>
+    <default>NULL</default>
+    <comment>FK to RentalsInvoice</comment>
+  </field>
 
   <field>
     <name>created_id</name>

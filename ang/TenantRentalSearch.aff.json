@@ -1,0 +1,23 @@
+{
+  "type": "search",
+  "name": "TenantRentalSearch",
+  "requires": [],
+  "title": "Tenant Rentals",
+  "description": "",
+  "is_dashlet": "",
+  "is_public": "",
+  "is_token": "",
+  "permission": "access CiviCRM",
+  "type": "search",
+  "entity_type": "",
+  "join_entity": "",
+  "contact_summary": "tab",
+  "icon": "fa-home",
+  "server_route": "civicrm/rentals/tenantsearch",
+  "redirect": "",
+  "create_submission": "",
+  "navigation": "",
+  "module_name": "TenantRentalSearch",
+  "directive_name": "afsearch-search-rentals",
+  "id": "TenantRentalSearch"
+}

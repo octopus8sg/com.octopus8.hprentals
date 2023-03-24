@@ -310,6 +310,11 @@ function _hprentals_civix_civicrm_entityTypes(&$entityTypes) {
       'class' => 'CRM_Hprentals_DAO_RentalsExpense',
       'table' => 'civicrm_o8_rental_expense',
     ],
+    'CRM_Hprentals_DAO_RentalsInvoice' => [
+      'name' => 'RentalsInvoice',
+      'class' => 'CRM_Hprentals_DAO_RentalsInvoice',
+      'table' => 'civicrm_o8_rental_invoice',
+    ],
     'CRM_Hprentals_DAO_RentalsMethod' => [
       'name' => 'RentalsMethod',
       'class' => 'CRM_Hprentals_DAO_RentalsMethod',

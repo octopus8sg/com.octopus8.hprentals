@@ -1,0 +1,8 @@
+<div af-fieldset="" af-title="Search Rentals">
+    <af-field name="admission" defn="{input_type: 'Select', search_range: true, input_attrs: {}}"/>
+    <af-field name="discharge" defn="{input_type: 'Select', search_range: true, input_attrs: {}}"/>
+    <crm-search-display-table
+            search-name="Search_Rentals"
+            display-name="Rentals_Table"
+            filters="{'tenant_id.id': options.contact_id}"></crm-search-display-table>
+</div>

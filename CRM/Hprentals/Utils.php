@@ -31,7 +31,7 @@ class CRM_Hprentals_Utils
     public const PATH_DASHBOARD = "civicrm/rentals/dashboard";
     public const PATH_SETUP = "civicrm/rentals/setup";
     public const PATH_RENTAL = "civicrm/rentals/rental";
-    public const PATH_RENTALS = "civicrm/rentals/rentals";
+    public const PATH_RENTALS = "civicrm/rentals/search";
     public const PATH_EXPENSE = "civicrm/rentals/expense";
     public const PATH_EXPENSES = "civicrm/rentals/expenses";
     public const PATH_METHOD = "civicrm/rentals/method";
@@ -140,6 +140,7 @@ class CRM_Hprentals_Utils
     public const MENU = [
         self::MAIN_MENU,
         self::DASHBOARD_MENU,
+        self::RENTALS_MENU,
         self::SETUP_MENU,
         self::TYPES_MENU,
         self::METHODS_MENU,
@@ -175,7 +176,7 @@ class CRM_Hprentals_Utils
     ];
 
     public const RENTAL_LESS_THAN_SIX_MONTH = [
-        'name' => "Rental (less_than_six_month)",
+        'name' => "Rental Less Than 6 month",
         'frequency' => "less_than_6_m",
         'is_prorate' => 1,
         'is_refund' => 0,
@@ -183,7 +184,7 @@ class CRM_Hprentals_Utils
     ];
 
     public const RENTAL_MORE_THAN_SIX_MONTH = [
-        'name' => "Rental (less_than_six_month)",
+        'name' => "Rental More Than 6 Month",
         'frequency' => "every_month",
         'is_prorate' => 1,
         'is_refund' => 0,
@@ -247,6 +248,27 @@ class CRM_Hprentals_Utils
         return self::EXPENSE_FREQUENCY;
     }
 
+    public static function createDefaultExpenses(){
+        $expenses = self::EXPENSES;
+        foreach ($expenses as $expense){
+            $rentals_api = civicrm_api3('RentalsExpense', 'create', $expense);
+            if ($rentals_api['is_error']) {
+                // handle error
+                self::writeLog($rentals_api['error_message']);
+            }
+        }
+    }
+
+    public static function createDefaultMethods(){
+        $methods = self::METHODS;
+        foreach ($methods as $method){
+            $rentals_api = civicrm_api3('RentalsMethod', 'create', $method);
+            if ($rentals_api['is_error']) {
+                // handle error
+                self::writeLog($rentals_api['error_message']);
+            }
+        }
+    }
     /**
      * @param $input
      * @param $preffix_log
@@ -482,6 +504,7 @@ class CRM_Hprentals_Utils
                     'admission' => $fakeDay['admission'],
                     'discharge' => $fakeDay['discharge'],
                 ]);
+                self::writeLog($rentals_api);
                 if ($rentals_api['is_error']) {
                     // handle error
                     self::writeLog($rentals_api['error_message']);
