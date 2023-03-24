@@ -2,6 +2,11 @@
 
 use CRM_Hprentals_ExtensionUtil as E;
 
+//require_once 'civicrm.config.php';
+//require_once 'CRM/Core/Config.php';
+require_once 'vendor/autoload.php'; // assumes that Faker is installed using composer
+use Faker\Factory;
+
 class CRM_Hprentals_Utils
 {
 
@@ -9,11 +14,18 @@ class CRM_Hprentals_Utils
 
     public const SETTINGS_NAME = "Hprentals Settings";
     public const SETTINGS_SLUG = 'hprentals_settings';
+    public const FAKER_GROUP = 'HpRentals Faker Group';
+    public const FAKER_COUNT = 10;
 
     public const SAVE_LOG = [
         'slug' => 'save_log',
         'name' => 'Save Log',
         'description' => "Write debugging output to CiviCRM log file"];
+
+    public const TEST_MODE = [
+        'slug' => 'test_mode',
+        'name' => 'Test Mode',
+        'description' => "See all rentals (not only last month), Rentals menu, Creation of Invoices per Rentals"];
 
     //PATHS
     public const PATH_DASHBOARD = "civicrm/rentals/dashboard";
@@ -33,7 +45,7 @@ class CRM_Hprentals_Utils
         "once_off" => "Once Off",
         "every_month" => "Every Month",
         "less_than_6_m" => "Less than 6 months"
-        ];
+    ];
 
 
     //MENU
@@ -103,6 +115,17 @@ class CRM_Hprentals_Utils
             //'separator' => 1,
             'is_active' => 1]];
 
+    public const RENTALS_MENU = [
+        'path' => self::MAIN_MENU['menu']['name'],
+        'menu' => [
+            'label' => 'Rentals',
+            'name' => 'hprentals_rentals',
+            'url' => self::PATH_RENTALS,
+            'permission' => 'adminster CiviCRM',
+            'operator' => 'OR',
+            //'separator' => 1,
+            'is_active' => 1]];
+
     public const REPORTS_MENU = [
         'path' => self::MAIN_MENU['menu']['name'],
         'menu' => [
@@ -125,9 +148,11 @@ class CRM_Hprentals_Utils
     ];
 
 
-    public static function getExpenseFrequency(){
+    public static function getExpenseFrequency()
+    {
         return self::EXPENSE_FREQUENCY;
     }
+
     /**
      * @param $input
      * @param $preffix_log
@@ -175,6 +200,25 @@ class CRM_Hprentals_Utils
         } catch (\Exception $exception) {
             $error_message = $exception->getMessage();
             $error_title = 'Write Log Config Required';
+            self::showErrorMessage($error_message, $error_title);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public static function getTestMode(): bool
+    {
+        $result = true;
+        try {
+            $result_ = self::getSettings(self::TEST_MODE['slug']);
+            if ($result_ == 1) {
+                $result = true;
+            }
+            return $result;
+        } catch (\Exception $exception) {
+            $error_message = $exception->getMessage();
+            $error_title = 'Test Mode Config Required';
             self::showErrorMessage($error_message, $error_title);
         }
     }
@@ -242,7 +286,257 @@ class CRM_Hprentals_Utils
         return $myentity;
     }
 
+    public static function create_fake_individuals()
+    {
+        $faker = Faker\Factory::create();
+        $contact_type = 'Individual';
+//        $api = civicrm_api3('Contact', 'create');
 
+        // check if the group already exists
+        $num_individuals = self::FAKER_COUNT;
+        $group_title = self::FAKER_GROUP;
+        $lastDay = date('Y-m-t');;
+        $twoYearsAgo = new DateTime('-2 years');
+        $firstDay = $twoYearsAgo->format('Y-m-t');
+        $faker_contacts = self::get_faker_contacts();
+        $faker_contacts_count = sizeof($faker_contacts);
+        $num_individuals = $num_individuals - $faker_contacts_count;
+
+
+        if($num_individuals <= 0){
+            return "There is already $faker_contacts_count fake Individual entities in the '$group_title' group.";
+        }
+
+        $group_params = array('title' => $group_title);
+        $group_api = civicrm_api3('Group', 'get', $group_params);
+        if ($group_api['is_error']) {
+            // handle error
+            return $group_api['Group Get error_message'];
+        }
+        if (count($group_api['values']) > 0) {
+            // group already exists, use existing group ID
+            $group = reset($group_api['values']);
+            $group_id = $group['id'];
+        } else {
+            // group doesn't exist, create a new group
+            $group_api = civicrm_api3('Group', 'create', $group_params);
+            if ($group_api['is_error']) {
+                // handle error
+                return $group_api['Group Create error_message'];
+            }
+            $group_id = $group_api['id'];
+        }
+
+        for ($i = 1; $i <= $num_individuals; $i++) {
+            $firstName = $faker->firstName;
+            $lastName = $faker->lastName;
+            $email = $faker->safeEmail;
+            $displayName = $firstName . ' ' . $lastName;
+            $phone = $faker->phoneNumber;
+            $streetAddress = $faker->streetAddress;
+            $city = $faker->city;
+            $state = $faker->stateAbbr;
+            $postalCode = $faker->postcode;
+            $country = $faker->countryCode;
+            $params = array(
+                'contact_type' => $contact_type,
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $email,
+//                'group_id' => $group_id
+            );
+//            $result = $api->create($params);
+            self::writeLog($params, 'to create');
+            $result = civicrm_api3('Contact', 'create', $params);
+            self::writeLog($result, 'after create');
+            if ($result['is_error']) {
+                // handle error
+                return $result['contact create error_message'];
+            }
+
+            // add contact to the group
+            $contact_id = $result['id'];
+            $group_contact_api = civicrm_api3('GroupContact', 'create', array(
+                'group_id' => $group_id,
+                'contact_id' => $contact_id,
+            ));
+            if ($group_contact_api['is_error']) {
+                // handle error
+                return $group_contact_api['Group Contact error_message'];
+            }
+
+            $phone_api = civicrm_api3('Phone', 'create', [
+                'contact_id' => $contact_id,
+                'phone' => $phone,
+                'phone_type_id' => 1, // Set phone type as "Home"
+            ]);
+
+            if ($phone_api['is_error']) {
+                // handle error
+                return $phone_api['Phone error_message'];
+            }
+            $address_api = civicrm_api3('Address', 'create', [
+                'contact_id' => $contact_id,
+                'street_address' => $streetAddress,
+                'city' => $city,
+//                'state_province_id' => $state,
+                'postal_code' => $postalCode,
+//                'country_id' => $country,
+                'location_type_id' => 1, // Set address type as "Home"
+            ]);
+
+            if ($address_api['is_error']) {
+                // handle error
+                return $phone_api['Phone error_message'];
+            }
+            $fakeDays = self::createFakerDateSets($firstDay, $lastDay);
+            foreach ($fakeDays as $fakeDay){
+                $address_api = civicrm_api3('RentalsRental', 'create', [
+                    'tenant_id' => $contact_id,
+                    'admission' => $fakeDay['admission'],
+                    'discharge' => $fakeDay['discharge'],
+                ]);
+                if ($address_api['is_error']) {
+                    // handle error
+                    return $phone_api['Phone error_message'];
+                }
+            }
+
+
+        }
+
+        // return success message
+        return "Created $num_individuals fake Individual entities in CiviCRM and added them to the '$group_title' group.";
+    }
+
+    public static function get_faker_contacts()
+    {
+        $group_title = self::FAKER_GROUP;
+        $group_params = array('title' => $group_title);
+        $group_api = civicrm_api3('Group', 'get', $group_params);
+        if ($group_api['is_error']) {
+            // handle error
+            return $group_api['error_message'];
+        }
+        if (count($group_api['values']) == 0) {
+            // group doesn't exist, return empty array
+            return array();
+        }
+        $group = reset($group_api['values']);
+        $group_id = $group['id'];
+        $group_contact_api = civicrm_api3('GroupContact', 'get', array(
+            'group_id' => $group_id,
+            'options' => array('limit' => 0),
+        ));
+        if ($group_contact_api['is_error']) {
+            // handle error
+            return $group_contact_api['error_message'];
+        }
+        $contacts = array();
+        foreach ($group_contact_api['values'] as $group_contact) {
+            $contact_id = $group_contact['contact_id'];
+            $contact_api = civicrm_api3('Contact', 'getsingle', array(
+                'id' => $contact_id,
+            ));
+            if ($contact_api['is_error']) {
+                // handle error
+                return $contact_api['error_message'];
+            }
+            $contacts[] = $contact_api;
+        }
+        return $contacts;
+    }
+
+    public static function delete_faker_contacts()
+    {
+        $group_title = self::FAKER_GROUP;
+        $group_params = array('title' => $group_title);
+        $group_api = civicrm_api3('Group', 'get', $group_params);
+        if ($group_api['is_error']) {
+            // handle error
+            return $group_api['error_message'];
+        }
+        if (count($group_api['values']) == 0) {
+            // group doesn't exist, nothing to delete
+            return;
+        }
+        $group = reset($group_api['values']);
+        $group_id = $group['id'];
+        $group_contact_api = civicrm_api3('GroupContact', 'get', array(
+            'group_id' => $group_id,
+            'options' => array('limit' => 0),
+        ));
+        if ($group_contact_api['is_error']) {
+            // handle error
+            return $group_contact_api['error_message'];
+        }
+        foreach ($group_contact_api['values'] as $group_contact) {
+            $contact_id = $group_contact['contact_id'];
+            $delete_params = array('id' => $contact_id);
+            $delete_api = civicrm_api3('Contact', 'delete', $delete_params);
+            if ($delete_api['is_error']) {
+                // handle error
+                return $delete_api['error_message'];
+            }
+        }
+        $delete_group_api = civicrm_api3('Group', 'delete', array('id' => $group_id));
+        if ($delete_group_api['is_error']) {
+            // handle error
+            return $delete_group_api['error_message'];
+        }
+    }
+
+    public static function createFakerDateSets($startDate, $endDate)
+    {
+        $faker = Faker\Factory::create();
+
+// Define the number of rental sets per person
+        $rentalSets = 5;
+
+// Define an empty array to store the rental sets
+        $personRentals = [];
+
+        // Loop through each rental set for this person
+        for ($j = 1; $j <= $rentalSets; $j++) {
+            // Generate a random start date within the range
+
+            $nextStartDate = date('Y-m-d', strtotime("$startDate +60 day"));
+            if ($nextStartDate > $endDate) {
+                break;
+            }
+            do {
+                // Generate a random start date within the range, after the person's start date
+                $startDateObj = $faker->dateTimeBetween($startDate, $nextStartDate);
+
+                // Generate a random end date within the range, after the start date
+                $endDateObj = $faker->dateTimeBetween($startDateObj, $endDate);
+
+                // Calculate the duration of the rental period in months
+                $diff = $startDateObj->diff($endDateObj);
+                $months = ($diff->y * 12) + $diff->m;
+
+                // Check if the duration of the rental period is less than or equal to 7 months
+                if ($months <= 7) {
+                    break;
+                }
+            } while (true);
+
+            // Format the dates as strings
+            $startDateStr = $startDateObj->format('Y-m-d');
+            $endDateStr = $endDateObj->format('Y-m-d');
+
+            // Add the rental set to the array
+            $personRentals[] = ['admission' => $startDateStr, 'discharge' => $endDateStr];
+
+            // Exclude this date range from future rentals for this person
+            $startDate = date('Y-m-d', strtotime($endDateStr . " +1 day"));
+        }
+
+        // Add the person's rental sets to the rentals array
+
+// Output the rentals array
+        return $personRentals;
+    }
 }
 
 

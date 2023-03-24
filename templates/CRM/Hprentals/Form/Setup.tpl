@@ -1,27 +1,28 @@
 {* HEADER *}
 
 <div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="top"}
+  <hr>
 </div>
-
-{* FIELD EXAMPLE: OPTION 1 (AUTOMATIC LAYOUT) *}
-
-{foreach from=$elementNames item=elementName}
-  <div class="crm-section">
-    <div class="label">{$form.$elementName.label}</div>
-    <div class="content">{$form.$elementName.html}</div>
-    <div class="clear"></div>
-  </div>
-{/foreach}
-
-{* FIELD EXAMPLE: OPTION 2 (MANUAL LAYOUT)
-
-  <div>
-    <span>{$form.favorite_color.label}</span>
-    <span>{$form.favorite_color.html}</span>
-  </div>
-
+{assign var=i value=0}
+<table>
+  {foreach from=$elementNames item=elementName}
+  {assign var=m4 value=$i%4}
+  {assign var=m2 value=$i%2}
+  {if $m4 eq 0}
+  </tr><tr class="crm-section">
+    {/if}
+    {if not str_contains($form.$elementName.name, "_description")}
+    <td class="right"> {$form.$elementName.label}</td>
+    <td>{$form.$elementName.html}
+      {/if}
+      {if str_contains($form.$elementName.name, "_description")}
+      <div class="description"></div> {$form.$elementName.html|nl2br}</div></td>
+    {/if}
+    {assign var=i value=$i+1}
+    {/foreach}
+</table>
+{*    {debug}*}
 {* FOOTER *}
 <div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="bottom"}
+  {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>

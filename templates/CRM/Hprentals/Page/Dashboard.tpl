@@ -8,7 +8,7 @@
         <h3>Rental Summary - {$last_month}</h3>
         <div class="crm-search-results">
             <table>
-                <table class="selector-rental row-highlight pagerDisplay" id="DashboardRentals" name="DashboardContact">
+                <table class="selector-rentals row-highlight pagerDisplay" id="DashboardRentals" name="DashboardContact">
                     <thead class="sticky">
                     <tr>
                         <th scope="col">
