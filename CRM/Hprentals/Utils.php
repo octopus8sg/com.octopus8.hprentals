@@ -148,6 +148,100 @@ class CRM_Hprentals_Utils
     ];
 
 
+    //EXPENSES
+
+    public const ADMINISTRATIVE_FEE = [
+        'name' => "Administrative Fee",
+        'frequency' => "once_off",
+        'is_prorate' => 0,
+        'is_refund' => 0,
+        'amount' => 50,
+    ];
+
+    public const RENTAL_DEPOSIT = [
+        'name' => "Rental Deposit",
+        'frequency' => "once_off",
+        'is_prorate' => 0,
+        'is_refund' => 1,
+        'amount' => 100,
+    ];
+
+    public const LOUNDRY = [
+        'name' => "Laundry",
+        'frequency' => "every_month",
+        'is_prorate' => 1,
+        'is_refund' => 0,
+        'amount' => 40,
+    ];
+
+    public const RENTAL_LESS_THAN_SIX_MONTH = [
+        'name' => "Rental (less_than_six_month)",
+        'frequency' => "less_than_6_m",
+        'is_prorate' => 1,
+        'is_refund' => 0,
+        'amount' => 100,
+    ];
+
+    public const RENTAL_MORE_THAN_SIX_MONTH = [
+        'name' => "Rental (less_than_six_month)",
+        'frequency' => "every_month",
+        'is_prorate' => 1,
+        'is_refund' => 0,
+        'amount' => 250,
+    ];
+
+    public const INVOICE_WAIVER = [
+        'name' => "Invoice Waiver",
+        'frequency' => "once_off",
+        'is_prorate' => 0,
+        'is_refund' => 0,
+        'amount' => -150,
+    ];
+
+    public const EXPENSES = [
+        self::ADMINISTRATIVE_FEE,
+        self::RENTAL_DEPOSIT,
+        self::LOUNDRY,
+        self::RENTAL_LESS_THAN_SIX_MONTH,
+        self::RENTAL_MORE_THAN_SIX_MONTH,
+        self::INVOICE_WAIVER
+    ];
+
+    //METHODS
+
+    public const CASH = [
+        'name' => "Cash",
+    ];
+
+    public const VISA = [
+        'name' => "VISA",
+    ];
+
+    public const MASTER = [
+        'name' => "MASTER",
+    ];
+
+    public const NETS = [
+        'name' => "NETS",
+    ];
+
+    public const PAYPAL = [
+        'name' => "PayPal",
+    ];
+
+    public const OTHER = [
+        'name' => "Other",
+    ];
+
+    public const METHODS = [
+        self::CASH,
+        self::VISA,
+        self::MASTER,
+        self::NETS,
+        self::PAYPAL,
+        self::OTHER
+    ];
+
     public static function getExpenseFrequency()
     {
         return self::EXPENSE_FREQUENCY;
@@ -303,7 +397,7 @@ class CRM_Hprentals_Utils
         $num_individuals = $num_individuals - $faker_contacts_count;
 
 
-        if($num_individuals <= 0){
+        if ($num_individuals <= 0) {
             self::writeLog("There is already $faker_contacts_count fake Individual entities in the '$group_title' group.");
         }
 
@@ -382,15 +476,15 @@ class CRM_Hprentals_Utils
                 self::writeLog($phone_api['error_message']);
             }
             $fakeDays = self::createFakerDateSets($firstDay, $lastDay);
-            foreach ($fakeDays as $fakeDay){
-                $address_api = civicrm_api3('RentalsRental', 'create', [
+            foreach ($fakeDays as $fakeDay) {
+                $rentals_api = civicrm_api3('RentalsRental', 'create', [
                     'tenant_id' => $contact_id,
                     'admission' => $fakeDay['admission'],
                     'discharge' => $fakeDay['discharge'],
                 ]);
-                if ($address_api['is_error']) {
+                if ($rentals_api['is_error']) {
                     // handle error
-                    self::writeLog($phone_api['error_message']);
+                    self::writeLog($rentals_api['error_message']);
                 }
             }
 
@@ -435,7 +529,7 @@ class CRM_Hprentals_Utils
             if ($contact_api['is_error']) {
                 // handle error
                 self::writeLog($contact_api['error_message']);
-            }else {
+            } else {
                 $contacts[] = $contact_api;
             }
         }
