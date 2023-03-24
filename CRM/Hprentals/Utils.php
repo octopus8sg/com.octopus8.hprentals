@@ -304,14 +304,14 @@ class CRM_Hprentals_Utils
 
 
         if($num_individuals <= 0){
-            return "There is already $faker_contacts_count fake Individual entities in the '$group_title' group.";
+            self::writeLog("There is already $faker_contacts_count fake Individual entities in the '$group_title' group.");
         }
 
         $group_params = array('title' => $group_title);
         $group_api = civicrm_api3('Group', 'get', $group_params);
         if ($group_api['is_error']) {
             // handle error
-            return $group_api['Group Get error_message'];
+            self::writeLog($group_api['error_message']);
         }
         if (count($group_api['values']) > 0) {
             // group already exists, use existing group ID
@@ -322,7 +322,7 @@ class CRM_Hprentals_Utils
             $group_api = civicrm_api3('Group', 'create', $group_params);
             if ($group_api['is_error']) {
                 // handle error
-                return $group_api['Group Create error_message'];
+                self::writeLog($group_api['error_message']);
             }
             $group_id = $group_api['id'];
         }
@@ -331,27 +331,21 @@ class CRM_Hprentals_Utils
             $firstName = $faker->firstName;
             $lastName = $faker->lastName;
             $email = $faker->safeEmail;
-            $displayName = $firstName . ' ' . $lastName;
             $phone = $faker->phoneNumber;
             $streetAddress = $faker->streetAddress;
             $city = $faker->city;
-            $state = $faker->stateAbbr;
             $postalCode = $faker->postcode;
-            $country = $faker->countryCode;
             $params = array(
                 'contact_type' => $contact_type,
                 'first_name' => $firstName,
                 'last_name' => $lastName,
                 'email' => $email,
-//                'group_id' => $group_id
             );
 //            $result = $api->create($params);
-            self::writeLog($params, 'to create');
             $result = civicrm_api3('Contact', 'create', $params);
-            self::writeLog($result, 'after create');
             if ($result['is_error']) {
                 // handle error
-                return $result['contact create error_message'];
+                self::writeLog($result['error_message']);
             }
 
             // add contact to the group
@@ -362,7 +356,7 @@ class CRM_Hprentals_Utils
             ));
             if ($group_contact_api['is_error']) {
                 // handle error
-                return $group_contact_api['Group Contact error_message'];
+                self::writeLog($group_contact_api['error_message']);
             }
 
             $phone_api = civicrm_api3('Phone', 'create', [
@@ -373,21 +367,19 @@ class CRM_Hprentals_Utils
 
             if ($phone_api['is_error']) {
                 // handle error
-                return $phone_api['Phone error_message'];
+                self::writeLog($phone_api['error_message']);
             }
             $address_api = civicrm_api3('Address', 'create', [
                 'contact_id' => $contact_id,
                 'street_address' => $streetAddress,
                 'city' => $city,
-//                'state_province_id' => $state,
                 'postal_code' => $postalCode,
-//                'country_id' => $country,
                 'location_type_id' => 1, // Set address type as "Home"
             ]);
 
             if ($address_api['is_error']) {
                 // handle error
-                return $phone_api['Phone error_message'];
+                self::writeLog($phone_api['error_message']);
             }
             $fakeDays = self::createFakerDateSets($firstDay, $lastDay);
             foreach ($fakeDays as $fakeDay){
@@ -398,7 +390,7 @@ class CRM_Hprentals_Utils
                 ]);
                 if ($address_api['is_error']) {
                     // handle error
-                    return $phone_api['Phone error_message'];
+                    self::writeLog($phone_api['error_message']);
                 }
             }
 
@@ -416,7 +408,8 @@ class CRM_Hprentals_Utils
         $group_api = civicrm_api3('Group', 'get', $group_params);
         if ($group_api['is_error']) {
             // handle error
-            return $group_api['error_message'];
+            self::writeLog($group_api['error_message']);
+            return array();
         }
         if (count($group_api['values']) == 0) {
             // group doesn't exist, return empty array
@@ -430,7 +423,8 @@ class CRM_Hprentals_Utils
         ));
         if ($group_contact_api['is_error']) {
             // handle error
-            return $group_contact_api['error_message'];
+            self::writeLog($group_contact_api['error_message']);
+            return array();
         }
         $contacts = array();
         foreach ($group_contact_api['values'] as $group_contact) {
@@ -440,9 +434,10 @@ class CRM_Hprentals_Utils
             ));
             if ($contact_api['is_error']) {
                 // handle error
-                return $contact_api['error_message'];
+                self::writeLog($contact_api['error_message']);
+            }else {
+                $contacts[] = $contact_api;
             }
-            $contacts[] = $contact_api;
         }
         return $contacts;
     }
@@ -468,7 +463,7 @@ class CRM_Hprentals_Utils
         ));
         if ($group_contact_api['is_error']) {
             // handle error
-            return $group_contact_api['error_message'];
+            self::writeLog($group_contact_api['error_message']);
         }
         foreach ($group_contact_api['values'] as $group_contact) {
             $contact_id = $group_contact['contact_id'];
@@ -476,13 +471,13 @@ class CRM_Hprentals_Utils
             $delete_api = civicrm_api3('Contact', 'delete', $delete_params);
             if ($delete_api['is_error']) {
                 // handle error
-                return $delete_api['error_message'];
+                self::writeLog($delete_api['error_message']);
             }
         }
         $delete_group_api = civicrm_api3('Group', 'delete', array('id' => $group_id));
         if ($delete_group_api['is_error']) {
             // handle error
-            return $delete_group_api['error_message'];
+            self::writeLog($delete_group_api['error_message']);
         }
     }
 
