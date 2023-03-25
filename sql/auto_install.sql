@@ -87,7 +87,7 @@ CREATE TABLE `civicrm_o8_rental_rental` (
   `tenant_id` int unsigned COMMENT 'FK to Contact',
   `admission` date NOT NULL COMMENT 'Admission date',
   `discharge` date NOT NULL COMMENT 'Discharge date',
-  `first_invoice_id` int unsigned COMMENT 'FK to RentalsInvoice',
+  `first_invoice_id` int unsigned DEFAULT NULL COMMENT 'FK to RentalsInvoice',
   `created_id` int unsigned COMMENT 'FK to civicrm_contact, who created this',
   `created_date` datetime COMMENT 'Date and time this was created.',
   `modified_id` int unsigned COMMENT 'FK to civicrm_contact, who modified this',

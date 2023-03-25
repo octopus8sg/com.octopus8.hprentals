@@ -112,8 +112,12 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
 
         $id = $this->getEntityId();
         $this->assign('id', $id);
+        if($this->_action == CRM_Core_Action::UPDATE) {
+            $this->add('hidden', 'first_invoice_id');
+        }
         if($this->_action == CRM_Core_Action::DELETE){
             $this->add('hidden', 'id');
+
             $this->addButtons([
                 ['type' => 'submit', 'name' => E::ts('Delete'), 'isDefault' => TRUE],
                 ['type' => 'cancel', 'name' => E::ts('Cancel')]
@@ -196,10 +200,11 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         // Retrieve the values of the date_from and date_to fields
         $date_from = $this->_submitValues['admission'];
         $date_to = $this->_submitValues['discharge'];
+        $rental_id = $this->_submitValues['id'];
 
         // Retrieve the ID of the tenant from the URL parameters
         $tenant_id = CRM_Utils_Request::retrieve('tenant_id', 'Positive', $this);
-        $existing_rent = U::getOverlappedRents($tenant_id, $date_from, $date_to);
+        $existing_rent = U::getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id);
 
         // If an overlap is found, set a validation error message
         if ($existing_rent > 0) {
@@ -226,6 +231,7 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         $values = $this->controller->exportValues();
         U::writeLog($values);
         $params['tenant_id'] = $values['tenant_id'];
+        $params['first_invoice_id'] = $values['first_invoice_id'];
         $params['admission'] = $values['admission'];
         $params['discharge'] = $values['discharge'];
         $id = $this->getEntityId();

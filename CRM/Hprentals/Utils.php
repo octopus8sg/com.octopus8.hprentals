@@ -671,9 +671,9 @@ class CRM_Hprentals_Utils
      * @param $date_to
      * @return mixed
      */
-    public static function getOverlappedRents($tenant_id, $date_from, $date_to)
+    public static function getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id = 0)
     {
-
+        $rental_id = intval($rental_id);
         $my_rent_table = 'civicrm_o8_rental_rental';
         // Retrieve the list of existing rents for the tenant
         $existing_rent = CRM_Core_DAO::singleValueQuery("
@@ -683,10 +683,12 @@ class CRM_Hprentals_Utils
             AND ((admission <= %2 AND discharge >= %2)
                  OR (admission <= %3 AND discharge >= %3)
                  OR (admission >= %2 AND discharge <= %3))
+            AND id != %4
     ", [
             1 => [$tenant_id, 'Integer'],
             2 => [$date_from, 'String'],
             3 => [$date_to, 'String'],
+            4 => [$rental_id, 'Integer'],
         ]);
         return $existing_rent;
     }
