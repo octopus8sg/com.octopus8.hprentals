@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+    <base>CRM/Hprentals</base>
+    <class>RentalsInvoice</class>
+    <name>civicrm_o8_rental_invoice</name>
+    <comment>FIXME</comment>
+    <log>true</log>
+
+    <field>
+        <name>id</name>
+        <type>int unsigned</type>
+        <required>true</required>
+        <comment>Unique RentalsInvoice ID</comment>
+        <html>
+            <type>Number</type>
+        </html>
+    </field>
+    <primaryKey>
+        <name>id</name>
+        <autoincrement>true</autoincrement>
+    </primaryKey>
+
+    <field>
+        <name>name</name>
+        <type>varchar</type>
+        <length>1255</length>
+        <label>Description</label>
+        <comment>Name</comment>
+        <required>true</required>
+        <import>true</import>
+        <export>true</export>
+        <html>
+            <type>Text</type>
+            <label>Description</label>
+        </html>
+    </field>
+
+    <field>
+        <name>tenant_id</name>
+        <label>Tenant</label>
+        <title>Tenant</title>
+        <type>int unsigned</type>
+        <comment>FK to Contact</comment>
+        <html>
+            <type>EntityRef</type>
+            <label>Tenant</label>
+        </html>
+    </field>
+    <foreignKey>
+        <name>tenant_id</name>
+        <table>civicrm_contact</table>
+        <key>id</key>
+        <onDelete>CASCADE</onDelete>
+    </foreignKey>
+
+    <field>
+        <name>rental_id</name>
+        <type>int unsigned</type>
+        <comment>FK to RentalsRental</comment>
+        <html>
+            <type>EntityRef</type>
+            <label>Rental</label>
+            <placeholder>Select Rental</placeholder>
+            <select>
+                <minimumInputLength>0</minimumInputLength>
+            </select>
+            <api>
+                <search_field>Admission</search_field>
+                <label_field>Admission</label_field>
+            </api>
+        </html>
+    </field>
+    <foreignKey>
+        <name>rental_id</name>
+        <table>civicrm_o8_rental_rental</table>
+        <key>id</key>
+        <onDelete>SET NULL</onDelete>
+    </foreignKey>
+
+    <field>
+        <name>is_first</name>
+        <type>boolean</type>
+        <title>First Invoice</title>
+        <html>
+            <type>CheckBox</type>
+        </html>
+        <default>0</default>
+        <comment>Is First Invoice for Rent?</comment>
+    </field>
+
+    <field>
+        <name>amount</name>
+        <type>decimal</type>
+        <required>true</required>
+        <import>true</import>
+        <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
+        <comment>Amount</comment>
+        <html>
+            <type>Text</type>
+            <label>Amount</label>
+        </html>
+    </field>
+
+    <field>
+        <name>created_id</name>
+        <type>int unsigned</type>
+        <title>Created By Contact ID</title>
+        <comment>FK to civicrm_contact, who created this</comment>
+        <html>
+            <label>Created By</label>
+        </html>
+    </field>
+    <foreignKey>
+        <name>created_id</name>
+        <table>civicrm_contact</table>
+        <key>id</key>
+        <onDelete>SET NULL</onDelete>
+    </foreignKey>
+    <field>
+        <name>created_date</name>
+        <type>datetime</type>
+        <title>Created Date</title>
+        <comment>Date and time this was created.</comment>
+        <add>3.0</add>
+    </field>
+    <field>
+        <name>modified_id</name>
+        <type>int unsigned</type>
+        <title>Modified By Contact ID</title>
+        <comment>FK to civicrm_contact, who modified this</comment>
+        <html>
+            <label>Modified By</label>
+        </html>
+    </field>
+    <foreignKey>
+        <name>modified_id</name>
+        <table>civicrm_contact</table>
+        <key>id</key>
+        <onDelete>SET NULL</onDelete>
+    </foreignKey>
+    <field>
+        <name>modified_date</name>
+        <type>datetime</type>
+        <title>Modified Date</title>
+        <comment>Date and time this was modified.</comment>
+        <add>3.0</add>
+    </field>
+
+
+</table>
