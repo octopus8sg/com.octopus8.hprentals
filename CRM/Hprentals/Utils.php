@@ -248,9 +248,10 @@ class CRM_Hprentals_Utils
         return self::EXPENSE_FREQUENCY;
     }
 
-    public static function createDefaultExpenses(){
+    public static function createDefaultExpenses()
+    {
         $expenses = self::EXPENSES;
-        foreach ($expenses as $expense){
+        foreach ($expenses as $expense) {
             $rentals_api = civicrm_api3('RentalsExpense', 'create', $expense);
             if ($rentals_api['is_error']) {
                 // handle error
@@ -259,9 +260,10 @@ class CRM_Hprentals_Utils
         }
     }
 
-    public static function createDefaultMethods(){
+    public static function createDefaultMethods()
+    {
         $methods = self::METHODS;
-        foreach ($methods as $method){
+        foreach ($methods as $method) {
             $rentals_api = civicrm_api3('RentalsMethod', 'create', $method);
             if ($rentals_api['is_error']) {
                 // handle error
@@ -269,6 +271,7 @@ class CRM_Hprentals_Utils
             }
         }
     }
+
     /**
      * @param $input
      * @param $preffix_log
@@ -411,9 +414,6 @@ class CRM_Hprentals_Utils
         // check if the group already exists
         $num_individuals = self::FAKER_COUNT;
         $group_title = self::FAKER_GROUP;
-        $lastDay = date('Y-m-t');;
-        $twoYearsAgo = new DateTime('-2 years');
-        $firstDay = $twoYearsAgo->format('Y-m-t');
         $faker_contacts = self::get_faker_contacts();
         $faker_contacts_count = sizeof($faker_contacts);
         $num_individuals = $num_individuals - $faker_contacts_count;
@@ -497,23 +497,7 @@ class CRM_Hprentals_Utils
                 // handle error
                 self::writeLog($phone_api['error_message']);
             }
-            $fakeDays = self::createFakerDateSets($firstDay, $lastDay);
-            foreach ($fakeDays as $fakeDay) {
-                $rentals_api = civicrm_api3('RentalsRental', 'create', [
-                    'tenant_id' => $contact_id,
-                    'admission' => $fakeDay['admission'],
-                    'discharge' => $fakeDay['discharge'],
-                ]);
-                self::writeLog($rentals_api);
-                if ($rentals_api['is_error']) {
-                    // handle error
-                    self::writeLog($rentals_api['error_message']);
-                }
-            }
-
-
         }
-
         // return success message
         return "Created $num_individuals fake Individual entities in CiviCRM and added them to the '$group_title' group.";
     }
@@ -648,6 +632,63 @@ class CRM_Hprentals_Utils
 
 // Output the rentals array
         return $personRentals;
+    }
+
+    public static function create_faker_rentals()
+    {
+        $fakers = self::get_faker_contacts();
+        foreach ($fakers as $faker) {
+            $lastDay = date('Y-m-t');;
+            $twoYearsAgo = new DateTime('-2 years');
+            $firstDay = $twoYearsAgo->format('Y-m-t');
+            $fak_id = intval($faker['contact_id']);
+//            echo $fak_id;
+            $fakeDays = self::createFakerDateSets($firstDay, $lastDay);
+            foreach ($fakeDays as $fakeDay) {
+                $date_from = $fakeDay['admission'];
+                $date_to = $fakeDay['discharge'];
+                $existing_rent = self::getOverlappedRents($fak_id, $date_from, $date_to);
+                // If an overlap is found, set a validation error message
+                if ($existing_rent == 0) {
+                    $rentals_api = civicrm_api3('RentalsRental', 'create', [
+                        'tenant_id' => intval($fak_id),
+                        'admission' => $date_from,
+                        'discharge' => $date_to,
+                    ]);
+                    self::writeLog($rentals_api);
+                }
+                if ($rentals_api['is_error']) {
+                    // handle error
+                    self::writeLog($rentals_api['error_message']);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $tenant_id
+     * @param $date_from
+     * @param $date_to
+     * @return mixed
+     */
+    public static function getOverlappedRents($tenant_id, $date_from, $date_to)
+    {
+
+        $my_rent_table = 'civicrm_o8_rental_rental';
+        // Retrieve the list of existing rents for the tenant
+        $existing_rent = CRM_Core_DAO::singleValueQuery("
+        SELECT COUNT(*) AS overlap
+        FROM {$my_rent_table}
+        WHERE tenant_id = %1
+            AND ((admission <= %2 AND discharge >= %2)
+                 OR (admission <= %3 AND discharge >= %3)
+                 OR (admission >= %2 AND discharge <= %3))
+    ", [
+            1 => [$tenant_id, 'Integer'],
+            2 => [$date_from, 'String'],
+            3 => [$date_to, 'String'],
+        ]);
+        return $existing_rent;
     }
 }
 

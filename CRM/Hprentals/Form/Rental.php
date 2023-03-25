@@ -199,20 +199,7 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
 
         // Retrieve the ID of the tenant from the URL parameters
         $tenant_id = CRM_Utils_Request::retrieve('tenant_id', 'Positive', $this);
-        $my_rent_table = $this->getDefaultEntityTable();
-        // Retrieve the list of existing rents for the tenant
-        $existing_rent = CRM_Core_DAO::singleValueQuery("
-        SELECT COUNT(*) AS overlap
-        FROM {$my_rent_table}
-        WHERE tenant_id = %1
-            AND ((admission <= %2 AND discharge >= %2)
-                 OR (admission <= %3 AND discharge >= %3)
-                 OR (admission >= %2 AND discharge <= %3))
-    ", [
-            1 => [$tenant_id, 'Integer'],
-            2 => [$date_from, 'String'],
-            3 => [$date_to, 'String'],
-        ]);
+        $existing_rent = U::getOverlappedRents($tenant_id, $date_from, $date_to);
 
         // If an overlap is found, set a validation error message
         if ($existing_rent > 0) {

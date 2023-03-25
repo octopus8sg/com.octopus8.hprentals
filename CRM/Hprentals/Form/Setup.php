@@ -10,6 +10,7 @@ use CRM_Hprentals_ExtensionUtil as E;
  */
 class CRM_Hprentals_Form_Setup extends CRM_Core_Form
 {
+
     public function buildQuickForm()
     {
 //        U::writeLog("start conf");
@@ -62,15 +63,16 @@ class CRM_Hprentals_Form_Setup extends CRM_Core_Form
         $oldTestMode = $defaults[U::TEST_MODE['slug']];
         $settings[U::SAVE_LOG['slug']] = $values[U::SAVE_LOG['slug']];
         $settings[U::TEST_MODE['slug']] = $newTestMode;
-        if ($newTestMode != $oldTestMode) {
-            if ($newTestMode) {
-                U::create_fake_individuals();
-                U::writeLog('fakers come');
-            }
-            if (!$newTestMode) {
-                U::delete_faker_contacts();
-                U::writeLog('fakers go');
-            }
+        if ($newTestMode) {
+            U::create_fake_individuals();
+            U::create_faker_rentals();
+            U::writeLog('fakers come');
+            CRM_Core_Session::setStatus(E::ts('Fake contacts added', ['domain' => 'com.octopus8.hprentals']), 'Configuration Updated', 'success');
+        }
+        if (!$newTestMode) {
+            U::delete_faker_contacts();
+            U::writeLog('fakers go');
+            CRM_Core_Session::setStatus(E::ts('Fake contacts removed', ['domain' => 'com.octopus8.hprentals']), 'Configuration Updated', 'success');
         }
         U::writeLog($settings, "after_submit");
         $s = CRM_Core_BAO_Setting::setItem($settings, U::SETTINGS_NAME, U::SETTINGS_SLUG);

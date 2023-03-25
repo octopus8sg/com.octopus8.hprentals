@@ -39,7 +39,7 @@ class CRM_Hprentals_Upgrader extends CRM_Hprentals_Upgrader_Base
     {
         $settings = [];
         $settings[U::SAVE_LOG['slug']] = 1;
-        $settings[U::TEST_MODE['slug']] = 0;
+//        $settings[U::TEST_MODE['slug']] = 0;
         CRM_Core_BAO_Setting::setItem($settings, U::SETTINGS_NAME, U::SETTINGS_SLUG);
 
     }
@@ -50,8 +50,8 @@ class CRM_Hprentals_Upgrader extends CRM_Hprentals_Upgrader_Base
     public function disable()
     {
         $settings = [];
-        $settings[U::SAVE_LOG['slug']] = 0;
-        $settings[U::TEST_MODE['slug']] = 0;
+//        $settings[U::SAVE_LOG['slug']] = 0;
+//        $settings[U::TEST_MODE['slug']] = 0;
         CRM_Core_BAO_Setting::setItem($settings, U::SETTINGS_NAME, U::SETTINGS_SLUG);
     }
 
