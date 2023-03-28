@@ -1,7 +1,7 @@
 {
   "type": "search",
   "name": "RentalSearch",
-  "requires": [],
+  "requires": ["crmHprentals"],
   "title": "Total Rentals",
   "description": "",
   "is_dashlet": "",
