@@ -21,7 +21,6 @@ return [
                         'RentalsRental_Contact_tenant_id_01.display_name',
                         'admission',
                         'discharge',
-                        'first_invoice_id',
                     ],
                     'orderBy' => [],
                     'where' => [],
@@ -34,20 +33,6 @@ return [
                                 'tenant_id',
                                 '=',
                                 'RentalsRental_Contact_tenant_id_01.id',
-                            ],
-                        ],
-                        [
-                            'RentalsInvoice AS RentalsRental_RentalsInvoice_rental_id_01',
-                            'LEFT',
-                            [
-                                'id',
-                                '=',
-                                'RentalsRental_RentalsInvoice_rental_id_01.rental_id',
-                            ],
-                            [
-                                'RentalsRental_RentalsInvoice_rental_id_01.is_first',
-                                '=',
-                                TRUE,
                             ],
                         ],
                     ],

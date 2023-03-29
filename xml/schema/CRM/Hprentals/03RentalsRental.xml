@@ -29,6 +29,10 @@
     <name>tenant_id</name>
     <type>int unsigned</type>
     <comment>FK to Contact</comment>
+    <html>
+      <label>Tenant</label>
+      <type>EntityRef</type>
+    </html>
   </field>
   <foreignKey>
     <name>tenant_id</name>
@@ -43,7 +47,8 @@
     <comment>Admission date</comment>
     <required>true</required>
     <html>
-      <type>Date</type>
+      <type>Select Date</type>
+      <formatType>activityDate</formatType>
     </html>
   </field>
 
@@ -53,7 +58,8 @@
     <comment>Discharge date</comment>
     <required>true</required>
     <html>
-      <type>Date</type>
+      <type>Select Date</type>
+      <formatType>activityDate</formatType>
     </html>
   </field>
 

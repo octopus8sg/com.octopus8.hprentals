@@ -1,13 +1,12 @@
 <hm-add-button
-        name="add-expense"
-        label="Add Expense"
-        url="civicrm/rentals/expense">
+        name="add-method"
+        label="Add Method"
+        url="civicrm/rentals/method">
 </hm-add-button>
 
 <div af-fieldset="">
     <af-field name="id" defn="{label: 'ID', input_attrs: {}, required: false}" />
     <af-field name="name" defn="{required: false, input_attrs: {}}" />
-    <af-field name="frequency" defn="{input_attrs: {multiple: true}}" />
     <button class="af-button btn btn-warning" type="reset" crm-icon="fa-undo">Reset</button>
-    <crm-search-display-table search-name="Expenses08" display-name="Expenses_Table08"></crm-search-display-table>
+    <crm-search-display-table search-name="Methods08" display-name="Methods_Table08"></crm-search-display-table>
 </div>

@@ -76,6 +76,22 @@ function hprentals_civicrm_disable()
 function hprentals_civicrm_pre($op, $objectName, $id, &$params)
 {
     U::addCreatedByModifiedBy($op, $objectName, $params);
+    if ($objectName == 'RentalsRental') {
+        U::writeLog($params, 'before overlap');
+        if($op == 'create' || $op == 'edit' || $op == 'update' )
+        $date_from = $params['admission'];
+        $date_to = $params['discharge'];
+        $rental_id = $params['id'];
+        $tenant_id = $params['tenant_id'];
+        $existing_rent = U::getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id);
+        // If an overlap is found, set a validation error message
+        if ($existing_rent > 0) {
+            U::showErrorMessage(ts('You already have a rent during this period.'), 'Date Overlap');
+            throw new CRM_Core_Exception(ts('You already have a rent during this period.'));
+        }
+        U::writeLog($params, 'after overlap');
+    }
+
 }
 
 /**

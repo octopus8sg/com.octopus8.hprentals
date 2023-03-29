@@ -145,13 +145,13 @@ class CRM_Hprentals_Utils
 
     public const MENU = [
         self::MAIN_MENU,
-        self::DASHBOARD_MENU,
-        self::RENTALS_MENU,
         self::SETUP_MENU,
         self::TYPES_MENU,
         self::METHODS_MENU,
+        self::RENTALS_MENU,
         self::INVOICES_MENU,
-        self::REPORTS_MENU
+        self::REPORTS_MENU,
+        self::DASHBOARD_MENU
     ];
 
 

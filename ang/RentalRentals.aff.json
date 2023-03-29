@@ -1,6 +1,6 @@
 {
   "type": "search",
-  "name": "RentalSearch",
+  "name": "afsearchSearchRentals",
   "requires": ["crmHprentals"],
   "title": "Total Rentals",
   "description": "",
