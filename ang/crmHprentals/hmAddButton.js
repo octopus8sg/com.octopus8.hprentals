@@ -14,10 +14,12 @@
             link: function (scope, element, attrs) {
                 element.on('click', function (event) {
                     event.preventDefault();
-                    var href = CRM.url(scope.url, 'reset=1&action=add');
-                    var $el = CRM.loadForm(href, {
+                    const href = CRM.url(scope.url);
+                    const $el = CRM.loadForm(href, {
                         dialog: {width: '50%', height: '50%'}
-                    }).close;
+                    })
+                        // .success()
+                        .close;
                 });
             }
         };

@@ -8,9 +8,7 @@
     <log>true</log>
     <paths>
         <add>civicrm/rentals/expense</add>
-        <view>civicrm/rentals/expense?#?RentalsExpense=[id]</view>
         <update>civicrm/rentals/expense?#?RentalsExpense=[id]</update>
-        <!--    <delete>civicrm/rentals/expense?reset=1&amp;action=delete&amp;id=[id]</delete>-->
     </paths>
 
     <field>

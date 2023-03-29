@@ -7,10 +7,10 @@
   <comment>FIXME</comment>
   <log>true</log>
   <paths>
-    <add>civicrm/rentals/rental?reset=1&amp;action=add</add>
-    <update>civicrm/rentals/rental?reset=1&amp;action=update&amp;id=[id]</update>
-    <delete>civicrm/rentals/rental?reset=1&amp;action=delete&amp;id=[id]</delete>
+    <add>civicrm/rentals/rental</add>
+    <update>civicrm/rentals/rental#?RentalsRental=[id]</update>
   </paths>
+
   <field>
     <name>id</name>
     <type>int unsigned</type>

@@ -6,6 +6,10 @@
     <name>civicrm_o8_rental_invoice</name>
     <comment>FIXME</comment>
     <log>true</log>
+    <paths>
+        <add>civicrm/rentals/invoice</add>
+        <update>civicrm/rentals/invoice#?RentalsInvoice=[id]</update>
+    </paths>
 
     <field>
         <name>id</name>
