@@ -15,6 +15,7 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
+DROP TABLE IF EXISTS `civicrm_o8_rental_payment`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_invoice`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_rental`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_method`;

@@ -17,6 +17,7 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
+DROP TABLE IF EXISTS `civicrm_o8_rental_payment`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_invoice`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_rental`;
 DROP TABLE IF EXISTS `civicrm_o8_rental_method`;
@@ -109,7 +110,7 @@ ENGINE=InnoDB;
 CREATE TABLE `civicrm_o8_rental_invoice` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique RentalsInvoice ID',
   `code` varchar(12) NOT NULL COMMENT 'Code',
-  `name` varchar(1255) NOT NULL COMMENT 'Name',
+  `description` varchar(1255) NOT NULL COMMENT 'Name',
   `rental_id` int unsigned COMMENT 'FK to RentalsRental',
   `amount` decimal(20,2) NOT NULL COMMENT 'Amount',
   `created_id` int unsigned COMMENT 'FK to civicrm_contact, who created this',
@@ -117,8 +118,32 @@ CREATE TABLE `civicrm_o8_rental_invoice` (
   `modified_id` int unsigned COMMENT 'FK to civicrm_contact, who modified this',
   `modified_date` datetime COMMENT 'Date and time this was modified.',
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `index_code`(code),
   CONSTRAINT FK_civicrm_o8_rental_invoice_rental_id FOREIGN KEY (`rental_id`) REFERENCES `civicrm_o8_rental_rental`(`id`) ON DELETE SET NULL,
   CONSTRAINT FK_civicrm_o8_rental_invoice_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
   CONSTRAINT FK_civicrm_o8_rental_invoice_modified_id FOREIGN KEY (`modified_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_o8_rental_payment
+-- *
+-- * FIXME
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_o8_rental_payment` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique RentalsPayment ID',
+  `code` varchar(12) NOT NULL COMMENT 'Code',
+  `method_id` int unsigned COMMENT 'FK to payment method',
+  `created_id` int unsigned COMMENT 'FK to civicrm_contact, who created this',
+  `created_date` datetime COMMENT 'Date and time this was created.',
+  `modified_id` int unsigned COMMENT 'FK to civicrm_contact, who modified this',
+  `modified_date` datetime COMMENT 'Date and time this was modified.',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `index_code`(code),
+  CONSTRAINT FK_civicrm_o8_rental_payment_method_id FOREIGN KEY (`method_id`) REFERENCES `civicrm_o8_rental_method`(`id`) ON DELETE SET NULL,
+  CONSTRAINT FK_civicrm_o8_rental_payment_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
+  CONSTRAINT FK_civicrm_o8_rental_payment_modified_id FOREIGN KEY (`modified_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL
 )
 ENGINE=InnoDB;

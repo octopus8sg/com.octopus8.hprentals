@@ -1,71 +1,71 @@
 <?xml version="1.0"?>
 <menu>
-  <item>
-    <path>civicrm/rentals/deleteexpense</path>
-    <page_callback>CRM_Hprentals_Form_Expense</page_callback>
-    <title>Expense</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
+<!--  <item>-->
+<!--    <path>civicrm/rentals/deleteexpense</path>-->
+<!--    <page_callback>CRM_Hprentals_Form_Expense</page_callback>-->
+<!--    <title>Expense</title>-->
+<!--    <access_arguments>access CiviCRM</access_arguments>-->
+<!--  </item>-->
 <!--  <item>-->
 <!--    <path>civicrm/rentals/expenses</path>-->
 <!--    <page_callback>CRM_Hprentals_Page_Expenses</page_callback>-->
 <!--    <title>Expenses</title>-->
 <!--    <access_arguments>access CiviCRM</access_arguments>-->
 <!--  </item>-->
-  <item>
-    <path>civicrm/rentals/expenses_ajax</path>
-    <page_callback>CRM_Hprentals_Page_Expenses::getAjax</page_callback>
-    <title>Expenses Ajax</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/method</path>
-    <page_callback>CRM_Hprentals_Form_Method</page_callback>
-    <title>Payment Method</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/methods</path>
-    <page_callback>CRM_Hprentals_Page_Methods</page_callback>
-    <title>Payment Methods</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/methods_ajax</path>
-    <page_callback>CRM_Hprentals_Page_Methods::getAjax</page_callback>
-    <title>Payment Methods Ajax</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/invoice</path>
-    <page_callback>CRM_Hprentals_Form_Invoice</page_callback>
-    <title>Invoice</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/invoices</path>
-    <page_callback>CRM_Hprentals_Page_Invoices</page_callback>
-    <title>Invoices</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/rental</path>
-    <page_callback>CRM_Hprentals_Form_Rental</page_callback>
-    <title>Rental</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/rentals</path>
-    <page_callback>CRM_Hprentals_Page_Rentals</page_callback>
-    <title>Rentals</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/payment</path>
-    <page_callback>CRM_Hprentals_Form_Payment</page_callback>
-    <title>Rental</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
+<!--  <item>-->
+<!--    <path>civicrm/rentals/expenses_ajax</path>-->
+<!--    <page_callback>CRM_Hprentals_Page_Expenses::getAjax</page_callback>-->
+<!--    <title>Expenses Ajax</title>-->
+<!--    <access_arguments>access CiviCRM</access_arguments>-->
+<!--  </item>-->
+<!--&lt;!&ndash;  <item>&ndash;&gt;-->
+<!--&lt;!&ndash;    <path>civicrm/rentals/method</path>&ndash;&gt;-->
+<!--&lt;!&ndash;    <page_callback>CRM_Hprentals_Form_Method</page_callback>&ndash;&gt;-->
+<!--&lt;!&ndash;    <title>Payment Method</title>&ndash;&gt;-->
+<!--&lt;!&ndash;    <access_arguments>access CiviCRM</access_arguments>&ndash;&gt;-->
+<!--&lt;!&ndash;  </item>&ndash;&gt;-->
+<!--&lt;!&ndash;  <item>&ndash;&gt;-->
+<!--&lt;!&ndash;    <path>civicrm/rentals/methods</path>&ndash;&gt;-->
+<!--&lt;!&ndash;    <page_callback>CRM_Hprentals_Page_Methods</page_callback>&ndash;&gt;-->
+<!--&lt;!&ndash;    <title>Payment Methods</title>&ndash;&gt;-->
+<!--&lt;!&ndash;    <access_arguments>access CiviCRM</access_arguments>&ndash;&gt;-->
+<!--&lt;!&ndash;  </item>&ndash;&gt;-->
+<!--&lt;!&ndash;  <item>&ndash;&gt;-->
+<!--&lt;!&ndash;    <path>civicrm/rentals/methods_ajax</path>&ndash;&gt;-->
+<!--&lt;!&ndash;    <page_callback>CRM_Hprentals_Page_Methods::getAjax</page_callback>&ndash;&gt;-->
+<!--&lt;!&ndash;    <title>Payment Methods Ajax</title>&ndash;&gt;-->
+<!--&lt;!&ndash;    <access_arguments>access CiviCRM</access_arguments>&ndash;&gt;-->
+<!--&lt;!&ndash;  </item>&ndash;&gt;-->
+<!--  <item>-->
+<!--    <path>civicrm/rentals/invoice</path>-->
+<!--    <page_callback>CRM_Hprentals_Form_Invoice</page_callback>-->
+<!--    <title>Invoice</title>-->
+<!--    <access_arguments>access CiviCRM</access_arguments>-->
+<!--  </item>-->
+<!--  <item>-->
+<!--    <path>civicrm/rentals/invoices</path>-->
+<!--    <page_callback>CRM_Hprentals_Page_Invoices</page_callback>-->
+<!--    <title>Invoices</title>-->
+<!--    <access_arguments>access CiviCRM</access_arguments>-->
+<!--  </item>-->
+<!--  <item>-->
+<!--    <path>civicrm/rentals/rental</path>-->
+<!--    <page_callback>CRM_Hprentals_Form_Rental</page_callback>-->
+<!--    <title>Rental</title>-->
+<!--    <access_arguments>access CiviCRM</access_arguments>-->
+<!--  </item>-->
+<!--  <item>-->
+<!--    <path>civicrm/rentals/rentals</path>-->
+<!--    <page_callback>CRM_Hprentals_Page_Rentals</page_callback>-->
+<!--    <title>Rentals</title>-->
+<!--    <access_arguments>access CiviCRM</access_arguments>-->
+<!--  </item>-->
+<!--  <item>-->
+<!--    <path>civicrm/rentals/payment</path>-->
+<!--    <page_callback>CRM_Hprentals_Form_Payment</page_callback>-->
+<!--    <title>Rental</title>-->
+<!--    <access_arguments>access CiviCRM</access_arguments>-->
+<!--  </item>-->
   <item>
     <path>civicrm/rentals/setup</path>
     <page_callback>CRM_Hprentals_Form_Setup</page_callback>

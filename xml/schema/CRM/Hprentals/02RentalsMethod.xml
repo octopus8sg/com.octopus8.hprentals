@@ -53,8 +53,10 @@
     <type>int unsigned</type>
     <title>Created By Contact ID</title>
     <comment>FK to civicrm_contact, who created this</comment>
+    <readonly>TRUE</readonly>
     <html>
       <label>Created By</label>
+      <type>EntityRef</type>
     </html>
   </field>
   <foreignKey>
@@ -68,15 +70,21 @@
     <type>datetime</type>
     <title>Created Date</title>
     <comment>Date and time this was created.</comment>
-    <add>3.0</add>
+    <readonly>TRUE</readonly>
+    <html>
+      <label>Created Date</label>
+      <type>Select Date</type>
+    </html>
   </field>
   <field>
     <name>modified_id</name>
     <type>int unsigned</type>
     <title>Modified By Contact ID</title>
     <comment>FK to civicrm_contact, who modified this</comment>
+    <readonly>TRUE</readonly>
     <html>
       <label>Modified By</label>
+      <type>EntityRef</type>
     </html>
   </field>
   <foreignKey>
@@ -90,7 +98,12 @@
     <type>datetime</type>
     <title>Modified Date</title>
     <comment>Date and time this was modified.</comment>
-    <add>3.0</add>
+    <readonly>TRUE</readonly>
+    <html>
+      <label>Modified Date</label>
+      <type>Select Date</type>
+    </html>
   </field>
+
 
 </table>

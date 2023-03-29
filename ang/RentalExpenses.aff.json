@@ -1,6 +1,6 @@
 {
   "name": "afsearchSearchExpenses",
-  "requires": [],
+  "requires": ["crmHprentals"],
   "title": "Search Expenses",
   "description": "",
   "is_dashlet": false,

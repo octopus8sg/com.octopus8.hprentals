@@ -35,9 +35,14 @@
             <label>Code</label>
         </html>
     </field>
+    <index>
+        <name>index_code</name>
+        <fieldName>code</fieldName>
+        <unique>true</unique>
+    </index>
 
     <field>
-        <name>name</name>
+        <name>description</name>
         <type>varchar</type>
         <length>1255</length>
         <label>Description</label>
@@ -55,17 +60,15 @@
         <name>rental_id</name>
         <type>int unsigned</type>
         <comment>FK to RentalsRental</comment>
+        <title>Rental</title>
+        <comment>FK to Rentals</comment>
+        <pseudoconstant>
+            <table>civicrm_o8_rental_rental</table>
+            <keyColumn>id</keyColumn>
+            <nameColumn>admission</nameColumn>
+        </pseudoconstant>
         <html>
-            <type>EntityRef</type>
-            <label>Rental</label>
-            <placeholder>Select Rental</placeholder>
-            <select>
-                <minimumInputLength>0</minimumInputLength>
-            </select>
-            <api>
-                <search_field>Admission</search_field>
-                <label_field>Admission</label_field>
-            </api>
+            <type>Select</type>
         </html>
     </field>
     <foreignKey>
@@ -93,8 +96,10 @@
         <type>int unsigned</type>
         <title>Created By Contact ID</title>
         <comment>FK to civicrm_contact, who created this</comment>
+        <readonly>TRUE</readonly>
         <html>
             <label>Created By</label>
+            <type>EntityRef</type>
         </html>
     </field>
     <foreignKey>
@@ -108,15 +113,21 @@
         <type>datetime</type>
         <title>Created Date</title>
         <comment>Date and time this was created.</comment>
-        <add>3.0</add>
+        <readonly>TRUE</readonly>
+        <html>
+            <label>Created Date</label>
+            <type>Select Date</type>
+        </html>
     </field>
     <field>
         <name>modified_id</name>
         <type>int unsigned</type>
         <title>Modified By Contact ID</title>
         <comment>FK to civicrm_contact, who modified this</comment>
+        <readonly>TRUE</readonly>
         <html>
             <label>Modified By</label>
+            <type>EntityRef</type>
         </html>
     </field>
     <foreignKey>
@@ -130,8 +141,11 @@
         <type>datetime</type>
         <title>Modified Date</title>
         <comment>Date and time this was modified.</comment>
-        <add>3.0</add>
+        <readonly>TRUE</readonly>
+        <html>
+            <label>Modified Date</label>
+            <type>Select Date</type>
+        </html>
     </field>
-
 
 </table>

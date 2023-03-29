@@ -1,150 +1,162 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 
 <table>
-  <base>CRM/Hprentals</base>
-  <class>RentalsExpense</class>
-  <name>civicrm_o8_rental_expense</name>
-  <comment>Rental expense (Type)</comment>
-  <log>true</log>
-  <paths>
-    <add>civicrm/rentals/affexpense</add>
-    <view>civicrm/rentals/affexpense?#?RentalsExpense=[id]</view>
-    <update>civicrm/rentals/affexpense?#?RentalsExpense=[id]</update>
-<!--    <delete>civicrm/rentals/expense?reset=1&amp;action=delete&amp;id=[id]</delete>-->
-  </paths>
+    <base>CRM/Hprentals</base>
+    <class>RentalsExpense</class>
+    <name>civicrm_o8_rental_expense</name>
+    <comment>Rental expense (Type)</comment>
+    <log>true</log>
+    <paths>
+        <add>civicrm/rentals/expense</add>
+        <view>civicrm/rentals/expense?#?RentalsExpense=[id]</view>
+        <update>civicrm/rentals/expense?#?RentalsExpense=[id]</update>
+        <!--    <delete>civicrm/rentals/expense?reset=1&amp;action=delete&amp;id=[id]</delete>-->
+    </paths>
 
-  <field>
-    <name>id</name>
-    <type>int unsigned</type>
-    <required>true</required>
-    <comment>Unique Rental Expense ID</comment>
-    <html>
-      <type>Number</type>
-    </html>
-  </field>
-  <primaryKey>
-    <name>id</name>
-    <autoincrement>true</autoincrement>
-  </primaryKey>
+    <field>
+        <name>id</name>
+        <type>int unsigned</type>
+        <required>true</required>
+        <comment>Unique Rental Expense ID</comment>
+        <html>
+            <type>Number</type>
+        </html>
+    </field>
+    <primaryKey>
+        <name>id</name>
+        <autoincrement>true</autoincrement>
+    </primaryKey>
 
-  <field>
-    <name>name</name>
-    <type>varchar</type>
-    <length>255</length>
-    <label>Name</label>
-    <comment>Name</comment>
-    <required>true</required>
-    <import>true</import>
-    <export>true</export>
-    <html>
-      <type>Text</type>
-      <label>Name</label>
-    </html>
-  </field>
+    <field>
+        <name>name</name>
+        <type>varchar</type>
+        <length>255</length>
+        <label>Name</label>
+        <comment>Name</comment>
+        <required>true</required>
+        <import>true</import>
+        <export>true</export>
+        <html>
+            <type>Text</type>
+            <label>Name</label>
+        </html>
+    </field>
 
-  <index>
-    <name>index_name</name>
-    <fieldName>name</fieldName>
-    <unique>true</unique>
-  </index>
-
-
-  <field>
-    <name>frequency</name>
-    <title>Frequency</title>
-    <type>varchar</type>
-    <length>25</length>
-    <default>"once_off"</default>
-    <required>true</required>
-    <import>true</import>
-    <export>true</export>
-    <pseudoconstant>
-      <callback>CRM_Hprentals_Utils::getexpenseFrequency</callback>
-    </pseudoconstant>
-    <html>
-      <type>Select</type>
-    </html>
-  </field>
+    <index>
+        <name>index_name</name>
+        <fieldName>name</fieldName>
+        <unique>true</unique>
+    </index>
 
 
-  <field>
-    <name>is_refund</name>
-    <type>boolean</type>
-    <title>Refund</title>
-    <default>0</default>
-    <comment>Is Refund?</comment>
-    <html>
-      <type>CheckBox</type>
-    </html>
-  </field>
+    <field>
+        <name>frequency</name>
+        <title>Frequency</title>
+        <type>varchar</type>
+        <length>25</length>
+        <default>"once_off"</default>
+        <required>true</required>
+        <import>true</import>
+        <export>true</export>
+        <pseudoconstant>
+            <callback>CRM_Hprentals_Utils::getexpenseFrequency</callback>
+        </pseudoconstant>
+        <html>
+            <type>Select</type>
+        </html>
+    </field>
 
-  <field>
-    <name>is_prorate</name>
-    <type>boolean</type>
-    <title>Prorate</title>
-    <default>1</default>
-    <comment>Is prorate?</comment>
-    <html>
-      <type>CheckBox</type>
-    </html>
-  </field>
 
-  <field>
-    <name>amount</name>
-    <type>decimal</type>
-    <required>true</required>
-    <import>true</import>
-    <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
-    <comment>Amount</comment>
-    <html>
-      <type>Text</type>
-      <label>Amount</label>
-    </html>
-  </field>
+    <field>
+        <name>is_refund</name>
+        <type>boolean</type>
+        <title>Refund</title>
+        <default>0</default>
+        <comment>Is Refund?</comment>
+        <html>
+            <type>CheckBox</type>
+        </html>
+    </field>
 
-  <field>
-    <name>created_id</name>
-    <type>int unsigned</type>
-    <title>Created By Contact ID</title>
-    <comment>FK to civicrm_contact, who created this</comment>
-    <html>
-      <label>Created By</label>
-    </html>
-  </field>
-  <foreignKey>
-    <name>created_id</name>
-    <table>civicrm_contact</table>
-    <key>id</key>
-    <onDelete>SET NULL</onDelete>
-  </foreignKey>
-  <field>
-    <name>created_date</name>
-    <type>datetime</type>
-    <title>Created Date</title>
-    <comment>Date and time this was created.</comment>
-    <add>3.0</add>
-  </field>
-  <field>
-    <name>modified_id</name>
-    <type>int unsigned</type>
-    <title>Modified By Contact ID</title>
-    <comment>FK to civicrm_contact, who modified this</comment>
-    <html>
-      <label>Modified By</label>
-    </html>
-  </field>
-  <foreignKey>
-    <name>modified_id</name>
-    <table>civicrm_contact</table>
-    <key>id</key>
-    <onDelete>SET NULL</onDelete>
-  </foreignKey>
-  <field>
-    <name>modified_date</name>
-    <type>datetime</type>
-    <title>Modified Date</title>
-    <comment>Date and time this was modified.</comment>
-    <add>3.0</add>
-  </field>
+    <field>
+        <name>is_prorate</name>
+        <type>boolean</type>
+        <title>Prorate</title>
+        <default>1</default>
+        <comment>Is prorate?</comment>
+        <html>
+            <type>CheckBox</type>
+        </html>
+    </field>
+
+    <field>
+        <name>amount</name>
+        <type>decimal</type>
+        <required>true</required>
+        <import>true</import>
+        <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
+        <comment>Amount</comment>
+        <html>
+            <type>Text</type>
+            <label>Amount</label>
+        </html>
+    </field>
+
+    <field>
+        <name>created_id</name>
+        <type>int unsigned</type>
+        <title>Created By Contact ID</title>
+        <comment>FK to civicrm_contact, who created this</comment>
+        <readonly>TRUE</readonly>
+        <html>
+            <label>Created By</label>
+            <type>EntityRef</type>
+        </html>
+    </field>
+    <foreignKey>
+        <name>created_id</name>
+        <table>civicrm_contact</table>
+        <key>id</key>
+        <onDelete>SET NULL</onDelete>
+    </foreignKey>
+    <field>
+        <name>created_date</name>
+        <type>datetime</type>
+        <title>Created Date</title>
+        <comment>Date and time this was created.</comment>
+        <readonly>TRUE</readonly>
+        <html>
+            <label>Created Date</label>
+            <type>Select Date</type>
+        </html>
+    </field>
+    <field>
+        <name>modified_id</name>
+        <type>int unsigned</type>
+        <title>Modified By Contact ID</title>
+        <comment>FK to civicrm_contact, who modified this</comment>
+        <readonly>TRUE</readonly>
+        <html>
+            <label>Modified By</label>
+            <type>EntityRef</type>
+        </html>
+    </field>
+    <foreignKey>
+        <name>modified_id</name>
+        <table>civicrm_contact</table>
+        <key>id</key>
+        <onDelete>SET NULL</onDelete>
+    </foreignKey>
+    <field>
+        <name>modified_date</name>
+        <type>datetime</type>
+        <title>Modified Date</title>
+        <comment>Date and time this was modified.</comment>
+        <readonly>TRUE</readonly>
+        <html>
+            <label>Modified Date</label>
+            <type>Select Date</type>
+        </html>
+    </field>
 
 </table>

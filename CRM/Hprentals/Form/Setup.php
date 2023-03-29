@@ -64,6 +64,8 @@ class CRM_Hprentals_Form_Setup extends CRM_Core_Form
         $settings[U::SAVE_LOG['slug']] = $values[U::SAVE_LOG['slug']];
         $settings[U::TEST_MODE['slug']] = $newTestMode;
         if ($newTestMode) {
+            U::createDefaultExpenses();
+            U::createDefaultMethods();
             U::create_fake_individuals();
             U::create_faker_rentals();
             U::writeLog('fakers come');

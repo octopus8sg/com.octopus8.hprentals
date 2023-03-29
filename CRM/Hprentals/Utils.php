@@ -260,7 +260,10 @@ class CRM_Hprentals_Utils
         foreach ($expenses as $expense) {
             try {
                 $rentals_api = civicrm_api4('RentalsExpense', 'create', ['values' => $expense, 'checkPermissions' => FALSE]);
-
+            } catch (Exception $e) {
+                self::writeLog($e->getMessage());
+            }
+            try {
                 if ($rentals_api['is_error']) {
                     // handle error
                     self::writeLog($rentals_api['error_message']);
@@ -278,6 +281,10 @@ class CRM_Hprentals_Utils
             try {
                 $rentals_api =
                     civicrm_api4('RentalsMethod', 'create', ['values' => $method, 'checkPermissions' => FALSE],);
+            } catch (Exception $e) {
+                self::writeLog($e->getMessage());
+            }
+            try {
                 if ($rentals_api['is_error']) {
                     // handle error
                     self::writeLog($rentals_api['error_message']);
@@ -720,7 +727,9 @@ class CRM_Hprentals_Utils
         $defaultEntities = self::DEFAULT_ENTITIES;
 
         if (in_array($objectName, $defaultEntities)) {
-            if ($op == 'create' || $op == 'update') {
+            self::writeLog($params, 'before save');
+            self::writeLog($op, 'before save op');
+            if ($op == 'create' || $op == 'update' || $op == 'edit' ) {
                 $userId = CRM_Core_Session::singleton()->getLoggedInContactID();
                 $now = date('YmdHis');
 
@@ -728,11 +737,13 @@ class CRM_Hprentals_Utils
                     $params['created_id'] = $userId;
                     $params['created_date'] = $now;
                 }
-                if ($op == 'edit') {
+                if ($op == 'update' || $op == 'edit' ) {
                     $params['modified_id'] = $userId;
                     $params['modified_date'] = $now;
                 }
+
             }
+            self::writeLog($params, 'after save');
         }
     }
 }
