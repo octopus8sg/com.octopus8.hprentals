@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+    <base>CRM/Hprentals</base>
+    <class>RentalsPayment</class>
+    <name>civicrm_o8_rental_payment</name>
+    <comment>FIXME</comment>
+    <log>true</log>
+    <paths>
+        <add>civicrm/rentals/payment</add>
+        <update>civicrm/rentals/invoice#?RentalsPayment=[id]</update>
+    </paths>
+
+    <field>
+        <name>id</name>
+        <type>int unsigned</type>
+        <required>true</required>
+        <comment>Unique RentalsPayment ID</comment>
+        <html>
+            <type>Number</type>
+        </html>
+    </field>
+    <primaryKey>
+        <name>id</name>
+        <autoincrement>true</autoincrement>
+    </primaryKey>
+
+    <field>
+        <name>code</name>
+        <type>varchar</type>
+        <length>12</length>
+        <label>Code</label>
+        <comment>Code</comment>
+        <required>true</required>
+        <import>true</import>
+        <export>true</export>
+        <html>
+            <type>Text</type>
+            <label>Code</label>
+        </html>
+    </field>
+    <index>
+        <name>index_code</name>
+        <fieldName>code</fieldName>
+        <unique>true</unique>
+    </index>
+
+    <field>
+        <name>method_id</name>
+        <type>int unsigned</type>
+        <title>Method</title>
+        <comment>FK to payment method</comment>
+        <pseudoconstant>
+            <table>civicrm_o8_rental_method</table>
+            <keyColumn>id</keyColumn>
+            <nameColumn>name</nameColumn>
+        </pseudoconstant>
+        <html>
+            <type>Select</type>
+        </html>
+    </field>
+    <foreignKey>
+        <name>method_id</name>
+        <table>civicrm_o8_rental_method</table>
+        <key>id</key>
+        <onDelete>SET NULL</onDelete>
+    </foreignKey>
+
+    <field>
+        <name>created_id</name>
+        <type>int unsigned</type>
+        <title>Created By Contact ID</title>
+        <comment>FK to civicrm_contact, who created this</comment>
+        <readonly>TRUE</readonly>
+        <html>
+            <label>Created By</label>
+            <type>EntityRef</type>
+        </html>
+    </field>
+    <foreignKey>
+        <name>created_id</name>
+        <table>civicrm_contact</table>
+        <key>id</key>
+        <onDelete>SET NULL</onDelete>
+    </foreignKey>
+
+
+    <field>
+        <name>created_date</name>
+        <type>datetime</type>
+        <title>Created Date</title>
+        <comment>Date and time this was created.</comment>
+        <readonly>TRUE</readonly>
+        <html>
+            <label>Created Date</label>
+            <type>Select Date</type>
+        </html>
+    </field>
+    <field>
+        <name>modified_id</name>
+        <type>int unsigned</type>
+        <title>Modified By Contact ID</title>
+        <comment>FK to civicrm_contact, who modified this</comment>
+        <readonly>TRUE</readonly>
+        <html>
+            <label>Modified By</label>
+            <type>EntityRef</type>
+        </html>
+    </field>
+    <foreignKey>
+        <name>modified_id</name>
+        <table>civicrm_contact</table>
+        <key>id</key>
+        <onDelete>SET NULL</onDelete>
+    </foreignKey>
+    <field>
+        <name>modified_date</name>
+        <type>datetime</type>
+        <title>Modified Date</title>
+        <comment>Date and time this was modified.</comment>
+        <readonly>TRUE</readonly>
+        <html>
+            <label>Modified Date</label>
+            <type>Select Date</type>
+        </html>
+    </field>
+
+</table>
