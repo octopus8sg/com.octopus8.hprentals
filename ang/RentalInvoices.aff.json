@@ -1,8 +1,8 @@
 {
   "type": "search",
-  "name": "afsearchRentalRentals",
+  "name": "afsearchSearchInvoices",
   "requires": ["crmHprentals"],
-  "title": "Total Rentals",
+  "title": "Total Invoices",
   "description": "",
   "is_dashlet": "",
   "is_public": "",
@@ -12,10 +12,10 @@
   "entity_type": "",
   "join_entity": "",
   "icon": "fa-home",
-  "server_route": "civicrm/rentals/search",
+  "server_route": "civicrm/rentals/invoices",
   "redirect": "",
   "create_submission": "",
   "navigation": "",
-  "module_name": "RentalRentals",
-  "id": "RentalRentals"
+  "module_name": "RentalInvoices",
+  "id": "RentalInvoices"
 }

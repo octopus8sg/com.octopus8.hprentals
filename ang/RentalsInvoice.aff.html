@@ -1,0 +1,13 @@
+<af-form ctrl="afform">
+    <af-entity url-autofill="1" type="RentalsInvoice" name="RentalsInvoice" label="Rental Invoice"
+               actions="{create: true, update: true}" security="RBAC"/>
+    <fieldset af-fieldset="RentalsInvoice" class="af-container" af-title="Invoice">
+        <af-field name="code"/>
+        <af-field name="rental_id"/>
+        <af-field name="description"/>
+        <af-field name="amount"/>
+    </fieldset>
+    <button class="af-button btn btn-warning " type="reset" crm-icon="fa-undo">Reset</button>
+    <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>
+    <button class="af-button btn btn-danger" crm-icon="fa-trash" ng-click="afform.delete()">Delete</button>
+</af-form>

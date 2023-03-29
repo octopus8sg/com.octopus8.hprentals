@@ -234,14 +234,15 @@ class CRM_Hprentals_DAO_RentalsInvoice extends CRM_Core_DAO {
           'bao' => 'CRM_Hprentals_DAO_RentalsInvoice',
           'localizable' => 0,
           'FKClassName' => 'CRM_Hprentals_DAO_RentalsRental',
-          'html' => [
-            'type' => 'Select',
-          ],
-          'pseudoconstant' => [
-            'table' => 'civicrm_o8_rental_rental',
-            'keyColumn' => 'id',
-            'nameColumn' => 'admission',
-          ],
+            'html' => [
+                'type' => 'EntityRef',
+                'label' => E::ts("Rental ID"),
+            ],
+//          'pseudoconstant' => [
+//            'table' => 'civicrm_o8_rental_rental',
+//            'keyColumn' => 'id',
+//            'nameColumn' => 'tenant_id.display_name',
+//          ],
           'add' => NULL,
         ],
         'amount' => [

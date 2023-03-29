@@ -1,0 +1,19 @@
+{
+  "name": "afformInvoice",
+  "requires": ["crmHprentals"],
+  "title": "Invoice",
+  "description": "Invoice",
+  "is_dashlet": false,
+  "is_public": false,
+  "is_token": false,
+  "permission": "access CiviCRM",
+  "type": "form",
+  "icon": "fa-home",
+  "server_route": "civicrm/rentals/invoice",
+  "create_submission": true,
+  "entity_type": "RentalsInvoice",
+  "join_entity": null,
+  "contact_summary": null,
+  "redirect": null,
+  "navigation": null
+}
