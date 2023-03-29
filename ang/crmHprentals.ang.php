@@ -19,7 +19,6 @@ return [
         'crmUi',
         'crmUtil',
         'ngRoute',
-        'afformInvoiceFB'
     ],
     'settings' => [],
 ];

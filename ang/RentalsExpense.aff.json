@@ -1,0 +1,19 @@
+{
+  "name": "afformExpense",
+  "requires": ["crmHprentals"],
+  "title": "Expense",
+  "description": "Expense",
+  "is_dashlet": false,
+  "is_public": false,
+  "is_token": false,
+  "permission": "access CiviCRM",
+  "type": "form",
+  "icon": "fa-home",
+  "server_route": "civicrm/rentals/affexpense",
+  "create_submission": true,
+  "entity_type": "RentalsExpense",
+  "join_entity": null,
+  "contact_summary": null,
+  "redirect": null,
+  "navigation": null
+}

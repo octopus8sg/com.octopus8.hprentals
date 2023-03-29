@@ -69,6 +69,16 @@ function hprentals_civicrm_disable()
 }
 
 /**
+ * Implements hook_civicrm_disable().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_disable
+ */
+function hprentals_civicrm_pre($op, $objectName, $id, &$params)
+{
+    U::addCreatedByModifiedBy($op, $objectName, $params);
+}
+
+/**
  * Implements hook_civicrm_upgrade().
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_upgrade

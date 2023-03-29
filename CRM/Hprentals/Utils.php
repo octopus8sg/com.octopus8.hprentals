@@ -26,7 +26,13 @@ class CRM_Hprentals_Utils
         'slug' => 'test_mode',
         'name' => 'Test Mode',
         'description' => "See all rentals (not only last month), Rentals menu, Creation of Invoices per Rentals"];
-
+    public const DEFAULT_ENTITIES = [
+        'RentalsExpense',
+        'RentalsMethod',
+        'RentalsRental',
+        'RentalsInvoice',
+        'RentalsPayment',
+    ];
     //PATHS
     public const PATH_DASHBOARD = "civicrm/rentals/dashboard";
     public const PATH_SETUP = "civicrm/rentals/setup";
@@ -252,10 +258,15 @@ class CRM_Hprentals_Utils
     {
         $expenses = self::EXPENSES;
         foreach ($expenses as $expense) {
-            $rentals_api = civicrm_api3('RentalsExpense', 'create', $expense);
-            if ($rentals_api['is_error']) {
-                // handle error
-                self::writeLog($rentals_api['error_message']);
+            try {
+                $rentals_api = civicrm_api4('RentalsExpense', 'create', ['values' => $expense, 'checkPermissions' => FALSE]);
+
+                if ($rentals_api['is_error']) {
+                    // handle error
+                    self::writeLog($rentals_api['error_message']);
+                }
+            } catch (Exception $e) {
+                self::writeLog($e->getMessage());
             }
         }
     }
@@ -264,11 +275,17 @@ class CRM_Hprentals_Utils
     {
         $methods = self::METHODS;
         foreach ($methods as $method) {
-            $rentals_api = civicrm_api3('RentalsMethod', 'create', $method);
-            if ($rentals_api['is_error']) {
-                // handle error
-                self::writeLog($rentals_api['error_message']);
+            try {
+                $rentals_api =
+                    civicrm_api4('RentalsMethod', 'create', ['values' => $method, 'checkPermissions' => FALSE],);
+                if ($rentals_api['is_error']) {
+                    // handle error
+                    self::writeLog($rentals_api['error_message']);
+                }
+            } catch (Exception $e) {
+                self::writeLog($e->getMessage());
             }
+
         }
     }
 
@@ -691,6 +708,32 @@ class CRM_Hprentals_Utils
             4 => [$rental_id, 'Integer'],
         ]);
         return $existing_rent;
+    }
+
+    /**
+     * @param $op
+     * @param $objectName
+     * @param $params
+     */
+    public static function addCreatedByModifiedBy($op, $objectName, &$params): void
+    {
+        $defaultEntities = self::DEFAULT_ENTITIES;
+
+        if (in_array($objectName, $defaultEntities)) {
+            if ($op == 'create' || $op == 'update') {
+                $userId = CRM_Core_Session::singleton()->getLoggedInContactID();
+                $now = date('YmdHis');
+
+                if ($op == 'create') {
+                    $params['created_id'] = $userId;
+                    $params['created_date'] = $now;
+                }
+                if ($op == 'edit') {
+                    $params['modified_id'] = $userId;
+                    $params['modified_date'] = $now;
+                }
+            }
+        }
     }
 }
 

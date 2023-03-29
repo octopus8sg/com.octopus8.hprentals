@@ -7,10 +7,10 @@
   <comment>Rental expense (Type)</comment>
   <log>true</log>
   <paths>
-    <add>civicrm/rentals/expense?reset=1&amp;action=add</add>
-    <view>civicrm/rentals/expense?reset=1&amp;action=view&amp;id=[id]</view>
-    <update>civicrm/rentals/expense?reset=1&amp;action=update&amp;id=[id]</update>
-    <delete>civicrm/rentals/expense?reset=1&amp;action=delete&amp;id=[id]</delete>
+    <add>civicrm/rentals/affexpense</add>
+    <view>civicrm/rentals/affexpense?#?RentalsExpense=[id]</view>
+    <update>civicrm/rentals/affexpense?#?RentalsExpense=[id]</update>
+<!--    <delete>civicrm/rentals/expense?reset=1&amp;action=delete&amp;id=[id]</delete>-->
   </paths>
 
   <field>
@@ -73,6 +73,9 @@
     <title>Refund</title>
     <default>0</default>
     <comment>Is Refund?</comment>
+    <html>
+      <type>CheckBox</type>
+    </html>
   </field>
 
   <field>
@@ -81,6 +84,9 @@
     <title>Prorate</title>
     <default>1</default>
     <comment>Is prorate?</comment>
+    <html>
+      <type>CheckBox</type>
+    </html>
   </field>
 
   <field>

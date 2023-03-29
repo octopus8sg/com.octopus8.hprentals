@@ -22,6 +22,21 @@
     </primaryKey>
 
     <field>
+        <name>code</name>
+        <type>varchar</type>
+        <length>12</length>
+        <label>Code</label>
+        <comment>Code</comment>
+        <required>true</required>
+        <import>true</import>
+        <export>true</export>
+        <html>
+            <type>Text</type>
+            <label>Code</label>
+        </html>
+    </field>
+
+    <field>
         <name>name</name>
         <type>varchar</type>
         <length>1255</length>
@@ -35,24 +50,6 @@
             <label>Description</label>
         </html>
     </field>
-
-    <field>
-        <name>tenant_id</name>
-        <label>Tenant</label>
-        <title>Tenant</title>
-        <type>int unsigned</type>
-        <comment>FK to Contact</comment>
-        <html>
-            <type>EntityRef</type>
-            <label>Tenant</label>
-        </html>
-    </field>
-    <foreignKey>
-        <name>tenant_id</name>
-        <table>civicrm_contact</table>
-        <key>id</key>
-        <onDelete>CASCADE</onDelete>
-    </foreignKey>
 
     <field>
         <name>rental_id</name>
@@ -77,17 +74,6 @@
         <key>id</key>
         <onDelete>SET NULL</onDelete>
     </foreignKey>
-
-    <field>
-        <name>is_first</name>
-        <type>boolean</type>
-        <title>First Invoice</title>
-        <html>
-            <type>CheckBox</type>
-        </html>
-        <default>0</default>
-        <comment>Is First Invoice for Rent?</comment>
-    </field>
 
     <field>
         <name>amount</name>

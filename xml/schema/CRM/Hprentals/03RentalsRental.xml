@@ -66,13 +66,6 @@
   </index>
 
   <field>
-    <name>first_invoice_id</name>
-    <type>int unsigned</type>
-    <default>NULL</default>
-    <comment>FK to RentalsInvoice</comment>
-  </field>
-
-  <field>
     <name>created_id</name>
     <type>int unsigned</type>
     <title>Created By Contact ID</title>

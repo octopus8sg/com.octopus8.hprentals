@@ -1,0 +1,25 @@
+<af-form ctrl="afform">
+  <af-entity url-autofill="1" type="RentalsExpense" name="RentalsExpense" label="Rental Expense" actions="{create: true, update: true}" security="RBAC" />
+<!--  <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>-->
+  <!--  <fieldset af-fieldset="RentalsExpense" class="af-container" af-title="Rental Expense">-->
+  <!--    <af-field name="name" />-->
+  <!--    <af-field name="frequency" />-->
+  <!--    <af-field name="is_refund" />-->
+  <!--    <af-field name="is_prorate" />-->
+  <!--    <af-field name="amount" />-->
+  <!--    <button class="af-button btn btn-warning" type="reset" crm-icon="fa-undo">Reset</button>-->
+  <!--    <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>-->
+  <!--  </fieldset>-->
+  <fieldset af-fieldset="RentalsExpense" class="af-container" af-title="Expense">
+    <af-field name="name" />
+    <af-field name="frequency" />
+    <af-field name="amount" />
+        <af-field name="is_refund" />
+        <af-field name="is_prorate" />
+    <button class="af-button btn btn-warning" type="reset" crm-icon="fa-undo">Reset</button>
+    <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>
+    <af-actions>
+      <button ng-click="deleteRecord()">Delete</button>
+    </af-actions>
+  </fieldset>
+</af-form>

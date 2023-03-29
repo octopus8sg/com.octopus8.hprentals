@@ -21,8 +21,8 @@ class CRM_Hprentals_Upgrader extends CRM_Hprentals_Upgrader_Base
      * so here to avoid order of operation problems.
      */
      public function postInstall() {
-        U::createDefaultExpenses();
-        U::createDefaultMethods();
+//        U::createDefaultExpenses();
+//        U::createDefaultMethods();
      }
 
     /**
@@ -41,6 +41,8 @@ class CRM_Hprentals_Upgrader extends CRM_Hprentals_Upgrader_Base
         $settings[U::SAVE_LOG['slug']] = 1;
 //        $settings[U::TEST_MODE['slug']] = 0;
         CRM_Core_BAO_Setting::setItem($settings, U::SETTINGS_NAME, U::SETTINGS_SLUG);
+//        U::createDefaultExpenses();
+//        U::createDefaultMethods();
 
     }
 
