@@ -123,13 +123,12 @@ function hprentals_civicrm_entityTypes(&$entityTypes)
  */
 function hprentals_civicrm_navigationMenu(&$menu)
 {
-    $menu_items = U::MENU;
+    $menu_items = U::getMenuItems();
     foreach ($menu_items as $menu_item) {
         _hprentals_civix_insert_navigation_menu($menu,
             $menu_item['path'],
             $menu_item['menu']);
     }
-
     _hprentals_civix_navigationMenu($menu);
 
 }

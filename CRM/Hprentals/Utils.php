@@ -125,7 +125,7 @@ class CRM_Hprentals_Utils
     public const RENTALS_MENU = [
         'path' => self::MAIN_MENU['menu']['name'],
         'menu' => [
-            'label' => 'Rentals',
+            'label' => 'Rentals (Test)',
             'name' => 'hprentals_rentals',
             'url' => self::PATH_RENTALS,
             'permission' => 'adminster CiviCRM',
@@ -255,6 +255,35 @@ class CRM_Hprentals_Utils
         return self::EXPENSE_FREQUENCY;
     }
 
+    public static function getMenuItems()
+    {
+        $test_mode = self::getTestMode();
+        $menu = [
+            self::MAIN_MENU,
+            self::DASHBOARD_MENU,
+            self::SETUP_MENU,
+            self::TYPES_MENU,
+            self::METHODS_MENU,
+//            self::RENTALS_MENU,
+            self::INVOICES_MENU,
+            self::REPORTS_MENU
+        ];
+
+        if ($test_mode==1) {
+            $menu = [
+                self::MAIN_MENU,
+                self::DASHBOARD_MENU,
+                self::SETUP_MENU,
+                self::TYPES_MENU,
+                self::METHODS_MENU,
+                self::RENTALS_MENU,
+                self::INVOICES_MENU,
+                self::REPORTS_MENU
+            ];
+        }
+return $menu;
+    }
+
     public static function createDefaultExpenses()
     {
         $expenses = self::EXPENSES;
@@ -353,7 +382,7 @@ class CRM_Hprentals_Utils
      */
     public static function getTestMode(): bool
     {
-        $result = true;
+        $result = false;
         try {
             $result_ = self::getSettings(self::TEST_MODE['slug']);
             if ($result_ == 1) {
@@ -864,7 +893,7 @@ class CRM_Hprentals_Utils
                 ],
                 'limit' => 1,
                 'checkPermissions' => FALSE,
-                  'where' => [
+                'where' => [
                     ['code', 'LIKE', $invoiceParams['prefix'] . '%'],
                 ],
             ]);

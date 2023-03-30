@@ -86,7 +86,8 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
     FROM civicrm_o8_rental_invoice i 
         INNER JOIN civicrm_o8_rental_rental r on r.id = i.rental_id
         INNER JOIN civicrm_contact c on r.tenant_id = c.id
-    WHERE YEAR(i.created_date) = YEAR(CURRENT_DATE()) 
+    WHERE YEAR(i.created_date) = YEAR(CURRENT_DATE())
+    AND c.is_deleted = 0
     AND MONTH(i.created_date) = MONTH(CURRENT_DATE()) ";
 
         if (isset($tenant_id)) {
@@ -188,6 +189,7 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
     FROM civicrm_o8_rental_payment i 
         INNER JOIN civicrm_contact c on i.tenant_id = c.id
     WHERE YEAR(i.created_date) = YEAR(CURRENT_DATE()) 
+    AND c.is_deleted = 0
     AND MONTH(i.created_date) = MONTH(CURRENT_DATE()) ";
 
         if (isset($tenant_id)) {
@@ -243,42 +245,42 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
     }
 
     public function getRentals()
-{
+    {
 
 //        U::writeLog($_REQUEST,'invoices request');
 //        U::writeLog($_POST,'invoices request');
 
 
-    $tenant_id = CRM_Utils_Request::retrieveValue('tenant_id', 'Positive', null);
+        $tenant_id = CRM_Utils_Request::retrieveValue('tenant_id', 'Positive', null);
 
-    $offset = CRM_Utils_Request::retrieveValue('iDisplayStart', 'Positive', 0);
+        $offset = CRM_Utils_Request::retrieveValue('iDisplayStart', 'Positive', 0);
 //        CRM_Core_Error::debug_var('offset', $offset);
 
-    $limit = CRM_Utils_Request::retrieveValue('iDisplayLength', 'Positive', 10);
+        $limit = CRM_Utils_Request::retrieveValue('iDisplayLength', 'Positive', 10);
 //        CRM_Core_Error::debug_var('limit', $limit);
 
 
-    $sortMapper = [
-        0 => 'id',
-        1 => 'display_name',
-        2 => 'admission',
-        3 => 'discharge'
-    ];
+        $sortMapper = [
+            0 => 'id',
+            1 => 'display_name',
+            2 => 'admission',
+            3 => 'discharge'
+        ];
 
-    $sort = isset($_REQUEST['iSortCol_0']) ? CRM_Utils_Array::value(CRM_Utils_Type::escape($_REQUEST['iSortCol_0'], 'Integer'), $sortMapper) : NULL;
-    $sortOrder = isset($_REQUEST['sSortDir_0']) ? CRM_Utils_Type::escape($_REQUEST['sSortDir_0'], 'String') : 'asc';
+        $sort = isset($_REQUEST['iSortCol_0']) ? CRM_Utils_Array::value(CRM_Utils_Type::escape($_REQUEST['iSortCol_0'], 'Integer'), $sortMapper) : NULL;
+        $sortOrder = isset($_REQUEST['sSortDir_0']) ? CRM_Utils_Type::escape($_REQUEST['sSortDir_0'], 'String') : 'asc';
 
 
 //        $searchParams = self::getSearchOptionsFromRequest();
-    $queryParams = [];
+        $queryParams = [];
 
-    $join = '';
-    $where = [];
+        $join = '';
+        $where = [];
 
 //        $isOrQuery = self::isOrQuery();
 
-    $nextParamKey = 3;
-    $sql = "
+        $nextParamKey = 3;
+        $sql = "
     SELECT SQL_CALC_FOUND_ROWS
       i.id,
       c.display_name,
@@ -287,56 +289,57 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
     FROM civicrm_o8_rental_rental i 
         INNER JOIN civicrm_contact c on i.tenant_id = c.id
     WHERE YEAR(i.created_date) = YEAR(CURRENT_DATE()) 
+    AND c.is_deleted = 0
     AND MONTH(i.created_date) = MONTH(CURRENT_DATE()) ";
 
-    if (isset($tenant_id)) {
-        if (is_numeric($tenant_id)) {
-            $sql .= " AND c.`id` = " . intval($tenant_id) . " ";
+        if (isset($tenant_id)) {
+            if (is_numeric($tenant_id)) {
+                $sql .= " AND c.`id` = " . intval($tenant_id) . " ";
+            }
         }
-    }
 
 
-    if ($sort !== NULL) {
-        $sql .= " ORDER BY {$sort} {$sortOrder}";
-    }
+        if ($sort !== NULL) {
+            $sql .= " ORDER BY {$sort} {$sortOrder}";
+        }
 
-    if ($limit !== false) {
-        if ($limit !== NULL) {
-            if ($offset !== false) {
-                if ($offset !== NULL) {
-                    $sql .= " LIMIT {$offset}, {$limit}";
+        if ($limit !== false) {
+            if ($limit !== NULL) {
+                if ($offset !== false) {
+                    if ($offset !== NULL) {
+                        $sql .= " LIMIT {$offset}, {$limit}";
+                    }
                 }
             }
         }
-    }
 
 //        CRM_Core_Error::debug_var('method_sql', $sql);
 
-    $dao = CRM_Core_DAO::executeQuery($sql);
-    $iFilteredTotal = CRM_Core_DAO::singleValueQuery("SELECT FOUND_ROWS()");
-    $rows = array();
-    $count = 0;
-    while ($dao->fetch()) {
-        $rows[$count][] = $dao->id;
-        $rows[$count][] = $dao->display_name;
-        $rows[$count][] = $dao->admission;
-        $rows[$count][] = $dao->discharge;
-        $count++;
-    }
+        $dao = CRM_Core_DAO::executeQuery($sql);
+        $iFilteredTotal = CRM_Core_DAO::singleValueQuery("SELECT FOUND_ROWS()");
+        $rows = array();
+        $count = 0;
+        while ($dao->fetch()) {
+            $rows[$count][] = $dao->id;
+            $rows[$count][] = $dao->display_name;
+            $rows[$count][] = $dao->admission;
+            $rows[$count][] = $dao->discharge;
+            $count++;
+        }
 
-    $searchRows = $rows;
-    $iTotal = 0;
-    if (is_countable($searchRows)) {
-        $iTotal = sizeof($searchRows);
+        $searchRows = $rows;
+        $iTotal = 0;
+        if (is_countable($searchRows)) {
+            $iTotal = sizeof($searchRows);
+        }
+        $hmdatas = [
+            'data' => $searchRows,
+            'recordsTotal' => $iTotal,
+            'recordsFiltered' => $iFilteredTotal,
+        ];
+        if (!empty($_REQUEST['is_unit_test'])) {
+            return $hmdatas;
+        }
+        CRM_Utils_JSON::output($hmdatas);
     }
-    $hmdatas = [
-        'data' => $searchRows,
-        'recordsTotal' => $iTotal,
-        'recordsFiltered' => $iFilteredTotal,
-    ];
-    if (!empty($_REQUEST['is_unit_test'])) {
-        return $hmdatas;
-    }
-    CRM_Utils_JSON::output($hmdatas);
-}
 }

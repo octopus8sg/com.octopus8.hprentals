@@ -79,6 +79,7 @@ class CRM_Hprentals_Form_Setup extends CRM_Core_Form
         U::writeLog($settings, "after_submit");
         $s = CRM_Core_BAO_Setting::setItem($settings, U::SETTINGS_NAME, U::SETTINGS_SLUG);
 //        U::writeLog($s);
+
         CRM_Core_Session::setStatus(E::ts('Hprentals Settings Saved', ['domain' => 'com.octopus8.hprentals']), 'Configuration Updated', 'success');
         parent::postProcess();
     }
