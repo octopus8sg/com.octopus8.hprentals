@@ -105,7 +105,7 @@ CRM.$(function ($) {
         invoices_table.destroy();
         var new_invoices_table = invoices_tab.DataTable(invoices_dtsettings);
         //End Reset Table
-        $('.dashboard-filter :input').keyup(function(){
+        $('.dashboard-filter :input').change(function(){
             // alert('Filter Changed!');
             new_invoices_table.draw();
         });

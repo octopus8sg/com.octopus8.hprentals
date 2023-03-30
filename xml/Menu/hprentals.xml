@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <menu>
-<!--  <item>-->
-<!--    <path>civicrm/rentals/deleteexpense</path>-->
-<!--    <page_callback>CRM_Hprentals_Form_Expense</page_callback>-->
-<!--    <title>Expense</title>-->
-<!--    <access_arguments>access CiviCRM</access_arguments>-->
-<!--  </item>-->
+  <item>
+    <path>civicrm/rentals/deleteexpense</path>
+    <page_callback>CRM_Hprentals_Form_Expense</page_callback>
+    <title>Delete Expense</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 <!--  <item>-->
 <!--    <path>civicrm/rentals/expenses</path>-->
 <!--    <page_callback>CRM_Hprentals_Page_Expenses</page_callback>-->

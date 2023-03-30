@@ -84,7 +84,7 @@ CRM.$(function ($) {
         rentals_table.destroy();
         var new_rentals_table = rentals_tab.DataTable(rentals_dtsettings);
         //End Reset Table
-        $('.dashboard-filter :input').keyup(function(){
+        $('.dashboard-filter :input').change(function(){
             // alert('Filter Changed!');
             new_rentals_table.draw();
         });

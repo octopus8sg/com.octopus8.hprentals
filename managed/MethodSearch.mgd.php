@@ -109,7 +109,7 @@ return [
                                     'join' => '',
                                     'target' => 'crm-popup',
                                     'icon' => 'fa-pencil',
-                                    'text' => 'View/Edit Rentals',
+                                    'text' => 'Edit',
                                     'style' => 'default',
                                     'path' => '',
                                     'condition' => [],

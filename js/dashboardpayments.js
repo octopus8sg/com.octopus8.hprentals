@@ -107,7 +107,7 @@ CRM.$(function ($) {
         payments_table.destroy();
         var new_payments_table = payments_tab.DataTable(payments_dtsettings);
         //End Reset Table
-        $('.dashboard-filter :input').keyup(function(){
+        $('.dashboard-filter :input').change(function(){
             // alert('Filter Changed!');
             new_payments_table.draw();
         });
