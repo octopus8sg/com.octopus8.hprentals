@@ -1,6 +1,7 @@
 <?php
 
 use CRM_Hprentals_ExtensionUtil as E;
+use CRM_Hprentals_Utils as U;
 
 /**
  * Form controller class
@@ -8,71 +9,153 @@ use CRM_Hprentals_ExtensionUtil as E;
  * @see https://docs.civicrm.org/dev/en/latest/framework/quickform/
  */
 class CRM_Hprentals_Form_Payment extends CRM_Core_Form {
-  public function buildQuickForm() {
+    protected $_id;
 
-    // add form elements
-    $this->add(
-      'select', // field type
-      'favorite_color', // field name
-      'Favorite Color', // field label
-      $this->getColorOptions(), // list of options
-      TRUE // is required
-    );
-    $this->addButtons(array(
-      array(
-        'type' => 'submit',
-        'name' => E::ts('Submit'),
-        'isDefault' => TRUE,
-      ),
-    ));
+    protected $_myentity;
 
-    // export form elements
-    $this->assign('elementNames', $this->getRenderableElementNames());
-    parent::buildQuickForm();
-  }
+    protected $_dialog;
 
-  public function postProcess() {
-    $values = $this->exportValues();
-    $options = $this->getColorOptions();
-    CRM_Core_Session::setStatus(E::ts('You picked color "%1"', array(
-      1 => $options[$values['favorite_color']],
-    )));
-    parent::postProcess();
-  }
-
-  public function getColorOptions() {
-    $options = array(
-      '' => E::ts('- select -'),
-      '#f00' => E::ts('Red'),
-      '#0f0' => E::ts('Green'),
-      '#00f' => E::ts('Blue'),
-      '#f0f' => E::ts('Purple'),
-    );
-    foreach (array('1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e') as $f) {
-      $options["#{$f}{$f}{$f}"] = E::ts('Grey (%1)', array(1 => $f));
+    public function getDefaultEntity()
+    {
+        return 'RentalsPayment';
     }
-    return $options;
-  }
 
-  /**
-   * Get the fields/elements defined in this form.
-   *
-   * @return array (string)
-   */
-  public function getRenderableElementNames() {
-    // The _elements list includes some items which should not be
-    // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
-    // items don't have labels.  We'll identify renderable by filtering on
-    // the 'label'.
-    $elementNames = array();
-    foreach ($this->_elements as $element) {
-      /** @var HTML_QuickForm_Element $element */
-      $label = $element->getLabel();
-      if (!empty($label)) {
-        $elementNames[] = $element->getName();
-      }
+    public function getDefaultEntityName()
+    {
+        return 'Rentals Payment';
     }
-    return $elementNames;
-  }
+
+    public function getDefaultEntityTable()
+    {
+        return 'civicrm_o8_rental_payment';
+    }
+
+    public function getEntityId()
+    {
+        return $this->_id;
+    }
+
+
+    /**
+     * Preprocess form.
+     *
+     * This is called before buildForm. Any pre-processing that
+     * needs to be done for buildForm should be done here.
+     *
+     * This is a virtual function and should be redefined if needed.
+     */
+    public function preProcess()
+    {
+        parent::preProcess();
+
+        $action = $this->getAction();
+//        U::writeLog($action, 'action before');
+        $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
+
+        $this->_action = $action;
+//        U::writeLog($action, 'action after');
+        $this->assign('action', $action);
+        $myEntity = null;
+        $entityName = $this->getDefaultEntityName();
+        $entityClass = $this->getDefaultEntity();
+        if ($id) {
+            $myEntity = U::getMyEntity($id, $entityClass);
+//            U::writeLog($myEntity, "RentalExpense Entity");
+
+            if ($myEntity) {
+                $this->_myentity = $myEntity;
+                $this->_id = $id;
+                $title = 'Edit ' . $entityName;
+                $this->assign('myEntity', $myEntity);
+            }
+        }
+        if ($this->_action == CRM_Core_Action::DELETE) {
+            $title = 'Delete ' . $entityName;
+            CRM_Utils_System::setTitle($title);
+        } else {
+            throw new CRM_Core_Exception(ts('You can only delete using this path'));
+        }
+    }
+
+    public function buildQuickForm()
+    {
+        $fields = [];
+
+        $id = $this->getEntityId();
+        $this->assign('id', $id);
+        if ($this->_action == CRM_Core_Action::DELETE) {
+            $this->add('hidden', 'id');
+            $this->addButtons([
+                ['type' => 'submit', 'name' => E::ts('Delete'), 'isDefault' => TRUE],
+                ['type' => 'cancel', 'name' => E::ts('Cancel')]
+            ]);
+        } else {
+            throw new CRM_Core_Exception(ts('You can only delete using this path'));
+        }
+        // export form elements
+        $this->assign('elementNames', $this->getRenderableElementNames());
+        parent::buildQuickForm();
+    }
+
+    /**
+     * Get the fields/elements defined in this form.
+     *
+     * @return array (string)
+     */
+    public function getRenderableElementNames()
+    {
+        // The _elements list includes some items which should not be
+        // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
+        // items don't have labels.  We'll identify renderable by filtering on
+        // the 'label'.
+        $elementNames = array();
+        foreach ($this->_elements as $element) {
+            /** @var HTML_QuickForm_Element $element */
+            $label = $element->getLabel();
+            if (!empty($label)) {
+                $elementNames[] = $element->getName();
+            }
+        }
+        return $elementNames;
+    }
+
+    /**
+     * This virtual function is used to set the default values of various form
+     * elements.
+     *
+     * @return array|NULL
+     *   reference to the array of default values
+     */
+    public function setDefaultValues()
+    {
+        $defaults = [];
+        if ($this->_myentity) {
+            $defaults = $this->_myentity;
+        }
+        U::writeLog($defaults, "RentalsExpense Defaults");
+        return $defaults;
+    }
+
+    /**
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws CiviCRM_API3_Exception
+     * @throws \Civi\API\Exception\NotImplementedException
+     */
+    public function postProcess()
+    {
+        $entity = $this->getDefaultEntity();
+        $name = $this->getDefaultEntityName();
+        $action = $this->_action;
+        $id = $this->getEntityId();
+        switch ($action) {
+            case CRM_Core_Action::DELETE:
+                $apiAction = 'delete';
+                civicrm_api4($entity, $apiAction, ['where' => [['id', '=', $id]]]);
+                CRM_Core_Session::setStatus(E::ts('Removed ') . $name, $name, 'success');
+                break;
+        }
+        parent::postProcess();
+    }
 
 }

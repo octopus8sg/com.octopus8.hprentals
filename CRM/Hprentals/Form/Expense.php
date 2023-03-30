@@ -64,17 +64,17 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
             $myEntity = U::getMyEntity($id, $entityClass);
 //            U::writeLog($myEntity, "RentalExpense Entity");
 
-            if($myEntity){
+            if ($myEntity) {
                 $this->_myentity = $myEntity;
                 $this->_id = $id;
                 $title = 'Edit ' . $entityName;
                 $this->assign('myEntity', $myEntity);
             }
         }
-        if($this->_action == CRM_Core_Action::DELETE){
+        if ($this->_action == CRM_Core_Action::DELETE) {
             $title = 'Delete ' . $entityName;
             CRM_Utils_System::setTitle($title);
-        }else{
+        } else {
             throw new CRM_Core_Exception(ts('You can only delete using this path'));
         }
     }
@@ -85,25 +85,27 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
 
         $id = $this->getEntityId();
         $this->assign('id', $id);
-        if($this->_action == CRM_Core_Action::DELETE){
+        if ($this->_action == CRM_Core_Action::DELETE) {
             $this->add('hidden', 'id');
             $this->addButtons([
                 ['type' => 'submit', 'name' => E::ts('Delete'), 'isDefault' => TRUE],
                 ['type' => 'cancel', 'name' => E::ts('Cancel')]
             ]);
-        }else{
+        } else {
             throw new CRM_Core_Exception(ts('You can only delete using this path'));
         }
         // export form elements
         $this->assign('elementNames', $this->getRenderableElementNames());
         parent::buildQuickForm();
     }
+
     /**
      * Get the fields/elements defined in this form.
      *
      * @return array (string)
      */
-    public function getRenderableElementNames() {
+    public function getRenderableElementNames()
+    {
         // The _elements list includes some items which should not be
         // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
         // items don't have labels.  We'll identify renderable by filtering on
@@ -144,23 +146,15 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
      */
     public function postProcess()
     {
-        $session = CRM_Core_Session::singleton();
         $entity = $this->getDefaultEntity();
+        $name = $this->getDefaultEntityName();
         $action = $this->_action;
-        $dialog = $this->_dialog;
         $id = $this->getEntityId();
         switch ($action) {
             case CRM_Core_Action::DELETE:
                 $apiAction = 'delete';
-                civicrm_api4($entity, 'delete', ['where' => [['id', '=', $id]]]);
-                CRM_Core_Session::setStatus(E::ts('Removed Expense'), E::ts('Expense'), 'success');
-                $url = (CRM_Utils_System::url(U::PATH_EXPENSES,
-                    "reset=1"));
-                U::writeLog($url);
-                $session->replaceUserContext($url);
-                if(!$dialog) {
-                    CRM_Utils_System::redirect($url);
-                }
+                civicrm_api4($entity, $apiAction, ['where' => [['id', '=', $id]]]);
+                CRM_Core_Session::setStatus(E::ts('Removed ') . $name, $name, 'success');
                 break;
         }
         parent::postProcess();
