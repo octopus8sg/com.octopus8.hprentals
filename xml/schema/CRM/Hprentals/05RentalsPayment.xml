@@ -46,6 +46,22 @@
     </index>
 
     <field>
+        <name>tenant_id</name>
+        <type>int unsigned</type>
+        <comment>FK to Contact</comment>
+        <html>
+            <label>Tenant</label>
+            <type>EntityRef</type>
+        </html>
+    </field>
+    <foreignKey>
+        <name>tenant_id</name>
+        <table>civicrm_contact</table>
+        <key>id</key>
+        <onDelete>CASCADE</onDelete>
+    </foreignKey>
+
+    <field>
         <name>method_id</name>
         <type>int unsigned</type>
         <title>Method</title>
@@ -65,6 +81,19 @@
         <key>id</key>
         <onDelete>SET NULL</onDelete>
     </foreignKey>
+
+    <field>
+        <name>amount</name>
+        <type>decimal</type>
+        <required>true</required>
+        <import>true</import>
+        <dataPattern>/^\d+(\.\d{2})?$/</dataPattern>
+        <comment>Amount</comment>
+        <html>
+            <type>Text</type>
+            <label>Amount</label>
+        </html>
+    </field>
 
     <field>
         <name>created_id</name>

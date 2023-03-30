@@ -31,6 +31,25 @@ CRM.$(function ($) {
         payments_dtsettings.sAjaxSource = payments_sourceUrl;
         payments_dtsettings.fnInitComplete = function (oSettings, json) {
         };
+        payments_dtsettings.aoColumns = [
+            null,
+            null,
+            null,
+            null,
+            null,
+            { "sClass": "right", "mRender": function(data, type, row) {
+                    return '$' + data;
+                } }
+        ];
+
+        payments_dtsettings.fnFooterCallback = function (nFoot, aData, iStart, iEnd, aiDisplay) {
+            var total = 0;
+            for (var i = iStart; i < iEnd; i++) {
+                total += parseFloat(aData[aiDisplay[i]][5]);
+            }
+            // console.log($(nFoot));
+            $(nFoot).find('#p_total_sum').html('<i>$' + total.toFixed(2) + '</i>');
+        };
         payments_dtsettings.fnDrawCallback = function (oSettings) {
             // $("a.view-payment").css('background','red');
             $("a.view-payment").off("click").click(function (event) {

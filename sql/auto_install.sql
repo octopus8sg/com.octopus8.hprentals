@@ -137,13 +137,16 @@ ENGINE=InnoDB;
 CREATE TABLE `civicrm_o8_rental_payment` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique RentalsPayment ID',
   `code` varchar(12) NOT NULL COMMENT 'Code',
+  `tenant_id` int unsigned COMMENT 'FK to Contact',
   `method_id` int unsigned COMMENT 'FK to payment method',
+  `amount` decimal(20,2) NOT NULL COMMENT 'Amount',
   `created_id` int unsigned COMMENT 'FK to civicrm_contact, who created this',
   `created_date` datetime COMMENT 'Date and time this was created.',
   `modified_id` int unsigned COMMENT 'FK to civicrm_contact, who modified this',
   `modified_date` datetime COMMENT 'Date and time this was modified.',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_code`(code),
+  CONSTRAINT FK_civicrm_o8_rental_payment_tenant_id FOREIGN KEY (`tenant_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_o8_rental_payment_method_id FOREIGN KEY (`method_id`) REFERENCES `civicrm_o8_rental_method`(`id`) ON DELETE SET NULL,
   CONSTRAINT FK_civicrm_o8_rental_payment_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
   CONSTRAINT FK_civicrm_o8_rental_payment_modified_id FOREIGN KEY (`modified_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL

@@ -10,16 +10,17 @@
                 label: '@',
                 url: '@'
             },
-
+            // require: '^ngController', // Add this line to require the controller
             link: function (scope, element, attrs) {
+                console.log(controller);
                 element.on('click', function (event) {
                     event.preventDefault();
-                    const href = CRM.url(scope.url);
-                    const $el = CRM.loadForm(href, {
+                    var href = CRM.url(scope.url);
+                    var $el = CRM.loadForm(href, {
                         dialog: {width: '50%', height: '50%'}
-                    })
-                        // .success()
-                        .close;
+                    }).on('crmPopupFormSuccess', function() {
+                        // controller.refreshAfterTask();
+                    }).close;
                 });
             }
         };

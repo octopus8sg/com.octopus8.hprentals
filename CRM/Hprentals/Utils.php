@@ -855,22 +855,29 @@ class CRM_Hprentals_Utils
             'number' => 1,
         ];
         try {
-            $lastInvoice = civicrm_api4('Invoice', 'get', [
-                'select' => ['invoice_number'],
-                'orderBy' => ['invoice_number DESC'],
+            $lastInvoice = civicrm_api4('RentalsInvoice', 'get', [
+                'select' => [
+                    'code',
+                ],
+                'orderBy' => [
+                    'code' => 'DESC',
+                ],
                 'limit' => 1,
-                'where' => [
-                    ['invoice_number', 'LIKE', $invoiceParams['prefix'] . '%'],
+                'checkPermissions' => FALSE,
+                  'where' => [
+                    ['code', 'LIKE', $invoiceParams['prefix'] . '%'],
                 ],
             ]);
+            self::writeLog($lastInvoice, 'lastInvoice');
         } catch (Exception $e) {
             self::writeLog($e->getMessage());
         }
         try {
-            if (!empty($lastInvoice['values'])) {
-                $lastInvoiceNumber = $lastInvoice['values'][0]['invoice_number'];
+            if (!empty($lastInvoice)) {
+                $lastInvoiceNumber = $lastInvoice[0]['code'];
                 $lastNumber = substr($lastInvoiceNumber, -4);
                 $invoiceParams['number'] = (int)$lastNumber + 1;
+                self::writeLog($lastInvoiceNumber, 'lastInvoiceNumber');
             }
         } catch (Exception $e) {
             self::writeLog($e->getMessage());

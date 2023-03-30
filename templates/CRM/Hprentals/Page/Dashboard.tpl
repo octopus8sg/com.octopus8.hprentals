@@ -8,7 +8,8 @@
         <h3>Rental Summary - {$last_month}</h3>
         <div class="crm-search-results">
             <table>
-                <table class="selector-rentals row-highlight pagerDisplay" id="DashboardRentals" name="DashboardContact">
+                <table class="selector-rentals row-highlight pagerDisplay" id="DashboardRentals"
+                       name="DashboardContact">
                     <thead class="sticky">
                     <tr>
                         <th scope="col">
@@ -37,8 +38,11 @@
             <table class="selector-invoices row-highlight pagerDisplay" id="DashboardInvoices" name="DashboardInvoices">
                 <thead class="sticky">
                 <tr>
-                    <th id="sortable"  scope="col">
+                    <th id="sortable" scope="col">
                         {ts}ID{/ts}
+                    </th>
+                    <th scope="col">
+                        {ts}Code{/ts}
                     </th>
                     <th scope="col">
                         {ts}Tenant{/ts}
@@ -49,11 +53,13 @@
                     <th scope="col">
                         {ts}Amount{/ts}
                     </th>
-                    <th scope="col">
-                        {ts}Description{/ts}
-                    </th>
                 </tr>
                 </thead>
+                <tfoot id="i_total">
+                <tr>
+                    <td colspan="5" id="i_total_td" style="text-align: right;"><b>Total: <span id="i_total_sum"></span></b></td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -67,8 +73,11 @@
             <table class="selector-payments row-highlight pagerDisplay" id="DashboardPayments" name="DashboardPayments">
                 <thead class="sticky">
                 <tr>
-                    <th id="sortable"  scope="col">
+                    <th id="sortable" scope="col">
                         {ts}ID{/ts}
+                    </th>
+                    <th scope="col">
+                        {ts}Code{/ts}
                     </th>
                     <th scope="col">
                         {ts}Tenant{/ts}
@@ -84,6 +93,11 @@
                     </th>
                 </tr>
                 </thead>
+                <tfoot id="p_total">
+                <tr>
+                    <td colspan="6" id="p_total_td" style="text-align: right;"><b>Total: <span id="p_total_sum"></span></b></td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </div>
