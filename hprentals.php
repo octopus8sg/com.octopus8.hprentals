@@ -75,9 +75,9 @@ function hprentals_civicrm_disable()
  */
 function hprentals_civicrm_pre($op, $objectName, $id, &$params)
 {
-    U::writeLog($params, 'hprentals_civicrm_pre para');
-    U::writeLog($objectName, 'hprentals_civicrm_pre onjne');
-    U::writeLog($op, 'hprentals_civicrm_pre op');
+//    U::writeLog($params, 'hprentals_civicrm_pre para');
+//    U::writeLog($objectName, 'hprentals_civicrm_pre onjne');
+//    U::writeLog($op, 'hprentals_civicrm_pre op');
 
     U::beforeSavingDo($op, $objectName, $params);
 

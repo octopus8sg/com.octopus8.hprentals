@@ -50,7 +50,8 @@ class CRM_Hprentals_Utils
     public const EXPENSE_FREQUENCY = [
         "once_off" => "Once Off",
         "every_month" => "Every Month",
-        "less_than_6_m" => "Less than 6 months"
+        "less_than_6_m" => "Less than 6 months",
+        "more_than_6_m" => "More than 6 months"
     ];
 
 

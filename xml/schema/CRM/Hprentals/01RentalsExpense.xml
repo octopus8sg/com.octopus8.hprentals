@@ -57,7 +57,7 @@
         <import>true</import>
         <export>true</export>
         <pseudoconstant>
-            <callback>CRM_Hprentals_Utils::getexpenseFrequency</callback>
+            <callback>CRM_Hprentals_Utils::getExpenseFrequency</callback>
         </pseudoconstant>
         <html>
             <type>Select</type>

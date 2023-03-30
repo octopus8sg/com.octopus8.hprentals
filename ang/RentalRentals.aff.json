@@ -1,6 +1,6 @@
 {
   "type": "search",
-  "name": "afsearchRentalRentals",
+  "name": "afsearchSearchRentals",
   "requires": ["crmHprentals"],
   "title": "Total Rentals",
   "description": "",
@@ -15,7 +15,5 @@
   "server_route": "civicrm/rentals/search",
   "redirect": "",
   "create_submission": "",
-  "navigation": "",
-  "module_name": "rentalRentals",
-  "id": "rentalRentals"
+  "navigation": ""
 }

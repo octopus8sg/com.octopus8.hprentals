@@ -1,14 +1,14 @@
 <?php
 return [
     [
-        'name' => 'SavedSearch_RentalsO8',
+        'name' => 'SavedSearch_Rentals08',
         'entity' => 'SavedSearch',
         'cleanup' => 'always',
         'update' => 'always',
         'params' => [
             'version' => 4,
             'values' => [
-                'name' => 'RentalsO8',
+                'name' => 'Rentals08',
                 'label' => 'Rentals',
                 'form_values' => NULL,
                 'mapping_id' => NULL,
@@ -45,16 +45,16 @@ return [
         ],
     ],
     [
-        'name' => 'SavedSearch_RentalsO8_SearchDisplay_All_Rentals_TableO8',
+        'name' => 'SavedSearch_Rentals08_SearchDisplay_All_Rentals_Table08',
         'entity' => 'SearchDisplay',
         'cleanup' => 'always',
         'update' => 'always',
         'params' => [
             'version' => 4,
             'values' => [
-                'name' => 'All_Rentals_TableO8',
+                'name' => 'All_Rentals_Table08',
                 'label' => 'All Rentals Table',
-                'saved_search_id.name' => 'RentalsO8',
+                'saved_search_id.name' => 'Rentals08',
                 'type' => 'table',
                 'settings' => [
                     'actions' => TRUE,
@@ -134,7 +134,7 @@ return [
         ],
     ],
     [
-        'name' => 'SavedSearch_RentalsO8_SearchDisplay_Tenant_Rentals_Table08',
+        'name' => 'SavedSearch_Rentals08_SearchDisplay_Tenant_Rentals_Table08',
         'entity' => 'SearchDisplay',
         'cleanup' => 'always',
         'update' => 'always',
@@ -143,7 +143,7 @@ return [
             'values' => [
                 'name' => 'Tenant_Rentals_Table08',
                 'label' => 'Tenant Rentals Table',
-                'saved_search_id.name' => 'RentalsO8',
+                'saved_search_id.name' => 'Rentals08',
                 'type' => 'table',
                 'settings' => [
                     'actions' => TRUE,

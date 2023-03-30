@@ -15,6 +15,7 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
+DELETE FROM civicrm_managed where `module` = "com.octopus8.hprentals";
 DELETE FROM civicrm_saved_search where `name` like "%08";
-DELETE FROM civicrm_saved_display where `name` like "%08";
+DELETE FROM civicrm_search_display where `name` like "%08";
 SET FOREIGN_KEY_CHECKS=1;
