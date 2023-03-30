@@ -186,6 +186,17 @@ return [
                         [
                             'links' => [
                                 [
+                                    'entity' => '',
+                                    'action' => '',
+                                    'join' => '',
+                                    'target' => 'crm-popup',
+                                    'icon' => 'fa-trash-o',
+                                    'text' => 'Delete',
+                                    'style' => 'danger',
+                                    'path' => 'civicrm/rentals/deleteinvoice?id=[id]&action=delete&reset=1',
+                                    'condition' => [],
+                                ],
+                                [
                                     'entity' => 'RentalsInvoice',
                                     'action' => 'update',
                                     'join' => '',
@@ -196,6 +207,7 @@ return [
                                     'path' => '',
                                     'condition' => [],
                                 ],
+
                             ],
                             'type' => 'links',
                             'alignment' => 'text-right',

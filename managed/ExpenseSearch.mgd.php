@@ -104,6 +104,17 @@ return [
                         [
                             'links' => [
                                 [
+                                    'entity' => '',
+                                    'action' => '',
+                                    'join' => '',
+                                    'target' => 'crm-popup',
+                                    'icon' => 'fa-trash-o',
+                                    'text' => 'Delete',
+                                    'style' => 'danger',
+                                    'path' => 'civicrm/rentals/deleteexpense?id=[id]&action=delete&reset=1',
+                                    'condition' => [],
+                                ],
+                                [
                                     'entity' => 'RentalsExpense',
                                     'action' => 'update',
                                     'join' => '',
@@ -113,7 +124,7 @@ return [
                                     'style' => 'default',
                                     'path' => '',
                                     'condition' => [],
-                                ],
+                                ]
                             ],
                             'type' => 'links',
                             'alignment' => 'text-right',
