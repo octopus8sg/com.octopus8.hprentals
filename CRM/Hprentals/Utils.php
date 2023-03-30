@@ -182,7 +182,7 @@ class CRM_Hprentals_Utils
     ];
 
     public const RENTAL_LESS_THAN_SIX_MONTH = [
-        'name' => "Rental Less Than 6 month",
+        'name' => "Rental Less Than 6 months",
         'frequency' => "less_than_6_m",
         'is_prorate' => 1,
         'is_refund' => 0,
@@ -190,8 +190,8 @@ class CRM_Hprentals_Utils
     ];
 
     public const RENTAL_MORE_THAN_SIX_MONTH = [
-        'name' => "Rental More Than 6 Month",
-        'frequency' => "every_month",
+        'name' => "Rental More Than 6 Months",
+        'frequency' => "more_than_6_m",
         'is_prorate' => 1,
         'is_refund' => 0,
         'amount' => 250,
@@ -679,7 +679,7 @@ class CRM_Hprentals_Utils
                         'admission' => $date_from,
                         'discharge' => $date_to,
                     ]);
-                    self::writeLog($rentals_api);
+                    self::writeLog($rentals_api, 'create Rentals Api');
                 }
                 if ($rentals_api['is_error']) {
                     // handle error
@@ -722,29 +722,160 @@ class CRM_Hprentals_Utils
      * @param $objectName
      * @param $params
      */
-    public static function addCreatedByModifiedBy($op, $objectName, &$params): void
+    public static function beforeSavingDo($op, $objectName, &$params): void
     {
         $defaultEntities = self::DEFAULT_ENTITIES;
 
         if (in_array($objectName, $defaultEntities)) {
             self::writeLog($params, 'before save');
             self::writeLog($op, 'before save op');
-            if ($op == 'create' || $op == 'update' || $op == 'edit' ) {
-                $userId = CRM_Core_Session::singleton()->getLoggedInContactID();
-                $now = date('YmdHis');
-
-                if ($op == 'create') {
-                    $params['created_id'] = $userId;
-                    $params['created_date'] = $now;
-                }
-                if ($op == 'update' || $op == 'edit' ) {
-                    $params['modified_id'] = $userId;
-                    $params['modified_date'] = $now;
-                }
-
-            }
+            $params = self::addCreatedByModifiedBy($op, $params);
+            self::checkRentalOverlap($op, $objectName, $params);
+            self::addRentalCode($op, $objectName, $params);
+            self::addInvoiceCode($op, $objectName, $params);
             self::writeLog($params, 'after save');
+
         }
+    }
+
+    /**
+     * @param $op
+     * @param $params
+     * @return mixed
+     */
+    public static function addCreatedByModifiedBy($op, &$params)
+    {
+        if ($op == 'create' || $op == 'update' || $op == 'edit') {
+            $userId = CRM_Core_Session::singleton()->getLoggedInContactID();
+            $now = date('YmdHis');
+
+            if ($op == 'create') {
+                $params['created_id'] = $userId;
+                $params['created_date'] = $now;
+            }
+            if ($op == 'update' || $op == 'edit') {
+                $params['modified_id'] = $userId;
+                $params['modified_date'] = $now;
+            }
+
+        }
+        return $params;
+    }
+
+    /**
+     * @param $op
+     * @param $objectName
+     * @param $params
+     */
+    public static function checkRentalOverlap($op, $objectName, &$params): void
+    {
+        if ($objectName == 'RentalsRental') {
+            self::writeLog($params, 'before overlap');
+            if ($op == 'create' || $op == 'edit' || $op == 'update') {
+                $date_from = $params['admission'];
+                $date_to = $params['discharge'];
+                $rental_id = $params['id'];
+                $tenant_id = $params['tenant_id'];
+                $existing_rent = self::getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id);
+                // If an overlap is found, set a validation error message
+                if ($existing_rent > 0) {
+                    self::showErrorMessage(ts('You already have a rent during this period.'), 'Date Overlap');
+                    throw new CRM_Core_Exception(ts('You already have a rent during this period.'));
+                }
+            }
+            self::writeLog($params, 'after overlap');
+        }
+    }
+
+    /**
+     * @param $op
+     * @param $objectName
+     * @param $params
+     */
+    public static function addRentalCode($op, $objectName, &$params)
+    {
+        if ($objectName == 'RentalsRental') {
+            self::writeLog($params, 'before adding rental code');
+            if ($op == 'create' || $op == 'edit' || $op == 'update') {
+                $date_from = $params['admission'];
+                $date_to = $params['discharge'];
+                $tenant_id = $params['tenant_id'];
+                // If an overlap is found, set a validation error message
+                $code = self::generateRentalCode($tenant_id, $date_from, $date_to);
+                $params['code'] = $code;
+                self::writeLog($params, 'after adding rental code');
+            }
+        }
+    }
+
+    /**
+     * @param $op
+     * @param $objectName
+     * @param $params
+     */
+    public static function addInvoiceCode($op, $objectName, &$params)
+    {
+        if ($objectName == 'RentalsInvoice') {
+            self::writeLog($params, 'before adding invoice code');
+            if ($op == 'create') {
+                self::writeLog($params, 'before adding invoice code 2');
+                $invoiceNumber = self::generateInvoiceNumber();
+                self::writeLog($invoiceNumber, 'before adding invoice code 3');
+                $params['code'] = $invoiceNumber;
+                self::writeLog($params, 'after adding invoice code');
+            }
+        }
+    }
+
+    public static function generateRentalCode($clientId, $startDate, $endDate)
+    {
+        // Convert the dates to the required format.
+        $startDateFormatted = date('ymd', strtotime($startDate));
+        $endDateFormatted = date('ymd', strtotime($endDate));
+
+        // Pad the client ID with leading zeros up to 5 digits.
+        $clientIdFormatted = str_pad($clientId, 5, '0', STR_PAD_LEFT);
+
+        // Concatenate the formatted client ID and dates to generate the entity label.
+        $entityLabel = 'c' . $clientIdFormatted . 'a' . $startDateFormatted . 'd' . $endDateFormatted;
+
+        return $entityLabel;
+    }
+
+    public static function generateInvoiceNumber($prefix = 'HP')
+    {
+        // Get the current year and month
+        $today = new DateTime();
+        $monthYear = $today->format('ym');
+        $invoiceParams = [
+            'sequential' => 1,
+            'prefix' => 'HP' . $monthYear,
+            'suffix' => '',
+            'number' => 1,
+        ];
+        try {
+            $lastInvoice = civicrm_api4('Invoice', 'get', [
+                'select' => ['invoice_number'],
+                'orderBy' => ['invoice_number DESC'],
+                'limit' => 1,
+                'where' => [
+                    ['invoice_number', 'LIKE', $invoiceParams['prefix'] . '%'],
+                ],
+            ]);
+        } catch (Exception $e) {
+            self::writeLog($e->getMessage());
+        }
+        try {
+            if (!empty($lastInvoice['values'])) {
+                $lastInvoiceNumber = $lastInvoice['values'][0]['invoice_number'];
+                $lastNumber = substr($lastInvoiceNumber, -4);
+                $invoiceParams['number'] = (int)$lastNumber + 1;
+            }
+        } catch (Exception $e) {
+            self::writeLog($e->getMessage());
+        }
+        $invoiceNumber = $invoiceParams['prefix'] . str_pad($invoiceParams['number'], 4, '0', STR_PAD_LEFT);
+        return $invoiceNumber;
     }
 }
 

@@ -26,6 +26,27 @@
   </primaryKey>
 
   <field>
+    <name>code</name>
+    <type>varchar</type>
+    <length>21</length>
+    <label>Rental Code</label>
+    <comment>Rental Code</comment>
+    <required>true</required>
+    <html>
+      <type>Text</type>
+      <label>Code</label>
+    </html>
+    <import>true</import>
+    <export>true</export>
+  </field>
+
+  <index>
+    <name>index_code</name>
+    <fieldName>code</fieldName>
+    <unique>true</unique>
+  </index>
+
+  <field>
     <name>tenant_id</name>
     <type>int unsigned</type>
     <comment>FK to Contact</comment>

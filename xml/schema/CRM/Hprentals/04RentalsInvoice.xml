@@ -31,7 +31,7 @@
         <length>12</length>
         <label>Code</label>
         <comment>Code</comment>
-        <required>true</required>
+<!--        <required>true</required>-->
         <import>true</import>
         <export>true</export>
         <html>
@@ -69,10 +69,12 @@
         <pseudoconstant>
             <table>civicrm_o8_rental_rental</table>
             <keyColumn>id</keyColumn>
-            <nameColumn>admission</nameColumn>
+            <labelColumn>code</labelColumn>
+<!--            <condition>LIMIT 10</condition>-->
         </pseudoconstant>
         <html>
             <type>Select</type>
+            <label>Rental</label>
         </html>
     </field>
     <foreignKey>

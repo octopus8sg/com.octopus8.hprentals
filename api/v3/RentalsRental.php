@@ -59,6 +59,7 @@ function civicrm_api3_rentals_rental_delete($params)
 function civicrm_api3_rentals_rental_get($params)
 {
     $rental_got = _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params, TRUE, 'RentalsRental');
-    U::writeLog($rental_got);
+    U::writeLog($rental_got,'civicrm_api3_rentals_rental_get');
+    U::writeLog($params,'civicrm_api3_rentals_rental_get params');
     return $rental_got;
 }

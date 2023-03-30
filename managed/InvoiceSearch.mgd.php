@@ -60,14 +60,14 @@ return [
         ],
     ],
     [
-        'name' => 'SavedSearch_Invoices08_SearchDisplay_Invoices_Table_08',
+        'name' => 'SavedSearch_Invoices08_SearchDisplay_Invoices_Table08',
         'entity' => 'SearchDisplay',
         'cleanup' => 'unused',
         'update' => 'unmodified',
         'params' => [
             'version' => 4,
             'values' => [
-                'name' => 'Invoices_Table_08',
+                'name' => 'Invoices_Table08',
                 'label' => 'Invoices Table',
                 'saved_search_id.name' => 'Invoices08',
                 'type' => 'table',

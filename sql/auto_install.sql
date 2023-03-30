@@ -85,6 +85,7 @@ ENGINE=InnoDB;
 -- *******************************************************/
 CREATE TABLE `civicrm_o8_rental_rental` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique ID',
+  `code` varchar(21) NOT NULL COMMENT 'Rental Code',
   `tenant_id` int unsigned COMMENT 'FK to Contact',
   `admission` date NOT NULL COMMENT 'Admission date',
   `discharge` date NOT NULL COMMENT 'Discharge date',
@@ -93,6 +94,7 @@ CREATE TABLE `civicrm_o8_rental_rental` (
   `modified_id` int unsigned COMMENT 'FK to civicrm_contact, who modified this',
   `modified_date` datetime COMMENT 'Date and time this was modified.',
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `index_code`(code),
   UNIQUE INDEX `idx_tenant_admission_discharge`(tenant_id, admission, discharge),
   CONSTRAINT FK_civicrm_o8_rental_rental_tenant_id FOREIGN KEY (`tenant_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_o8_rental_rental_created_id FOREIGN KEY (`created_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
@@ -109,7 +111,7 @@ ENGINE=InnoDB;
 -- *******************************************************/
 CREATE TABLE `civicrm_o8_rental_invoice` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique RentalsInvoice ID',
-  `code` varchar(12) NOT NULL COMMENT 'Code',
+  `code` varchar(12) COMMENT 'Code',
   `description` varchar(1255) NOT NULL COMMENT 'Name',
   `rental_id` int unsigned COMMENT 'FK to RentalsRental',
   `amount` decimal(20,2) NOT NULL COMMENT 'Amount',

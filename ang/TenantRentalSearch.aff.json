@@ -1,7 +1,7 @@
 {
   "type": "search",
-  "name": "TenantRentalSearch",
-  "requires": [],
+  "name": "tenantRentalSearch",
+  "requires": ["crmHprentals"],
   "title": "Tenant Rentals",
   "description": "",
   "is_dashlet": "",
@@ -17,7 +17,7 @@
   "redirect": "",
   "create_submission": "",
   "navigation": "",
-  "module_name": "TenantRentalSearch",
-  "directive_name": "afsearch-search-rentals",
-  "id": "TenantRentalSearch"
+  "module_name": "tenantRentalSearch",
+  "directive_name": "tenant-rental-search",
+  "id": "tenantRentalSearch"
 }

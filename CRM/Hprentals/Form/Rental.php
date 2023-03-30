@@ -229,7 +229,7 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         $action = $this->_action;
         $dialog = $this->_dialog;
         $values = $this->controller->exportValues();
-        U::writeLog($values);
+        U::writeLog($values, 'postProcess');
         $params['tenant_id'] = $values['tenant_id'];
         $params['first_invoice_id'] = $values['first_invoice_id'];
         $params['admission'] = $values['admission'];
