@@ -1,10 +1,12 @@
 <af-form ctrl="afform">
-  <af-entity url-autofill="1" type="RentalsRental" name="RentalsRental" label="Rental" actions="{create: true, update: true}" security="RBAC" />
-  <fieldset af-fieldset="RentalsRental" class="af-container" af-title="Method">
-    <af-field name="tenant_id" />
-    <af-field name="admission" />
-    <af-field name="discharge" />
-  </fieldset>
-  <button class="af-button btn btn-warning " type="reset" crm-icon="fa-undo">Reset</button>
-  <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>
+    <af-entity url-autofill="1" type="RentalsRental" name="RentalsRental" label="Rental"
+               actions="{create: true, update: true}" security="RBAC"/>
+    <fieldset af-fieldset="RentalsRental" class="af-container" af-title="Rental">
+        <af-field name="tenant_id"/>
+        <af-field name="admission"/>
+        <af-field name="discharge"/>
+    </fieldset>
+    <hr/>
+    <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>
+    <hr/>
 </af-form>

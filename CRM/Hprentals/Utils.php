@@ -261,24 +261,24 @@ class CRM_Hprentals_Utils
         $menu = [
             self::MAIN_MENU,
             self::DASHBOARD_MENU,
-            self::SETUP_MENU,
             self::TYPES_MENU,
             self::METHODS_MENU,
 //            self::RENTALS_MENU,
             self::INVOICES_MENU,
-            self::REPORTS_MENU
+            self::REPORTS_MENU,
+            self::SETUP_MENU
         ];
 
         if ($test_mode==1) {
             $menu = [
                 self::MAIN_MENU,
                 self::DASHBOARD_MENU,
-                self::SETUP_MENU,
                 self::TYPES_MENU,
                 self::METHODS_MENU,
                 self::RENTALS_MENU,
                 self::INVOICES_MENU,
-                self::REPORTS_MENU
+                self::REPORTS_MENU,
+                self::SETUP_MENU
             ];
         }
 return $menu;

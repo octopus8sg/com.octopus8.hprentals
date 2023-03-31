@@ -8,7 +8,7 @@
     <log>true</log>
     <paths>
         <add>civicrm/rentals/payment</add>
-        <update>civicrm/rentals/invoice#?RentalsPayment=[id]</update>
+        <update>civicrm/rentals/payment#?RentalsPayment=[id]</update>
     </paths>
 
     <field>

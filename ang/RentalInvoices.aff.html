@@ -5,11 +5,32 @@
 </hm-add-button>
 
 <div af-fieldset="">
-    <af-field name="id" defn="{label: 'ID', input_attrs: {}, required: false}" />
-    <af-field name="code" defn="{required: false, input_attrs: {}}" />
-    <af-field name="RentalsInvoice_RentalsRental_rental_id_01.tenant_id.display_name" defn="{label: 'Tenant', input_attrs: {}}" />
-    <af-field name="RentalsInvoice_RentalsRental_rental_id_01.admission" defn="{input_type: 'Select', search_range: true, input_attrs: {}}" />
-    <af-field name="RentalsInvoice_RentalsRental_rental_id_01.discharge" defn="{input_type: 'Select', search_range: true, input_attrs: {}}" />
-    <button class="af-button btn btn-warning" type="reset" crm-icon="fa-undo">Reset</button>
+    <div class="row">
+        <div class="col-md-4 col-xs-6">
+            <af-field name="id" defn="{label: 'ID', input_attrs: {}, required: false}" />
+        </div>
+        <div class="col-md-4 col-xs-6">
+            <af-field name="code" defn="{required: false, input_attrs: {}}" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-xs-6">
+            <af-field name="RentalsInvoice_RentalsRental_rental_id_01.tenant_id.display_name" defn="{label: 'Tenant', input_attrs: {}}" />
+        </div>
+        <div class="col-md-4 col-xs-6">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-xs-6">
+            <af-field name="RentalsInvoice_RentalsRental_rental_id_01.admission" defn="{input_type: 'Select', search_range: true, input_attrs: {}}" />
+        </div>
+        <div class="col-md-4 col-xs-6">
+            <af-field name="RentalsInvoice_RentalsRental_rental_id_01.discharge" defn="{input_type: 'Select', search_range: true, input_attrs: {}}" />
+        </div>
+    </div>
+    <hr/>
+
     <crm-search-display-table search-name="Invoices08" display-name="Invoices_Table08"></crm-search-display-table>
 </div>
