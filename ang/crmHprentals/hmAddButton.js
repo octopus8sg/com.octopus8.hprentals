@@ -11,14 +11,17 @@
                 url: '@',
             },
             // can be array of parents directive too
-            link: function (scope, element, attrs, ) {
+            link: function (scope, element, attrs,) {
 
                 element.on('click', function (event) {
                     event.preventDefault();
                     var href = CRM.url(scope.url);
 
-                    var $el = CRM.loadForm(href, {
+                    var $el =
+                        CRM.loadForm(href, {
                         dialog: {width: '50%', height: '50%'}
+                    }).on('crmFormSuccess crmPopupFormSuccess crmFormSubmit', function (e, data) {
+                        $('.crm-sortable-col:first').click();
                     }).close;
                 });
             }
