@@ -9,7 +9,7 @@ return [
             'version' => 4,
             'values' => [
                 'name' => 'Expenses08',
-                'label' => 'Expenses',
+                'label' => 'Types',
                 'form_values' => NULL,
                 'mapping_id' => NULL,
                 'search_custom_id' => NULL,
@@ -44,7 +44,7 @@ return [
             'version' => 4,
             'values' => [
                 'name' => 'Expenses_Table08',
-                'label' => 'Expenses Table',
+                'label' => 'Types Table',
                 'saved_search_id.name' => 'Expenses08',
                 'type' => 'table',
                 'settings' => [

@@ -24,7 +24,7 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
 
     public function getDefaultEntityName()
     {
-        return 'Rentals Expense';
+        return 'Type';
     }
 
     public function getDefaultEntityTable()
@@ -134,7 +134,7 @@ class CRM_Hprentals_Form_Expense extends CRM_Core_Form
         if ($this->_myentity) {
             $defaults = $this->_myentity;
         }
-        U::writeLog($defaults, "RentalsExpense Defaults");
+//        U::writeLog($defaults, "RentalsExpense Defaults");
         return $defaults;
     }
 

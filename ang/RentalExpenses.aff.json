@@ -1,7 +1,7 @@
 {
   "name": "afsearchSearchExpenses",
   "requires": ["crmHprentals"],
-  "title": "Search Expenses",
+  "title": "Search Types",
   "description": "",
   "is_dashlet": false,
   "is_public": false,

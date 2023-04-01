@@ -1,8 +1,8 @@
 {
   "name": "afformExpense",
   "requires": ["crmHprentals"],
-  "title": "Expense",
-  "description": "Expense",
+  "title": "Type",
+  "description": "Type",
   "is_dashlet": false,
   "is_public": false,
   "is_token": false,

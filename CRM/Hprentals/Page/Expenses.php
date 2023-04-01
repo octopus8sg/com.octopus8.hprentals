@@ -24,7 +24,7 @@ class CRM_Hprentals_Page_Expenses extends CRM_Core_Page
         // controller form for ajax search
         $controller_data = new CRM_Core_Controller_Simple(
             'CRM_Hprentals_Form_ExpenseFilter',
-            ts('Expenses Filter'),
+            ts('Types Filter'),
             NULL,
             FALSE, FALSE, TRUE
         );
