@@ -5,8 +5,7 @@
     <fieldset af-fieldset="RentalsInvoice" class="af-container" af-title="Invoice">
         <div class="row">
             <div class="col-md-4 col-xs-6">
-                <input style="{min-width: 350px}" crm-entityref="{entity: 'Contact', select: {allowClear:true}}"
-                       ng-model="tenant"/>
+                <hp-select-tenants ng-model="tenant"></hp-select-tenants>
             </div>
         </div>
 
@@ -22,7 +21,8 @@
         <div class="row">
             <div class="col-md-4 col-xs-6">
                 <select style="{min-width: 350px}"
-                        crm-ui-select="{placeholder: 'Select a Rental Start Date', allowClear: true}" ng-model="myrental">
+                        crm-ui-select="{placeholder: 'Select a Rental Start Date', allowClear: true}"
+                        ng-model="myrental">
                     <option style="{min-width: 350px}" value=""></option>
                     <option style="{min-width: 350px}" ng-repeat="myRental in myRentals" value="{{myRental.id}}">
                         {{myRental.admission}}
@@ -51,7 +51,7 @@
         </div>
 
         <!--        <textarea ng-model="totalSum"></textarea>-->
-                <hp-expenses></hp-expenses>
+        <hp-expenses></hp-expenses>
         <!--        <div class="row">-->
         <!--            <div class="col-md-12 col-xs-12">-->
         <!--                <hp-textarea value="description"></hp-textarea>-->

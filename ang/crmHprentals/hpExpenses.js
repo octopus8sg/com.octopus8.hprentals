@@ -10,6 +10,20 @@
             //     womanOnly: '@' // Use '@' for string parameter
             // },
             link: function (scope, element, attrs) {
+                scope.hptenants = [348, 349];
+                //     JSON.stringify({
+                //     entity: 'Contact',
+                //     select: {
+                //         allowClear: true
+                //     },
+                //     api: {
+                //         params: {
+                //             'id': {
+                //                 'IN': [348, 349]
+                //             }
+                //         }
+                //     }
+                // }); // for directive
                 // Convert IDs string to array
                 // let options = {where: [["id", "BETWEEN", [100, 500]], ["gender_id", "=", 1]]};
                 var rentaloptions = {};
@@ -18,7 +32,7 @@
                     scope.$apply();
                 });
                 scope.$watch('tenant', function (newVal, oldVal) {
-                    console.log('newVal', newVal)
+                    // console.log('newVal', newVal)
                     rentaloptions = {
                         where: [["tenant_id", "=", newVal]],
                         limit: 0
@@ -29,7 +43,7 @@
                     });
                 });
                 scope.$watch('myrental', function (newValue, oldValue) {
-                    console.log('rentalnewVal', newValue)
+                    // console.log('rentalnewVal', newValue)
                     if (newValue) {
                         var rentaltextarea = $('af-field[name="rental_id"]').find('textarea');
                         rentaltextarea.val(newValue);
