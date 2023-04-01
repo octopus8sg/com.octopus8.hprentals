@@ -32,31 +32,19 @@
         </div>
 
 
-        <div class="row">
-            <div class="col-md-4 col-xs-6">
+        <div class="row" hidden>
+            <div class="col-4">
                 <af-field name="rental_id" defn="{input_type: 'TextArea', input_attrs: {}}"/>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 col-xs-12">
+            <div class="col-4">
                 <af-field name="description"/>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4 col-xs-6">
+            <div class="col-4">
                 <af-field name="amount"/>
             </div>
         </div>
 
-        <!--        <textarea ng-model="totalSum"></textarea>-->
         <hp-expenses></hp-expenses>
-        <!--        <div class="row">-->
-        <!--            <div class="col-md-12 col-xs-12">-->
-        <!--                <hp-textarea value="description"></hp-textarea>-->
-        <!--            </div>-->
-        <!--        </div>-->
     </fieldset>
     <hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px"/>
     <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>

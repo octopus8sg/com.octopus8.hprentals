@@ -2,11 +2,13 @@
 
     <div class="help">
         <h3>Rental {{selectedRental.code}}</h3>
-        <div class="row">
-            <div class="col-4">Tenant: {{selectedRental.tenant}}</div>
-            <div class="col-4">Admission: {{selectedRental.admission}}</div>
-            <div class="col-4">Discharge: {{selectedRental.discharge}}</div>
+        <div class="col-4">Rental: {{hpRentalCode}}</div>
+        <div class="col-4">Expenses: <br/>
+            <ul ng-repeat="rTotal in arrTotal">
+                <li>{{rTotal}}</li>
+            </ul>
         </div>
+        <div class="col-4">Total Amount: {{hpRentalAmount}}</div>
     </div>
 
     <table>
