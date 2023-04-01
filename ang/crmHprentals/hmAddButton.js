@@ -12,18 +12,20 @@
             },
             // can be array of parents directive too
             link: function (scope, element, attrs,) {
-
-                element.on('click', function (event) {
+                element.on('click', function(event) {
+                    event.stopPropagation();
+                });
+                scope.onClick = function() {
                     event.preventDefault();
                     var href = CRM.url(scope.url);
 
                     var $el =
                         CRM.loadForm(href, {
-                        dialog: {width: '50%', height: '50%'}
-                    }).on('crmFormSuccess crmPopupFormSuccess crmFormSubmit', function (e, data) {
-                        $('.crm-sortable-col:first').click();
-                    }).close;
-                });
+                            dialog: {width: '50%', height: '50%'}
+                        }).on('crmFormSuccess crmPopupFormSuccess crmFormSubmit', function (e, data) {
+                            $('.crm-sortable-col:first').click();
+                        }).close;
+                };
             }
         };
     });
