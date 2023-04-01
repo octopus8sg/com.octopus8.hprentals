@@ -55,7 +55,7 @@
         <import>true</import>
         <export>true</export>
         <html>
-            <type>Text</type>
+            <type>TextArea</type>
             <label>Description</label>
         </html>
     </field>

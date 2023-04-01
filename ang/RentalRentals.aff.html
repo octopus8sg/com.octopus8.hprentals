@@ -3,17 +3,17 @@
         label="Add Rental"
         url="civicrm/rentals/rental">
 </hm-add-button>
-
+<hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px" />
 <div af-fieldset="" af-title="Search Rentals">
     <div class="row">
         <div class="col-md-4 col-xs-6">
             <af-field name="id" defn="{label: 'ID', input_attrs: {}}"/>
         </div>
         <div class="col-md-4 col-xs-6">
-            <af-field name="code" defn="{label: 'Code', input_attrs: {}}"/>
+            <af-field name="tenant_id.display_name" defn="{label: 'Tenant', input_attrs: {}}"/>
         </div>
     </div>
-<hr />
+    <hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px" />
     <div class="row">
         <div class="col-md-4 col-xs-6">
             <af-field name="admission" defn="{input_type: 'Select', search_range: true, input_attrs: {time:false}}"/>
@@ -22,14 +22,7 @@
             <af-field name="discharge" defn="{input_type: 'Select', search_range: true, input_attrs: {time:false}}"/>
         </div>
     </div>
-<hr />
-    <div class="row">
-        <div class="col-md-4 col-xs-6">
-            <af-field name="tenant_id.display_name" defn="{label: 'Tenant', input_attrs: {}}"/>
-        </div>
-        <div class="col-sm">
-        </div>
-    </div>
+    <hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px" />
 <crm-search-display-table
         search-name="Rentals08"
         display-name="All_Rentals_Table08"

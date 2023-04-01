@@ -1,7 +1,7 @@
 <div class="crm-container">
 
     <div class="help">
-        <p>{{$ctrl.calculateTotalText()}}</p>
+        <p>{{$myctrl.calculateTotalText()}}</p>
     </div>
 
     <table>
@@ -21,21 +21,21 @@
         <tr ng-repeat="myExpense in myExpenses">
             <td><input type="checkbox" ng-model="myExpense.checked"></td>
             <td>
-                {{$ctrl.myExpense.id}}
+                {{$myctrl.myExpense.id}}
             </td>
             <td>
-                {{$ctrl.myExpense.name}}
+                {{$myctrl.myExpense.name}}
             </td>
-            <td>{{frequency[$ctrl.myExpense.frequency]}}</td>
-            <td>{{$ctrl.myExpense.is_refund == "1" ? ts('Refund') : ts('Non Refund')}}</td>
-            <td>{{$ctrl.myExpense.is_prorate == "1" ? ts('Prorate') : ts('Non Prorate')}}</td>
-            <td>{{$ctrl.myExpense.amount | currency}}</td>
-            <td>{{$ctrl.myExpense.amount}}</td>
+            <td>{{frequency[$myctrl.myExpense.frequency]}}</td>
+            <td>{{$myctrl.myExpense.is_refund == "1" ? ts('Refund') : ts('Non Refund')}}</td>
+            <td>{{$myctrl.myExpense.is_prorate == "1" ? ts('Prorate') : ts('Non Prorate')}}</td>
+            <td>{{$myctrl.myExpense.amount | currency}}</td>
+            <td>{{$myctrl.myExpense.amount}}</td>
         </tr>
         <tfoot>
         <tr>
             <th colspan=3>Sum</th>
-            <th colspan=2>Total: {{$ctrl.calculateTotal() | currency}}</th>
+            <th colspan=2>Total: {{$myctrl.calculateTotal() | currency}}</th>
         </tr>
         </tfoot>
         </tbody>

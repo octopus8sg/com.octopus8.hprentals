@@ -5,12 +5,13 @@
         <af-field name="name"/>
         <af-field name="frequency"/>
         <af-field name="amount"/>
-        <hr/>
+        <hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px"/>
         <div class="row">
             <div class="col-12 col-md-12 col-xs-12">
                 <div class="checkbox">
                     <label>
-                        <af-field name="is_refund" defn="{label: false}"/> <b>Refund</b>
+                        <af-field name="is_refund" defn="{label: false}"/>
+                        <b>Refund</b>
                     </label>
                 </div>
             </div>
@@ -19,12 +20,13 @@
             <div class="col-12 col-md-12 col-xs-12">
                 <div class="checkbox">
                     <label>
-                        <af-field name="is_prorate" defn="{label: false}"/> <b>Prorate</b>
+                        <af-field name="is_prorate" defn="{label: false}"/>
+                        <b>Prorate</b>
                     </label>
                 </div>
             </div>
         </div>
-        <hr/>
+        <hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px"/>
     </fieldset>
     <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>
 </af-form>
