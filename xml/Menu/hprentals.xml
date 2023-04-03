@@ -1,31 +1,31 @@
 <?xml version="1.0"?>
 <menu>
   <item>
-    <path>civicrm/rentals/deleteexpense</path>
+    <path>civicrm/rentals/expense</path>
     <page_callback>CRM_Hprentals_Form_Expense</page_callback>
     <title>Delete Expense</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/rentals/deletemethod</path>
+    <path>civicrm/rentals/method</path>
     <page_callback>CRM_Hprentals_Form_Method</page_callback>
     <title>Payment Method</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/rentals/deleteinvoice</path>
+    <path>civicrm/rentals/invoice</path>
     <page_callback>CRM_Hprentals_Form_Invoice</page_callback>
     <title>Invoice</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/rentals/deleterental</path>
+    <path>civicrm/rentals/rental</path>
     <page_callback>CRM_Hprentals_Form_Rental</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/rentals/deletepayment</path>
+    <path>civicrm/rentals/payment</path>
     <page_callback>CRM_Hprentals_Form_Payment</page_callback>
     <title>Rental</title>
     <access_arguments>access CiviCRM</access_arguments>

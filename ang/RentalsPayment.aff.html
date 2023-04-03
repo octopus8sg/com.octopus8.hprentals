@@ -1,20 +1,22 @@
 <af-form ctrl="afform">
-    <af-entity url-autofill="1" type="RentalsPayment" name="RentalsPayment" label="Rental"
+    <af-entity url-autofill="1" type="RentalsPayment" name="RentalsPayment" label="Payment"
                actions="{create: true, update: false}" security="RBAC"/>
-    <fieldset af-fieldset="RentalsRental" class="af-container" af-title="Rental">
+    <fieldset af-fieldset="RentalsPayment" class="af-container" af-title="Rental">
         <h1>Hello {{routeParams}}</h1>
         <hp-show-tenant></hp-show-tenant>
         <div class="row">
-            <div class="col-md-8 col-xs-12">
+            <div class="col-md-4 col-xs-6">
                 <af-field name="tenant_id"/>
             </div>
         </div>
         <div class="row">
             <div class="col-md-4 col-xs-6">
-                <af-field name="admission"/>
+                <af-field name="method_id"/>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-4 col-xs-6">
-                <af-field name="discharge"/>
+                <af-field name="amount"/>
             </div>
         </div>
     </fieldset>

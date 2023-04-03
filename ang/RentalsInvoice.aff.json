@@ -9,7 +9,7 @@
   "permission": "access CiviCRM",
   "type": "form",
   "icon": "fa-home",
-  "server_route": "civicrm/rentals/invoice",
+  "server_route": "civicrm/rentals/affinvoice",
   "create_submission": true,
   "entity_type": "RentalsInvoice",
   "join_entity": null,

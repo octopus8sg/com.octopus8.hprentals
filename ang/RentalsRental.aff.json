@@ -9,7 +9,7 @@
   "permission": "access CiviCRM",
   "type": "form",
   "icon": "fa-home",
-  "server_route": "civicrm/rentals/rental",
+  "server_route": "civicrm/rentals/affrental",
   "create_submission": true,
   "entity_type": "RentalsRental",
   "join_entity": null,

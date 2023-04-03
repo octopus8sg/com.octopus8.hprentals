@@ -4,11 +4,17 @@
     <base>CRM/Hprentals</base>
     <class>RentalsExpense</class>
     <name>civicrm_o8_rental_expense</name>
-    <comment>Rental expense (Type)</comment>
+    <comment>Rental Expense (Type)</comment>
     <log>true</log>
     <paths>
-        <add>civicrm/rentals/expense</add>
-        <update>civicrm/rentals/expense?#?RentalsExpense=[id]</update>
+        <add>civicrm/rentals/angexpense</add>
+        <update>civicrm/rentals/expense?action=update&amp;id=[id]</update>
+        <delete>civicrm/rentals/expense?action=delete&amp;id=[id]</delete>
+        <view>civicrm/rentals/expense?action=view&amp;id=[id]</view>
+        <tadd>civicrm/rentals/angexpense#?cid=[id]</tadd>
+        <tupdate>civicrm/rentals/expense?action=update&amp;id=[id]&amp;cid=[cid]</tupdate>
+        <tdelete>civicrm/rentals/expense?action=delete&amp;id=[id]&amp;cid=[cid]</tdelete>
+        <tview>civicrm/rentals/expense?action=view&amp;id=[id]&amp;cid=[cid]</tview>
     </paths>
 
     <field>

@@ -7,8 +7,14 @@
     <comment>Rental Payment Method</comment>
     <log>true</log>
     <paths>
-        <add>civicrm/rentals/method</add>
-        <update>civicrm/rentals/method#?RentalsMethod=[id]</update>
+        <add>civicrm/rentals/angmethod</add>
+        <update>civicrm/rentals/method?action=update&amp;id=[id]</update>
+        <delete>civicrm/rentals/method?action=delete&amp;id=[id]</delete>
+        <view>civicrm/rentals/method?action=view&amp;id=[id]</view>
+        <tadd>civicrm/rentals/angmethod#?cid=[id]</tadd>
+        <tupdate>civicrm/rentals/method?action=update&amp;id=[id]&amp;cid=[cid]</tupdate>
+        <tdelete>civicrm/rentals/method?action=delete&amp;id=[id]&amp;cid=[cid]</tdelete>
+        <tview>civicrm/rentals/method?action=view&amp;id=[id]&amp;cid=[cid]</tview>
     </paths>
 
     <field>

@@ -7,10 +7,15 @@
     <comment>FIXME</comment>
     <log>true</log>
     <paths>
-        <add>civicrm/rentals/payment</add>
-        <update>civicrm/rentals/payment#?RentalsPayment=[id]</update>
+        <add>civicrm/rentals/angpayment</add>
+        <update>civicrm/rentals/payment?action=update&amp;id=[id]</update>
+        <delete>civicrm/rentals/payment?action=delete&amp;id=[id]</delete>
+        <view>civicrm/rentals/payment?action=view&amp;id=[id]</view>
+        <tadd>civicrm/rentals/angpayment#?cid=[id]</tadd>
+        <tupdate>civicrm/rentals/payment?action=update&amp;id=[id]&amp;cid=[cid]</tupdate>
+        <tdelete>civicrm/rentals/payment?action=delete&amp;id=[id]&amp;cid=[cid]</tdelete>
+        <tview>civicrm/rentals/payment?action=view&amp;id=[id]&amp;cid=[cid]</tview>
     </paths>
-
     <field>
         <name>id</name>
         <type>int unsigned</type>

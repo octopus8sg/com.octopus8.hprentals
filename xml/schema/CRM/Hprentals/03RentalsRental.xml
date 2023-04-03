@@ -7,8 +7,14 @@
   <comment>FIXME</comment>
   <log>true</log>
   <paths>
-    <add>civicrm/rentals/rental</add>
-    <update>civicrm/rentals/rental#?RentalsRental=[id]</update>
+    <add>civicrm/rentals/angrental</add>
+    <update>civicrm/rentals/rental?action=update&amp;id=[id]</update>
+    <delete>civicrm/rentals/rental?action=delete&amp;id=[id]</delete>
+    <view>civicrm/rentals/rental?action=view&amp;id=[id]</view>
+    <tadd>civicrm/rentals/angrental#?cid=[id]</tadd>
+    <tupdate>civicrm/rentals/rental?action=update&amp;id=[id]&amp;cid=[cid]</tupdate>
+    <tdelete>civicrm/rentals/rental?action=delete&amp;id=[id]&amp;cid=[cid]</tdelete>
+    <tview>civicrm/rentals/rental?action=view&amp;id=[id]&amp;cid=[cid]</tview>
   </paths>
 
   <field>

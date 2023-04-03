@@ -7,8 +7,14 @@
     <comment>FIXME</comment>
     <log>true</log>
     <paths>
-        <add>civicrm/rentals/invoice</add>
-        <update>civicrm/rentals/invoice#?RentalsInvoice=[id]</update>
+        <add>civicrm/rentals/anginvoice</add>
+        <update>civicrm/rentals/invoice?action=update&amp;id=[id]</update>
+        <delete>civicrm/rentals/invoice?action=delete&amp;id=[id]</delete>
+        <view>civicrm/rentals/invoice?action=view&amp;id=[id]</view>
+        <tadd>civicrm/rentals/anginvoice#?cid=[id]</tadd>
+        <tupdate>civicrm/rentals/invoice?action=update&amp;id=[id]&amp;cid=[cid]</tupdate>
+        <tdelete>civicrm/rentals/invoice?action=delete&amp;id=[id]&amp;cid=[cid]</tdelete>
+        <tview>civicrm/rentals/invoice?action=view&amp;id=[id]&amp;cid=[cid]</tview>
     </paths>
 
     <field>
