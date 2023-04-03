@@ -1,7 +1,0 @@
-<input
-        ng-model="tenants"
-        ng-attr-value={{birbirbir}}
->
-<!--        ng-attr-crm-entityref="{{birbirbir}}"-->
-
-{{birbirbir}}

@@ -41,23 +41,41 @@
 
                 var rentaloptions = {};
                 var innerrentals = [];
+                var options = scope.routeParams;
+                console.log(options);
+                let lookfortenant = true;
+                if (options) {
+                    if (options.cid) {
+                        let contact = options.cid;
+                        if (contact) {
+                            rentaloptions = {
+                                where: [["tenant_id", "=", contact]],
+                                limit: 0
+                            };
+                            lookfortenant = false;
+                        }
+                    }
+                }
+
                 CRM.api4('RentalsRental', 'get', rentaloptions).then(function (result) {
                     innerrentals = result;
                     scope.myRentals = result;
                     scope.$apply();
                 });
-                scope.$watch('tenant', function (newVal, oldVal) {
-                    // console.log('newVal', newVal)
-                    rentaloptions = {
-                        where: [["tenant_id", "=", newVal]],
-                        limit: 0
-                    };
-                    CRM.api4('RentalsRental', 'get', rentaloptions).then(function (result) {
-                        innerrentals = result;
-                        scope.myRentals = result;
-                        scope.$apply();
+                if (lookfortenant) {
+                    scope.$watch('tenant', function (newVal, oldVal) {
+                        // console.log('newVal', newVal)
+                        rentaloptions = {
+                            where: [["tenant_id", "=", newVal]],
+                            limit: 0
+                        };
+                        CRM.api4('RentalsRental', 'get', rentaloptions).then(function (result) {
+                            innerrentals = result;
+                            scope.myRentals = result;
+                            scope.$apply();
+                        });
                     });
-                });
+                }
                 scope.$watch('myrental', function (newValue, oldValue) {
                     // console.log('rentalnewVal', newValue)
                     let myRentalCode = "";
@@ -102,9 +120,9 @@
                     return total;
 
                 };
-                const options = {};
+                const roptions = {};
                 // Call API to get contacts
-                CRM.api4('RentalsExpense', 'get', options).then(function (result) {
+                CRM.api4('RentalsExpense', 'get', roptions).then(function (result) {
                     scope.myExpenses = result;
                     scope.$apply();
                 });

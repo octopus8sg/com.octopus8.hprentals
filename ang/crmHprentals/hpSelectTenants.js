@@ -10,9 +10,25 @@
                 hpSelectTenants: '='
             },
             link: function (scope, element, attrs, ngModel) {
+                let options = scope.$parent.options;
+                let routeParams = scope.$parent.routeParams;
+                console.log(options);
+                console.log(routeParams);
+                if (options) {
+                    if (options.contact_id) {
+                        let contact = options.contact_id;
+                        if (contact) {
+                            let selectoptions = {
+                                select: ["id"],
+                                where: [["id", "=", contact]],
+                                limit: 0
+                            };
+                        }
+                    }
+                }
                 // In cases where UI initiates update, there may be an extra
                 // call to refreshUI, but it doesn't create a cycle.
-                selectoptions = {
+                let selectoptions = {
                     select: ["id"],
                     join: [["RentalsRental AS rentals_rental", "INNER", ["id", "=", "rentals_rental.tenant_id"]]],
                     limit: 0

@@ -14,19 +14,21 @@
             link: function (scope, element, attrs,) {
                 var href = CRM.url(scope.url);
                 let options = scope.$parent.options;
+                console.log(options);
                 if (options) {
                     if (options.contact_id) {
                         let contact = options.contact_id;
                         if (contact) {
-                            var href = CRM.url(scope.url + "#?cid=["+contact+"]");
+                            var href = CRM.url(scope.url + "#?cid=" + contact);
+                            console.log(href);
                         }
                     }
                 }
-
-                element.on('click', function(event) {
+                console.log(href);
+                element.on('click', function (event) {
                     event.stopPropagation();
                 });
-                scope.onClick = function() {
+                scope.onClick = function () {
 
                     var $el =
                         CRM.loadForm(href, {
