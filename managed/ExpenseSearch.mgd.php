@@ -109,7 +109,7 @@ return [
                                     'join' => '',
                                     'target' => 'crm-popup',
                                     'icon' => 'fa-eye',
-                                    'text' => 'Edit',
+                                    'text' => 'View',
                                     'style' => 'default',
                                     'path' => 'civicrm/rentals/expense?id=[id]&action=preview&reset=1',
                                     'condition' => [],

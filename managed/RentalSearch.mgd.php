@@ -106,14 +106,25 @@ return [
                         [
                             'links' => [
                                 [
-                                    'entity' => 'RentalsRental',
-                                    'action' => 'update',
+                                    'entity' => '',
+                                    'action' => '',
+                                    'join' => '',
+                                    'target' => 'crm-popup',
+                                    'icon' => 'fa-eye',
+                                    'text' => 'View',
+                                    'style' => 'default',
+                                    'path' => 'civicrm/rentals/rental?id=[id]&action=preview&reset=1',
+                                    'condition' => [],
+                                ],
+                                [
+                                    'entity' => '',
+                                    'action' => '',
                                     'join' => '',
                                     'target' => 'crm-popup',
                                     'icon' => 'fa-pencil',
                                     'text' => 'Edit',
                                     'style' => 'default',
-                                    'path' => '',
+                                    'path' => 'civicrm/rentals/rental?id=[id]&action=update&reset=1',
                                     'condition' => [],
                                 ],
                                 [
@@ -124,7 +135,7 @@ return [
                                     'icon' => 'fa-trash-o',
                                     'text' => 'Delete',
                                     'style' => 'danger',
-                                    'path' => 'civicrm/rentals/deleterental?id=[id]&action=delete&reset=1',
+                                    'path' => 'civicrm/rentals/rental?id=[id]&action=delete&reset=1',
                                     'condition' => [],
                                 ]
                             ],
