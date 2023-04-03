@@ -104,14 +104,25 @@ return [
                         [
                             'links' => [
                                 [
-                                    'entity' => 'RentalsExpense',
-                                    'action' => 'update',
+                                    'entity' => '',
+                                    'action' => '',
+                                    'join' => '',
+                                    'target' => 'crm-popup',
+                                    'icon' => 'fa-eye',
+                                    'text' => 'Edit',
+                                    'style' => 'default',
+                                    'path' => 'civicrm/rentals/expense?id=[id]&action=preview&reset=1',
+                                    'condition' => [],
+                                ],
+                                [
+                                    'entity' => '',
+                                    'action' => '',
                                     'join' => '',
                                     'target' => 'crm-popup',
                                     'icon' => 'fa-pencil',
                                     'text' => 'Edit',
                                     'style' => 'default',
-                                    'path' => '',
+                                    'path' => 'civicrm/rentals/expense?id=[id]&action=update&reset=1',
                                     'condition' => [],
                                 ],
                                 [
@@ -122,7 +133,7 @@ return [
                                     'icon' => 'fa-trash-o',
                                     'text' => 'Delete',
                                     'style' => 'danger',
-                                    'path' => 'civicrm/rentals/deleteexpense?id=[id]&action=delete&reset=1',
+                                    'path' => 'civicrm/rentals/expense?id=[id]&action=delete&reset=1',
                                     'condition' => [],
                                 ],
                             ],
