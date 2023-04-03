@@ -37,7 +37,8 @@
     <length>21</length>
     <label>Rental Code</label>
     <comment>Rental Code</comment>
-    <required>true</required>
+    <required>false</required>
+    <default>NULL</default>
     <html>
       <type>Text</type>
       <label>Code</label>

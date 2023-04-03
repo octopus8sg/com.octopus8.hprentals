@@ -36,7 +36,6 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         return $this->_id;
     }
 
-
     /**
      * Preprocess form.
      *
@@ -53,12 +52,31 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
 //        U::writeLog($action, 'action before');
         $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
 
+
+        if (!$action) {
+            if (!$id) {
+                $action = CRM_Core_Action::ADD;
+            }
+            if ($id) {
+                $action = CRM_Core_Action::PREVIEW;
+            }
+        }
+        if ($action == CRM_Core_Action::UPDATE) {
+            if (!$id) {
+                $action = CRM_Core_Action::ADD;
+            }
+        }
         $this->_action = $action;
 //        U::writeLog($action, 'action after');
         $this->assign('action', $action);
+
+//        U::writeLog($id, "RentalExpense id");
+
         $myEntity = null;
         $entityName = $this->getDefaultEntityName();
+        $title = 'Add ' . $entityName;
         $entityClass = $this->getDefaultEntity();
+        $session = CRM_Core_Session::singleton();
         if ($id) {
             $myEntity = U::getMyEntity($id, $entityClass);
 //            U::writeLog($myEntity, "RentalExpense Entity");
@@ -68,14 +86,19 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
                 $this->_id = $id;
                 $title = 'Edit ' . $entityName;
                 $this->assign('myEntity', $myEntity);
+                $session->replaceUserContext(CRM_Utils_System::url(U::PATH_RENTAL,
+                    ['id' => $this->getEntityId(),
+                        'action' => 'update']));
             }
         }
         if ($this->_action == CRM_Core_Action::DELETE) {
             $title = 'Delete ' . $entityName;
-            CRM_Utils_System::setTitle($title);
-        } else {
-            throw new CRM_Core_Exception(ts('You can only delete using this path'));
         }
+        if ($this->_action == CRM_Core_Action::PREVIEW) {
+            $title = 'View ' . $entityName;
+        }
+        CRM_Utils_System::setTitle($title);
+
     }
 
     public function buildQuickForm()
@@ -84,14 +107,62 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
 
         $id = $this->getEntityId();
         $this->assign('id', $id);
-        if ($this->_action == CRM_Core_Action::DELETE) {
+        $action = $this->_action;
+        if ($action == CRM_Core_Action::DELETE) {
             $this->add('hidden', 'id');
             $this->addButtons([
                 ['type' => 'submit', 'name' => E::ts('Delete'), 'isDefault' => TRUE],
                 ['type' => 'cancel', 'name' => E::ts('Cancel')]
             ]);
-        } else {
-            throw new CRM_Core_Exception(ts('You can only delete using this path'));
+        }
+        if ($action != CRM_Core_Action::DELETE) {
+
+            $id_field = $this->add('text', 'id', E::ts('ID'), ['class' => 'huge'],)->freeze();
+
+            $code = $this->add('text', 'code', E::ts('Code'), ['class' => 'huge']);
+            $code->freeze();
+
+            //
+            $tenant_id = $this->addEntityRef('tenant_id', E::ts('Tenant'), ['create' => TRUE], TRUE);
+
+            if ($action == CRM_Core_Action::PREVIEW) {
+                $tenant_id->freeze();
+            }
+
+            $attributes = ['formatType' => 'searchDate'];
+            $extra = ['time' => FALSE];
+            $admission = $this->add('datepicker', 'admission', ts('Admission'), $attributes, TRUE, $extra);
+            if ($action == CRM_Core_Action::PREVIEW) {
+                $admission->freeze();
+            }
+
+            $discharge = $this->add('datepicker', 'discharge', ts('Discharge'), $attributes, TRUE, $extra);
+            if ($action == CRM_Core_Action::PREVIEW) {
+                $discharge->freeze();
+            }
+            $created_id = $this->addEntityRef('created_id', E::ts('Created By'),
+                false);
+            $created_id->freeze();
+            $created_at = $this->add('datepicker', 'created_date', E::ts('Created At'));
+            $created_at->freeze();
+            $modified_id = $this->addEntityRef('modified_id', E::ts('Updated By'),
+                false);
+            $modified_id->freeze();
+            $modified_at = $this->add('datepicker', 'modified_date', E::ts('Updated At'));
+            $modified_at->freeze();
+            $submit = [
+                'type' => 'submit',
+                'name' => E::ts('Submit'),
+                'isDefault' => TRUE,
+            ];
+            if ($action == CRM_Core_Action::PREVIEW) {
+                $submit = [
+                    'type' => 'submit',
+                    'name' => E::ts('Close'),
+                    'isDefault' => TRUE,
+                ];
+            }
+            $this->addButtons([$submit]);
         }
         // export form elements
         $this->assign('elementNames', $this->getRenderableElementNames());
@@ -137,6 +208,29 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         return $defaults;
     }
 
+
+    function validate() {
+        // Call the parent validate method
+        $errors = parent::validate();
+
+        // Retrieve the values of the date_from and date_to fields
+        $date_from = $this->_submitValues['admission'];
+        $date_to = $this->_submitValues['discharge'];
+        $rental_id = $this->_submitValues['id'];
+
+        // Retrieve the ID of the tenant from the URL parameters
+        $tenant_id = CRM_Utils_Request::retrieve('tenant_id', 'Positive', $this);
+        $existing_rent = U::getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id);
+
+        // If an overlap is found, set a validation error message
+        if ($existing_rent > 0) {
+            $this->_errors['admission'] = ts('You already have a rent during this period.');
+        }
+
+        return empty($this->_errors) ? true : false;
+
+    }
+
     /**
      * @throws API_Exception
      * @throws CRM_Core_Exception
@@ -146,17 +240,43 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
     public function postProcess()
     {
         $entity = $this->getDefaultEntity();
-        $name = $this->getDefaultEntityName();
+        $entityName = $this->getDefaultEntityName();
         $action = $this->_action;
+        $values = $this->controller->exportValues();
+        U::writeLog($values, $entityName . " values for " . $action);
+        $params['tenant_id'] = $values['tenant_id'];
+        $params['admission'] = $values['admission'];
+        $params['discharge'] = $values['discharge'];
+
         $id = $this->getEntityId();
         switch ($action) {
+            case CRM_Core_Action::ADD:
+                $apiAction = "create";
+                break;
+
+            case CRM_Core_Action::UPDATE:
+                $params['id'] = $id;
+                $apiAction = "update";
+                break;
+            case CRM_Core_Action::PREVIEW:
+                return;
+                break;
+
             case CRM_Core_Action::DELETE:
                 $apiAction = 'delete';
-                civicrm_api4($entity, $apiAction, ['where' => [['id', '=', $id]]]);
-                CRM_Core_Session::setStatus(E::ts('Removed ') . $name, $name, 'success');
+                civicrm_api4($entity, 'delete', ['where' => [['id', '=', $id]]]);
+                CRM_Core_Session::setStatus('Removed ' . $entityName, $entityName, 'success');
+                return;
                 break;
         }
+        if (($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)) {
+            U::writeLog($params, $entityName . " params for " . $action);
+            $result = civicrm_api4($entity, $apiAction, ['values' => $params]);
+            U::writeLog($result, $entityName . " is " . $action);
+        }
+
         parent::postProcess();
     }
 
 }
+

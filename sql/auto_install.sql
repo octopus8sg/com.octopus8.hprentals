@@ -85,7 +85,7 @@ ENGINE=InnoDB;
 -- *******************************************************/
 CREATE TABLE `civicrm_o8_rental_rental` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique ID',
-  `code` varchar(21) NOT NULL COMMENT 'Rental Code',
+  `code` varchar(21) NULL DEFAULT NULL COMMENT 'Rental Code',
   `tenant_id` int unsigned COMMENT 'FK to Contact',
   `admission` date NOT NULL COMMENT 'Admission date',
   `discharge` date NOT NULL COMMENT 'Discharge date',

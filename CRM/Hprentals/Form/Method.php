@@ -16,8 +16,6 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
 
     protected $_myentity;
 
-    protected $_dialog;
-
     public function getDefaultEntity()
     {
         return 'RentalsMethod';
@@ -52,28 +50,19 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
         parent::preProcess();
 
         $action = $this->getAction();
-        U::writeLog($action, 'action before');
+//        U::writeLog($action, 'action before');
         $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
 
-        $dialog = CRM_Utils_Request::retrieve('dialogue', 'Boolean', $this, FALSE);
-        if($dialog){
-            $this->_dialog = TRUE;
-//            U::writeLog($dialog, "is dialog");
-        }
-        if(!$dialog){
-            $this->_dialog = FALSE;
-//            U::writeLog($dialog, "no is dialog");
-        }
 
-        if(!$action){
-            if(!$id){
+        if (!$action) {
+            if (!$id) {
                 $action = CRM_Core_Action::ADD;
             }
-            if($id){
+            if ($id) {
                 $action = CRM_Core_Action::PREVIEW;
             }
         }
-        if($action == CRM_Core_Action::UPDATE) {
+        if ($action == CRM_Core_Action::UPDATE) {
             if (!$id) {
                 $action = CRM_Core_Action::ADD;
             }
@@ -93,20 +82,20 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
             $myEntity = U::getMyEntity($id, $entityClass);
 //            U::writeLog($myEntity, "RentalExpense Entity");
 
-            if($myEntity){
+            if ($myEntity) {
                 $this->_myentity = $myEntity;
                 $this->_id = $id;
                 $title = 'Edit ' . $entityName;
                 $this->assign('myEntity', $myEntity);
-                $session->replaceUserContext(CRM_Utils_System::url(U::PATH_EXPENSE,
+                $session->replaceUserContext(CRM_Utils_System::url(U::PATH_METHOD,
                     ['id' => $this->getEntityId(),
                         'action' => 'update']));
             }
         }
-        if($this->_action == CRM_Core_Action::DELETE){
+        if ($this->_action == CRM_Core_Action::DELETE) {
             $title = 'Delete ' . $entityName;
         }
-        if($this->_action == CRM_Core_Action::PREVIEW){
+        if ($this->_action == CRM_Core_Action::PREVIEW) {
             $title = 'View ' . $entityName;
         }
         CRM_Utils_System::setTitle($title);
@@ -120,19 +109,19 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
         $id = $this->getEntityId();
         $this->assign('id', $id);
         $action = $this->_action;
-        if($action == CRM_Core_Action::DELETE){
+        if ($action == CRM_Core_Action::DELETE) {
             $this->add('hidden', 'id');
             $this->addButtons([
                 ['type' => 'submit', 'name' => E::ts('Delete'), 'isDefault' => TRUE],
                 ['type' => 'cancel', 'name' => E::ts('Cancel')]
             ]);
         }
-        if($action != CRM_Core_Action::DELETE) {
+        if ($action != CRM_Core_Action::DELETE) {
 
             $id_field = $this->add('text', 'id', E::ts('ID'), ['class' => 'huge'],)->freeze();
             $name = $this->add('text', 'name', E::ts('Name'), ['class' => 'huge']);
 //
-            if($action == CRM_Core_Action::PREVIEW) {
+            if ($action == CRM_Core_Action::PREVIEW) {
                 $name->freeze();
             }
 
@@ -146,13 +135,13 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
             $modified_id->freeze();
             $modified_at = $this->add('datepicker', 'modified_date', E::ts('Updated At'));
             $modified_at->freeze();
-            $submit =  [
+            $submit = [
                 'type' => 'submit',
                 'name' => E::ts('Submit'),
                 'isDefault' => TRUE,
             ];
-            if($action == CRM_Core_Action::PREVIEW) {
-                $submit =  [
+            if ($action == CRM_Core_Action::PREVIEW) {
+                $submit = [
                     'type' => 'submit',
                     'name' => E::ts('Close'),
                     'isDefault' => TRUE,
@@ -164,12 +153,14 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
         $this->assign('elementNames', $this->getRenderableElementNames());
         parent::buildQuickForm();
     }
+
     /**
      * Get the fields/elements defined in this form.
      *
      * @return array (string)
      */
-    public function getRenderableElementNames() {
+    public function getRenderableElementNames()
+    {
         // The _elements list includes some items which should not be
         // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
         // items don't have labels.  We'll identify renderable by filtering on
@@ -198,7 +189,7 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
         if ($this->_myentity) {
             $defaults = $this->_myentity;
         }
-        U::writeLog($defaults, "RentalsExpense Defaults");
+//        U::writeLog($defaults, "RentalsExpense Defaults");
         return $defaults;
     }
 
@@ -210,29 +201,23 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
      */
     public function postProcess()
     {
-        $session = CRM_Core_Session::singleton();
-        $userId = CRM_Core_Session::singleton()->getLoggedInContactID();
         $entity = $this->getDefaultEntity();
-        $now = date('YmdHis');
+        $entityName = $this->getDefaultEntityName();
         $action = $this->_action;
-        $dialog = $this->_dialog;
         $values = $this->controller->exportValues();
+        U::writeLog($values, $entityName . " values for " . $action);
         $params['name'] = $values['name'];
+
         $id = $this->getEntityId();
         switch ($action) {
             case CRM_Core_Action::ADD:
-                $params['created_id'] = $userId;
-                $params['created_date'] = $now;
                 $apiAction = "create";
                 break;
 
             case CRM_Core_Action::UPDATE:
-                $params['modified_id'] = $userId;
-                $params['modified_date'] = $now;
                 $params['id'] = $id;
                 $apiAction = "update";
                 break;
-
             case CRM_Core_Action::PREVIEW:
                 return;
                 break;
@@ -240,33 +225,14 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
             case CRM_Core_Action::DELETE:
                 $apiAction = 'delete';
                 civicrm_api4($entity, 'delete', ['where' => [['id', '=', $id]]]);
-                CRM_Core_Session::setStatus(E::ts('Removed Type'), E::ts('Type'), 'success');
-                $url = (CRM_Utils_System::url(U::PATH_EXPENSES,
-                    "reset=1"));
-                U::writeLog($url);
-                $session->replaceUserContext($url);
-                if(!$dialog) {
-                    CRM_Utils_System::redirect($url);
-                }
+                CRM_Core_Session::setStatus('Removed ' . $entityName, $entityName, 'success');
+                return;
                 break;
         }
-//        U::writeLog($params, 'after switch 1');
-//        U::writeLog($apiAction, 'apiAction switch 1');
-        if(($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)){
-
+        if (($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)) {
+            U::writeLog($params, $entityName . " params for " . $action);
             $result = civicrm_api4($entity, $apiAction, ['values' => $params]);
-            if(sizeof($result) == 1){
-                $myentity=$result[0];
-                $id = $myentity['id'];
-
-            }
-            $url = (CRM_Utils_System::url(U::PATH_EXPENSE,
-                "reset=1&id={$id}"));
-            U::writeLog($url);
-            $session->replaceUserContext($url);
-            if(!$dialog) {
-                CRM_Utils_System::redirect($url);
-            }
+            U::writeLog($result, $entityName . " is " . $action);
         }
 
         parent::postProcess();
