@@ -34,7 +34,7 @@ SET FOREIGN_KEY_CHECKS=1;
 -- *
 -- * civicrm_o8_rental_expense
 -- *
--- * Rental expense (Type)
+-- * Rental Expense (Type)
 -- *
 -- *******************************************************/
 CREATE TABLE `civicrm_o8_rental_expense` (

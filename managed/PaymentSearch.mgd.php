@@ -66,7 +66,7 @@ return [
             'version' => 4,
             'values' => [
                 'name' => 'Payments_Table08',
-                'label' => 'Search Payments',
+                'label' => 'Payments',
                 'saved_search_id.name' => 'Payments08',
                 'type' => 'table',
                 'settings' => [

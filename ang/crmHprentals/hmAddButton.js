@@ -8,16 +8,25 @@
             scope: {
                 name: '@',
                 label: '@',
-                url: '@',
+                url: '@'
             },
             // can be array of parents directive too
             link: function (scope, element, attrs,) {
+                var href = CRM.url(scope.url);
+                let options = scope.$parent.options;
+                if (options) {
+                    if (options.contact_id) {
+                        let contact = options.contact_id;
+                        if (contact) {
+                            var href = CRM.url(scope.url + "#?cid=["+contact+"]");
+                        }
+                    }
+                }
+
                 element.on('click', function(event) {
                     event.stopPropagation();
                 });
                 scope.onClick = function() {
-                    event.preventDefault();
-                    var href = CRM.url(scope.url);
 
                     var $el =
                         CRM.loadForm(href, {

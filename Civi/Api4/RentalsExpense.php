@@ -4,7 +4,7 @@ namespace Civi\Api4;
 /**
  * RentalsExpense entity.
  *
- * Provided by the FIXME extension.
+ * Provided by the HP Rentals extension.
  *
  * @package Civi\Api4
  */

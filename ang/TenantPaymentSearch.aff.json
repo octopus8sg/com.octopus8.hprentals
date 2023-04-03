@@ -1,0 +1,23 @@
+{
+  "type": "search",
+  "name": "tenantPaymentSearch",
+  "requires": ["crmHprentals"],
+  "title": "Payments",
+  "description": "",
+  "is_dashlet": "",
+  "is_public": "",
+  "is_token": "",
+  "permission": "access CiviCRM",
+  "type": "search",
+  "entity_type": "",
+  "join_entity": "",
+  "contact_summary": "tab",
+  "icon": "fa-home",
+  "server_route": "civicrm/rentals/tenantpayments",
+  "redirect": "",
+  "create_submission": "",
+  "navigation": "",
+  "module_name": "tenantPaymentSearch",
+  "directive_name": "tenant-payment-search",
+  "id": "tenantRentalSearch"
+}
