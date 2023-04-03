@@ -104,6 +104,17 @@ return [
                         [
                             'links' => [
                                 [
+                                    'entity' => 'RentalsExpense',
+                                    'action' => 'update',
+                                    'join' => '',
+                                    'target' => 'crm-popup',
+                                    'icon' => 'fa-pencil',
+                                    'text' => 'Edit',
+                                    'style' => 'default',
+                                    'path' => '',
+                                    'condition' => [],
+                                ],
+                                [
                                     'entity' => '',
                                     'action' => '',
                                     'join' => '',
@@ -114,17 +125,6 @@ return [
                                     'path' => 'civicrm/rentals/deleteexpense?id=[id]&action=delete&reset=1',
                                     'condition' => [],
                                 ],
-                                [
-                                    'entity' => 'RentalsExpense',
-                                    'action' => 'update',
-                                    'join' => '',
-                                    'target' => 'crm-popup',
-                                    'icon' => 'fa-pencil',
-                                    'text' => 'Edit',
-                                    'style' => 'default',
-                                    'path' => '',
-                                    'condition' => [],
-                                ]
                             ],
                             'type' => 'links',
                             'alignment' => 'text-right',

@@ -3,12 +3,21 @@
         label="Add Rental"
         url="civicrm/rentals/rental">
 </hm-add-button>
+<div af-fieldset="" af-title="Rentals">
+    <div class="row">
+        <div class="col-md-4 col-xs-6">
+            <af-field name="id" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-xs-6">
+            <af-field name="admission" defn="{input_type: 'Select', search_range: true, input_attrs: {}}" />
+        </div>
+        <div class="col-md-4 col-xs-6">
+            <af-field name="discharge" defn="{input_type: 'Select', search_range: true, input_attrs: {}}" />
+        </div>
+    </div>
 
-<div af-fieldset="" af-title="Rentals: Tenant Rentals Table">
-    <af-field name="id" />
-    <af-field name="code" />
-    <af-field name="admission" defn="{input_type: 'Select', search_range: true, input_attrs: {}}" />
-    <af-field name="discharge" defn="{input_type: 'Select', search_range: true, input_attrs: {}}" />
-    <button class="af-button btn btn-warning" type="reset" crm-icon="fa-undo">Reset</button>
-    <crm-search-display-table search-name="Rentals08" display-name="Tenant_Rentals_Table08"></crm-search-display-table>
+
+    <crm-search-display-table search-name="Rentals08" display-name="Tenant_Rentals_Table08" filters="{'tenant_id': options.contact_id}"></crm-search-display-table>
 </div>

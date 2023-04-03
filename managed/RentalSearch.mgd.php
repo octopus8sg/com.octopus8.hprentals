@@ -76,13 +76,6 @@ return [
                         ],
                         [
                             'type' => 'field',
-                            'key' => 'code',
-                            'dataType' => 'String',
-                            'label' => 'Code',
-                            'sortable' => TRUE,
-                        ],
-                        [
-                            'type' => 'field',
                             'key' => 'RentalsRental_Contact_tenant_id_01.display_name',
                             'dataType' => 'String',
                             'label' => 'Tenant',
@@ -113,6 +106,17 @@ return [
                         [
                             'links' => [
                                 [
+                                    'entity' => 'RentalsRental',
+                                    'action' => 'update',
+                                    'join' => '',
+                                    'target' => 'crm-popup',
+                                    'icon' => 'fa-pencil',
+                                    'text' => 'Edit',
+                                    'style' => 'default',
+                                    'path' => '',
+                                    'condition' => [],
+                                ],
+                                [
                                     'entity' => '',
                                     'action' => '',
                                     'join' => '',
@@ -122,18 +126,7 @@ return [
                                     'style' => 'danger',
                                     'path' => 'civicrm/rentals/deleterental?id=[id]&action=delete&reset=1',
                                     'condition' => [],
-                                ],
-                                [
-                                    'entity' => 'RentalsRental',
-                                    'action' => 'update',
-                                    'join' => '',
-                                    'target' => 'crm-popup',
-                                    'icon' => 'fa-pencil',
-                                    'text' => 'View/Edit',
-                                    'style' => 'default',
-                                    'path' => '',
-                                    'condition' => [],
-                                ],
+                                ]
                             ],
                             'type' => 'links',
                             'alignment' => 'text-right',
@@ -171,14 +164,7 @@ return [
                             'type' => 'field',
                             'key' => 'id',
                             'dataType' => 'Integer',
-                            'label' => 'id',
-                            'sortable' => TRUE,
-                        ],
-                        [
-                            'type' => 'field',
-                            'key' => 'code',
-                            'dataType' => 'String',
-                            'label' => 'Code',
+                            'label' => 'ID',
                             'sortable' => TRUE,
                         ],
                         [
@@ -198,6 +184,17 @@ return [
                         [
                             'links' => [
                                 [
+                                    'entity' => 'RentalsRental',
+                                    'action' => 'update',
+                                    'join' => '',
+                                    'target' => 'crm-popup',
+                                    'icon' => 'fa-pencil',
+                                    'text' => 'Edit',
+                                    'style' => 'default',
+                                    'path' => '',
+                                    'condition' => [],
+                                ],
+                                [
                                     'entity' => '',
                                     'action' => '',
                                     'join' => '',
@@ -207,18 +204,7 @@ return [
                                     'style' => 'danger',
                                     'path' => 'civicrm/rentals/deleterental?id=[id]&action=delete&reset=1',
                                     'condition' => [],
-                                ],
-                                [
-                                    'entity' => 'RentalsRental',
-                                    'action' => 'update',
-                                    'join' => '',
-                                    'target' => 'crm-popup',
-                                    'icon' => 'fa-pencil',
-                                    'text' => 'Edit Rentals Rental',
-                                    'style' => 'default',
-                                    'path' => '',
-                                    'condition' => [],
-                                ],
+                                ]
                             ],
                             'type' => 'links',
                             'alignment' => 'text-right',

@@ -19,7 +19,6 @@ return [
                     'select' => [
                         'id',
                         'code',
-                        'description',
                         'amount',
                         'created_id.display_name',
                         'created_date',
@@ -94,40 +93,9 @@ return [
                         ],
                         [
                             'type' => 'field',
-                            'key' => 'rental_id',
-                            'dataType' => 'Integer',
-                            'label' => 'Rental ID',
-                            'sortable' => TRUE,
-                        ],
-                        [
-                            'type' => 'field',
-                            'key' => 'RentalsInvoice_RentalsRental_rental_id_01_RentalsRental_Contact_tenant_id_01.display_name',
-                            'dataType' => 'String',
-                            'label' => 'Tenant',
-                            'sortable' => TRUE,
-                        ],
-                        [
-                            'type' => 'field',
-                            'key' => 'RentalsInvoice_RentalsRental_rental_id_01.admission',
-                            'dataType' => 'Date',
-                            'label' => 'Admission',
-                            'sortable' => TRUE,
-                        ],
-                        [
-                            'type' => 'field',
                             'key' => 'code',
                             'dataType' => 'String',
-                            'label' => 'Code',
-                            'sortable' => TRUE,
-                            'tally' => [
-                                'fn' => NULL,
-                            ],
-                        ],
-                        [
-                            'type' => 'field',
-                            'key' => 'description',
-                            'dataType' => 'String',
-                            'label' => 'Description',
+                            'label' => 'Invoice No',
                             'sortable' => TRUE,
                             'tally' => [
                                 'fn' => NULL,
@@ -186,6 +154,17 @@ return [
                         [
                             'links' => [
                                 [
+                                    'entity' => 'RentalsInvoice',
+                                    'action' => 'update',
+                                    'join' => '',
+                                    'target' => 'crm-popup',
+                                    'icon' => 'fa-pencil',
+                                    'text' => 'Edit',
+                                    'style' => 'default',
+                                    'path' => '',
+                                    'condition' => [],
+                                ],
+                                [
                                     'entity' => '',
                                     'action' => '',
                                     'join' => '',
@@ -195,19 +174,7 @@ return [
                                     'style' => 'danger',
                                     'path' => 'civicrm/rentals/deleteinvoice?id=[id]&action=delete&reset=1',
                                     'condition' => [],
-                                ],
-                                [
-                                    'entity' => 'RentalsInvoice',
-                                    'action' => 'update',
-                                    'join' => '',
-                                    'target' => 'crm-popup',
-                                    'icon' => 'fa-pencil',
-                                    'text' => 'Edit Rentals Invoice',
-                                    'style' => 'default',
-                                    'path' => '',
-                                    'condition' => [],
-                                ],
-
+                                ]
                             ],
                             'type' => 'links',
                             'alignment' => 'text-right',

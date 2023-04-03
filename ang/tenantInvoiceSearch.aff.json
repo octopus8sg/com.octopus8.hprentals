@@ -2,7 +2,7 @@
   "type": "search",
   "name": "afsearchSearchInvoices",
   "requires": ["crmHprentals"],
-  "title": "Search Invoices",
+  "title": "Invoices",
   "description": "",
   "is_dashlet": "",
   "is_public": "",
@@ -11,11 +11,13 @@
   "type": "search",
   "entity_type": "",
   "join_entity": "",
+  "contact_summary": "tab",
   "icon": "fa-home",
-  "server_route": "civicrm/rentals/invoices",
+  "server_route": "civicrm/rentals/tenantinvoices",
   "redirect": "",
   "create_submission": "",
   "navigation": "",
-  "module_name": "RentalInvoices",
-  "id": "RentalInvoices"
+  "module_name": "tenantInvoiceSearch",
+  "directive_name": "tenant-invoice-search",
+  "id": "tenantInvoiceSearch"
 }
