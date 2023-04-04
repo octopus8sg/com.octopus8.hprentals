@@ -246,29 +246,6 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
     }
 
 
-    function validate()
-    {
-        // Call the parent validate method
-        $errors = parent::validate();
-
-        // Retrieve the values of the date_from and date_to fields
-        $date_from = $this->_submitValues['admission'];
-        $date_to = $this->_submitValues['discharge'];
-        $rental_id = $this->_submitValues['id'];
-
-        // Retrieve the ID of the tenant from the URL parameters
-        $tenant_id = CRM_Utils_Request::retrieve('tenant_id', 'Positive', $this);
-        $existing_rent = U::getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id);
-
-        // If an overlap is found, set a validation error message
-        if ($existing_rent > 0) {
-            $this->_errors['admission'] = ts('You already have a rent during this period.');
-        }
-
-        return empty($this->_errors) ? true : false;
-
-    }
-
     /**
      * @throws API_Exception
      * @throws CRM_Core_Exception
