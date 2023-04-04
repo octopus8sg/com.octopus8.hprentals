@@ -82,7 +82,8 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
       i.code,
       c.display_name,
       i.created_date,
-      i.amount
+      i.amount,
+      r.tenant_id
     FROM civicrm_o8_rental_invoice i 
         INNER JOIN civicrm_o8_rental_rental r on r.id = i.rental_id
         INNER JOIN civicrm_contact c on r.tenant_id = c.id
@@ -118,9 +119,14 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
         $rows = array();
         $count = 0;
         while ($dao->fetch()) {
+            if (!empty($dao->tenant_id)) {
+                $contact = '<a href="' . CRM_Utils_System::url('civicrm/contact/view',
+                        ['reset' => 1, 'cid' => $dao->tenant_id]) . '">' .
+                    CRM_Contact_BAO_Contact::displayName($dao->tenant_id) . '</a>';
+            }
             $rows[$count][] = $dao->id;
             $rows[$count][] = $dao->code;
-            $rows[$count][] = $dao->display_name;
+            $rows[$count][] = $contact;
             $rows[$count][] = $dao->created_date;
             $rows[$count][] = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(intval($dao->amount));
             $count++;
@@ -185,7 +191,8 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
       i.code,
       c.display_name,
       i.created_date,
-      i.amount
+      i.amount,
+      i.tenant_id
     FROM civicrm_o8_rental_payment i 
         INNER JOIN civicrm_contact c on i.tenant_id = c.id
     WHERE YEAR(i.created_date) = YEAR(CURRENT_DATE()) 
@@ -220,9 +227,15 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
         $rows = array();
         $count = 0;
         while ($dao->fetch()) {
+            if (!empty($dao->tenant_id)) {
+                $contact = '<a href="' . CRM_Utils_System::url('civicrm/contact/view',
+                        ['reset' => 1, 'cid' => $dao->tenant_id]) . '">' .
+                    CRM_Contact_BAO_Contact::displayName($dao->tenant_id) . '</a>';
+            }
+
             $rows[$count][] = $dao->id;
             $rows[$count][] = $dao->code;
-            $rows[$count][] = $dao->display_name;
+            $rows[$count][] = $contact;
             $rows[$count][] = $dao->created_date;
             $rows[$count][] = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(intval($dao->amount));
             $count++;
@@ -285,7 +298,8 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
       i.id,
       c.display_name,
       i.admission,
-      i.discharge
+      i.discharge,
+      i.tenant_id
     FROM civicrm_o8_rental_rental i 
         INNER JOIN civicrm_contact c on i.tenant_id = c.id
     WHERE YEAR(i.created_date) = YEAR(CURRENT_DATE()) 
@@ -320,8 +334,13 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
         $rows = array();
         $count = 0;
         while ($dao->fetch()) {
+            if (!empty($dao->tenant_id)) {
+                $contact = '<a href="' . CRM_Utils_System::url('civicrm/contact/view',
+                        ['reset' => 1, 'cid' => $dao->tenant_id]) . '">' .
+                    CRM_Contact_BAO_Contact::displayName($dao->tenant_id) . '</a>';
+            }
             $rows[$count][] = $dao->id;
-            $rows[$count][] = $dao->display_name;
+            $rows[$count][] = $contact;
             $rows[$count][] = $dao->admission;
             $rows[$count][] = $dao->discharge;
             $count++;

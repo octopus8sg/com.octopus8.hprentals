@@ -19,5 +19,5 @@
   "navigation": "",
   "module_name": "tenantPaymentSearch",
   "directive_name": "tenant-payment-search",
-  "id": "tenantRentalSearch"
+  "id": "tenantPaymentSearch"
 }

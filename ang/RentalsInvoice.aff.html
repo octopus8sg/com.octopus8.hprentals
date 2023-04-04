@@ -3,15 +3,6 @@
     <af-entity url-autofill="1" type="RentalsInvoice" name="RentalsInvoice" label="Rental Invoice"
                actions="{create: true, update: false}" security="RBAC"/>
     <fieldset af-fieldset="RentalsInvoice" class="af-container" af-title="Invoice">
-        <div ng-if="!routeParams">
-            <!-- content to show when routeParams is undefined -->
-        <div class="row">
-            <div class="col-md-4 col-xs-6">
-                <hp-select-tenants ng-model="tenant"></hp-select-tenants>
-            </div>
-        </div>
-        </div>
-
         <style>
             .select2-container {
                 min-width: 350px !important;;
@@ -28,7 +19,7 @@
                         ng-model="myrental">
                     <option style="{min-width: 350px}" value=""></option>
                     <option style="{min-width: 350px}" ng-repeat="myRental in myRentals" value="{{myRental.id}}">
-                        {{myRental.admission}}
+                        {{myRental.display_name}} {{myRental.admission}}
                     </option>
                 </select>
             </div>

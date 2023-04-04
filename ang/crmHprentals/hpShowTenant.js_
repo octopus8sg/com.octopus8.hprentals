@@ -13,7 +13,7 @@
         $scope.$watch('hpShowTenant', function(newValue){
 
 
-          console.log($scope.routeParams);
+//          console.log($scope.routeParams);
         });
       }
     };

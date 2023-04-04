@@ -5,44 +5,25 @@
         return {
             restrict: 'E',
             templateUrl: '~/crmHprentals/hpExpenses.html',
-            // scope: {
-            //     startDate: '@', // Use '@' for string parameter
-            //     womanOnly: '@' // Use '@' for string parameter
-            // },
+
             link: function (scope, element, attrs) {
-                //     JSON.stringify({
-                //     entity: 'Contact',
-                //     select: {
-                //         allowClear: true
-                //     },
-                //     api: {
-                //         params: {
-                //             'id': {
-                //                 'IN': [348, 349]
-                //             }
-                //         }
-                //     }
-                // }); // for directive
-                // Convert IDs string to array
-                // let options = {where: [["id", "BETWEEN", [100, 500]], ["gender_id", "=", 1]]};
-                function nl2br(str) {
-                    return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                }
 
                 function getCodeById(id, myArray) {
                     for (let x = 0; x < myArray.length; x++) {
                         if (myArray[x].id == id) {
                             // console.log(myArray[x]);
-                            return myArray[x].code;
+                            return myArray[x].display_name + " " + myArray[x].admission;
                         }
                     }
                     return null; // or whatever you want to return if there's no match
                 }
 
-                var rentaloptions = {};
+                var rentaloptions = {select: ["id", "admission","code", "tenant.display_name"],
+                    join: [["Contact AS tenant", "LEFT", ["tenant_id", "=", "tenant.id"]]],
+                    limit: 0};
                 var innerrentals = [];
                 var options = scope.routeParams;
-                console.log(options);
+                // console.log(options);
                 let lookfortenant = true;
                 if (options) {
                     if (options.cid) {
@@ -50,6 +31,8 @@
                         if (contact) {
                             rentaloptions = {
                                 where: [["tenant_id", "=", contact]],
+                                select: ["id", "admission", "code", "tenant.display_name"],
+                                join: [["Contact AS tenant", "LEFT", ["tenant_id", "=", "tenant.id"]]],
                                 limit: 0
                             };
                             lookfortenant = false;
@@ -58,24 +41,24 @@
                 }
 
                 CRM.api4('RentalsRental', 'get', rentaloptions).then(function (result) {
-                    innerrentals = result;
-                    scope.myRentals = result;
+                    innerrentals = result.map(rental => {
+                        const keys = Object.keys(rental);
+                        const modifiedRental = {};
+                        keys.forEach(key => {
+                            if (key.includes('.')) {
+                                const nestedKeys = key.split('.');
+                                modifiedRental[nestedKeys[1]] = rental[key];
+                            } else {
+                                modifiedRental[key] = rental[key];
+                            }
+                        });
+                        return modifiedRental;
+                    });
+                    scope.myRentals = innerrentals;
                     scope.$apply();
                 });
-                if (lookfortenant) {
-                    scope.$watch('tenant', function (newVal, oldVal) {
-                        // console.log('newVal', newVal)
-                        rentaloptions = {
-                            where: [["tenant_id", "=", newVal]],
-                            limit: 0
-                        };
-                        CRM.api4('RentalsRental', 'get', rentaloptions).then(function (result) {
-                            innerrentals = result;
-                            scope.myRentals = result;
-                            scope.$apply();
-                        });
-                    });
-                }
+                // console.log('tenant lookfortenant', lookfortenant)
+
                 scope.$watch('myrental', function (newValue, oldValue) {
                     // console.log('rentalnewVal', newValue)
                     let myRentalCode = "";

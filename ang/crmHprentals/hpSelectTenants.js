@@ -12,8 +12,8 @@
             link: function (scope, element, attrs, ngModel) {
                 let options = scope.$parent.options;
                 let routeParams = scope.$parent.routeParams;
-                console.log(options);
-                console.log(routeParams);
+                // console.log(options);
+                // console.log(routeParams);
                 if (options) {
                     if (options.contact_id) {
                         let contact = options.contact_id;
