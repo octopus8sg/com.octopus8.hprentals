@@ -1,7 +1,8 @@
 <div class="action-link">
-    <a class="button  crm-popup"  ng-href="{{ crmUrl('civicrm/rentals/rental', {reset: 1, action: 'add', cid: options.contact_id}) }}">
-    <i class="crm-i fa-plus-circle">&nbsp;</i>
-    Add Rental
+    <a class="button  crm-popup"
+       ng-href="{{ crmUrl('civicrm/rentals/rental', {reset: 1, action: 'add', cid: options.contact_id}) }}">
+        <i class="crm-i fa-plus-circle">&nbsp;</i>
+        Add Rental
     </a>
 </div>
 
@@ -9,18 +10,21 @@
 <div af-fieldset="" af-title="Rentals">
     <div class="row">
         <div class="col-md-4 col-xs-6">
-            <af-field name="id" />
+            <af-field name="id"/>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4 col-xs-6">
-            <af-field name="admission" defn="{input_type: 'Select', search_range: true, input_attrs: {}}" />
+            <af-field name="admission" defn="{input_type: 'Select', search_range: true, input_attrs: {}}"/>
         </div>
         <div class="col-md-4 col-xs-6">
-            <af-field name="discharge" defn="{input_type: 'Select', search_range: true, input_attrs: {}}" />
+            <af-field name="discharge" defn="{input_type: 'Select', search_range: true, input_attrs: {}}"/>
         </div>
     </div>
 
 
-    <crm-search-display-table search-name="Rentals08" display-name="Tenant_Rentals_Table08" filters="{'tenant_id': options.contact_id}"></crm-search-display-table>
+    <crm-search-display-table
+            search-name="Rentals08"
+            display-name="Tenant_Rentals_Table08"
+            filters="{'tenant_id': options.contact_id}"></crm-search-display-table>
 </div>

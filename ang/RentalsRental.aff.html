@@ -1,7 +1,7 @@
 <af-form ctrl="afform">
     <af-entity ng-if="!routeParams.cid" url-autofill="1" type="RentalsRental" name="RentalsRental"
                label="Rental" actions="{create: true, update: false}" security="RBAC" data="{tenant_id: 'user_contact_id'}" />
-
+    {{user_contact_id}}
     <fieldset af-fieldset="RentalsRental" class="af-container" af-title="Rental">
         <div class="row">
             <div class="col-md-4 col-xs-6">
