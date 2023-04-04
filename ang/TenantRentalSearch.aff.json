@@ -11,7 +11,7 @@
   "type": "search",
   "entity_type": "",
   "join_entity": "",
-  "contact_summary": "tab",
+  "contact_summary": "",
   "icon": "fa-home",
   "server_route": "civicrm/rentals/tenantrentals",
   "redirect": "",
