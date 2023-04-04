@@ -66,4 +66,10 @@
     <title>Reports</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/rentals/tab</path>
+    <page_callback>CRM_Hprentals_Page_RentalsTab</page_callback>
+    <title>RentalsTab</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>

@@ -137,22 +137,31 @@ function hprentals_civicrm_navigationMenu(&$menu)
  * Implementation of hook_civicrm_tabset
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_tabset
  */
-function __hprentals_civicrm_tabset($path, &$tabs, $context)
+function hprentals_civicrm_tabset($path, &$tabs, $context)
 {
     if ($path === 'civicrm/contact/view') {
-        // add a tab to the contact summary screen
-        $contactId = $context['contact_id'];
-        $url = CRM_Utils_System::url('civicrm/rentals/search/#?tenant_id=' . $contactId, null, null, null, false);
+        /**
+         * Implementation of hook_civicrm_tabset
+         * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_tabset
+         */
+                // add a tab to the contact summary screen
+                $contactId = $context['contact_id'];
+                $url = CRM_Utils_System::url('civicrm/rentals/tab', ['cid' => $contactId]);
 
-        $tabs[] = array(
-            'id' => 'contact_rentals',
-            'url' => $url,
-            'title' => E::ts('Rentals'),
-            'weight' => 10000,
-            'count' => 10,
-            'icon' => 'crm-i fa-home',
-        );
-    }
+                $myEntities = \Civi\Api4\RentalsRental::get()
+                    ->selectRowCount()
+                    ->addWhere('tenant_id', '=', $contactId)
+                    ->execute();
+
+                $tabs[] = array(
+                    'id' => 'contact_rentals_tab',
+                    'url' => $url,
+                    'count' => $myEntities->count(),
+                    'title' => E::ts('Rentals'),
+                    'weight' => 1000,
+                    'icon' => 'crm-i fa-home',
+                );
+            }
 }
 
 function hprentals_civicrm_angularModules(&$angularModules)
