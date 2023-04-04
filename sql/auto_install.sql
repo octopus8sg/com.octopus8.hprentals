@@ -136,7 +136,7 @@ ENGINE=InnoDB;
 -- *******************************************************/
 CREATE TABLE `civicrm_o8_rental_payment` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique RentalsPayment ID',
-  `code` varchar(12) NOT NULL COMMENT 'Code',
+  `code` varchar(12) NULL DEFAULT NULL COMMENT 'Code',
   `tenant_id` int unsigned COMMENT 'FK to Contact',
   `method_id` int unsigned COMMENT 'FK to payment method',
   `amount` decimal(20,2) NOT NULL COMMENT 'Amount',

@@ -169,7 +169,8 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
             1 => 'code',
             2 => 'display_name',
             3 => 'created_at',
-            4 => 'amount',
+            4 => 'method',
+            5 => 'amount',
         ];
 
         $sort = isset($_REQUEST['iSortCol_0']) ? CRM_Utils_Array::value(CRM_Utils_Type::escape($_REQUEST['iSortCol_0'], 'Integer'), $sortMapper) : NULL;
@@ -191,10 +192,12 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
       i.code,
       c.display_name,
       i.created_date,
+      m.name as method,
       i.amount,
       i.tenant_id
     FROM civicrm_o8_rental_payment i 
         INNER JOIN civicrm_contact c on i.tenant_id = c.id
+        INNER JOIN civicrm_o8_rental_method m on i.method_id = m.id
     WHERE YEAR(i.created_date) = YEAR(CURRENT_DATE()) 
     AND c.is_deleted = 0
     AND MONTH(i.created_date) = MONTH(CURRENT_DATE()) ";
@@ -237,6 +240,7 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
             $rows[$count][] = $dao->code;
             $rows[$count][] = $contact;
             $rows[$count][] = $dao->created_date;
+            $rows[$count][] = $dao->method;
             $rows[$count][] = CRM_Utils_Money::formatLocaleNumericRoundedForDefaultCurrency(intval($dao->amount));
             $count++;
         }

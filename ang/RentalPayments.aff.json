@@ -1,0 +1,19 @@
+{
+  "type": "search",
+  "name": "afsearchSearchPayments",
+  "requires": ["crmHprentals"],
+  "title": "Total Payments",
+  "description": "",
+  "is_dashlet": "",
+  "is_public": "",
+  "is_token": "",
+  "permission": "access CiviCRM",
+  "type": "search",
+  "entity_type": "",
+  "join_entity": "",
+  "icon": "fa-home",
+  "server_route": "civicrm/rentals/payments",
+  "redirect": "",
+  "create_submission": "",
+  "navigation": ""
+}

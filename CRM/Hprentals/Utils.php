@@ -111,6 +111,17 @@ class CRM_Hprentals_Utils
             //'separator' => 1,
             'is_active' => 1]];
 
+    public const PAYMENTS_MENU = [
+        'path' => self::MAIN_MENU['menu']['name'],
+        'menu' => [
+            'label' => 'Payments (test)',
+            'name' => 'hprentals_payments',
+            'url' => self::PATH_PAYMENTS,
+            'permission' => 'adminster CiviCRM',
+            'operator' => 'OR',
+            //'separator' => 1,
+            'is_active' => 1]];
+
     public const INVOICES_MENU = [
         'path' => self::MAIN_MENU['menu']['name'],
         'menu' => [
@@ -277,6 +288,7 @@ class CRM_Hprentals_Utils
                 self::METHODS_MENU,
                 self::RENTALS_MENU,
                 self::INVOICES_MENU,
+                self::PAYMENTS_MENU,
                 self::REPORTS_MENU,
                 self::SETUP_MENU
             ];
@@ -763,6 +775,7 @@ return $menu;
             self::checkRentalOverlap($op, $objectName, $params);
             self::addRentalCode($op, $objectName, $params);
             self::addInvoiceCode($op, $objectName, $params);
+            self::addPaymentCode($op, $objectName, $params);
             self::writeLog($params, 'after save');
 
         }
@@ -856,6 +869,24 @@ return $menu;
             }
         }
     }
+    /**
+     * @param $op
+     * @param $objectName
+     * @param $params
+     */
+    public static function addPaymentCode($op, $objectName, &$params)
+    {
+        if ($objectName == 'RentalsPayment') {
+            self::writeLog($params, 'before adding invoice code');
+            if ($op == 'create') {
+                self::writeLog($params, 'before adding invoice code 2');
+                $invoiceNumber = self::generatePaymentNumber('RC');
+                self::writeLog($invoiceNumber, 'before adding invoice code 3');
+                $params['code'] = $invoiceNumber;
+                self::writeLog($params, 'after adding invoice code');
+            }
+        }
+    }
 
     public static function generateRentalCode($clientId, $startDate, $endDate)
     {
@@ -879,7 +910,7 @@ return $menu;
         $monthYear = $today->format('ym');
         $invoiceParams = [
             'sequential' => 1,
-            'prefix' => 'HP' . $monthYear,
+            'prefix' => $prefix . $monthYear,
             'suffix' => '',
             'number' => 1,
         ];
@@ -912,6 +943,48 @@ return $menu;
             self::writeLog($e->getMessage());
         }
         $invoiceNumber = $invoiceParams['prefix'] . str_pad($invoiceParams['number'], 4, '0', STR_PAD_LEFT);
+        return $invoiceNumber;
+    }
+    public static function generatePaymentNumber($prefix = 'RC')
+    {
+        // Get the current year and month
+        $today = new DateTime();
+        $monthYear = $today->format('ym');
+        $paymentParams = [
+            'sequential' => 1,
+            'prefix' => $prefix . $monthYear,
+            'suffix' => '',
+            'number' => 1,
+        ];
+        try {
+            $lastInvoice = civicrm_api4('RentalsPayment', 'get', [
+                'select' => [
+                    'code',
+                ],
+                'orderBy' => [
+                    'code' => 'DESC',
+                ],
+                'limit' => 1,
+                'checkPermissions' => FALSE,
+                'where' => [
+                    ['code', 'LIKE', $paymentParams['prefix'] . '%'],
+                ],
+            ]);
+            self::writeLog($lastInvoice, 'lastInvoice');
+        } catch (Exception $e) {
+            self::writeLog($e->getMessage());
+        }
+        try {
+            if (!empty($lastInvoice)) {
+                $lastInvoiceNumber = $lastInvoice[0]['code'];
+                $lastNumber = substr($lastInvoiceNumber, -4);
+                $paymentParams['number'] = (int)$lastNumber + 1;
+                self::writeLog($lastInvoiceNumber, 'lastPaymentNumber');
+            }
+        } catch (Exception $e) {
+            self::writeLog($e->getMessage());
+        }
+        $invoiceNumber = $paymentParams['prefix'] . str_pad($paymentParams['number'], 4, '0', STR_PAD_LEFT);
         return $invoiceNumber;
     }
 }

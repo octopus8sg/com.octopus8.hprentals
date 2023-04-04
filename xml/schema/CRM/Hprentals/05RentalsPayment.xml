@@ -36,7 +36,8 @@
         <length>12</length>
         <label>Code</label>
         <comment>Code</comment>
-        <required>true</required>
+        <required>false</required>
+        <default>NULL</default>
         <import>true</import>
         <export>true</export>
         <html>
@@ -74,7 +75,7 @@
         <pseudoconstant>
             <table>civicrm_o8_rental_method</table>
             <keyColumn>id</keyColumn>
-            <nameColumn>name</nameColumn>
+            <labelColumn>name</labelColumn>
         </pseudoconstant>
         <html>
             <type>Select</type>
