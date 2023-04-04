@@ -2,7 +2,7 @@
   "type": "search",
   "name": "afsearchSearchRentals",
   "requires": ["crmHprentals"],
-  "title": "Total Rentals",
+  "title": "Search Rentals",
   "description": "",
   "is_dashlet": "",
   "is_public": "",
