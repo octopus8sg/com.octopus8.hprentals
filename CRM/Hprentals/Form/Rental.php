@@ -10,6 +10,8 @@ use CRM_Hprentals_Utils as U;
  */
 class CRM_Hprentals_Form_Rental extends CRM_Core_Form
 {
+    protected $_cid;
+
     protected $_id;
 
     protected $_myentity;
@@ -47,7 +49,11 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
     public function preProcess()
     {
         parent::preProcess();
-
+        $cid = CRM_Utils_Request::retrieve('cid', 'Positive');
+        if ($cid) {
+            $this->_cid = $cid;
+        }
+        U::writeLog($cid, 'preProcess cid');
         $action = $this->getAction();
 //        U::writeLog($action, 'action before');
         $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
@@ -103,7 +109,9 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
 
     public function buildQuickForm()
     {
+        $cid = $this->_cid;
         $fields = [];
+        U::writeLog($cid, 'buildQuickForm cid');
 
         $id = $this->getEntityId();
         $this->assign('id', $id);
@@ -126,6 +134,9 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
             $tenant_id = $this->addEntityRef('tenant_id', E::ts('Tenant'), ['create' => TRUE], TRUE);
 
             if ($action == CRM_Core_Action::PREVIEW) {
+                $tenant_id->freeze();
+            }
+            if ($cid) {
                 $tenant_id->freeze();
             }
 
@@ -201,15 +212,22 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
     public function setDefaultValues()
     {
         $defaults = [];
+        $cid = $this->_cid;
         if ($this->_myentity) {
             $defaults = $this->_myentity;
         }
-        U::writeLog($defaults, "RentalsExpense Defaults");
+        if ($cid) {
+            $defaults['tenant_id'] = $cid;
+        }
+
+        U::writeLog($cid, "cid Defaults");
+        U::writeLog($defaults, "Rentals Defaults");
         return $defaults;
     }
 
 
-    function validate() {
+    function validate()
+    {
         // Call the parent validate method
         $errors = parent::validate();
 

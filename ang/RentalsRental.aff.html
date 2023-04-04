@@ -1,23 +1,15 @@
 <af-form ctrl="afform">
-    <af-entity url-autofill="1" type="RentalsRental" name="RentalsRental" label="Rental"
-               actions="{create: true, update: true}" security="RBAC"/>
-    <fieldset af-fieldset="RentalsRental" class="af-container" af-title="Rental">
+    <af-entity ng-if="!routeParams.cid" url-autofill="1" type="RentalsRental" name="RentalsRental"
+               label="Rental" actions="{create: true, update: false}" security="RBAC" data="{tenant_id: 'user_contact_id'}" />
 
-        <hp-show-tenant></hp-show-tenant>
-        <div class="row">
-            <div class="col-md-8 col-xs-12">
-                <af-field name="tenant_id"/>
-            </div>
-        </div>
+    <fieldset af-fieldset="RentalsRental" class="af-container" af-title="Rental">
         <div class="row">
             <div class="col-md-4 col-xs-6">
-                <af-field name="admission"/>
-            </div>
+                <af-field name="admission"/></div>
             <div class="col-md-4 col-xs-6">
-                <af-field name="discharge"/>
-            </div>
+                <af-field name="discharge"/></div>
         </div>
     </fieldset>
-    <hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px"/>
+    <hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px" />
     <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>
 </af-form>
