@@ -127,12 +127,17 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
 
             $id_field = $this->add('text', 'id', E::ts('ID'), ['class' => 'huge'],)->freeze();
 
-            $code = $this->add('text', 'code', E::ts('Code'), ['class' => 'huge']);
+            $code = $this->add('text', 'code', E::ts('Receipt No'), ['class' => 'huge']);
             $code->freeze();
 
             //
-            $tenant_id = $this->addEntityRef('tenant_id', E::ts('Tenant'), ['create' => TRUE], TRUE);
 
+            if ($cid) {
+                $this->add('hidden', 'tenant_id');
+            }
+            if (!$cid) {
+                $tenant_id = $this->addEntityRef('tenant_id', E::ts('Tenant'), ['create' => TRUE], TRUE);
+            }
             if ($action == CRM_Core_Action::PREVIEW) {
                 $tenant_id->freeze();
             }
