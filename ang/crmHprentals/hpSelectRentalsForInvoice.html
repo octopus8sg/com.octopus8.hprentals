@@ -1,0 +1,18 @@
+<div>
+  <p>{{ts('Example directive (hp-select-rentals-for-invoice)')}}</p>
+  <pre>Options: {{myOptions|json}}</pre>
+  <!-- Year select -->
+  <select ng-model="selectedYear" ng-options="year for year in years">
+    <option value="">-- Select year --</option>
+  </select>
+
+  <!-- Month select -->
+  <select name="month" ng-model="selectedMonth" ng-options="month for month in months">
+    <option value="">-- Select month --</option>
+  </select>
+
+  <!-- Date select -->
+  <select name="date" ng-model="selectedDate" ng-options="date for date in dates">
+    <option value="">-- Select date --</option>
+  </select>
+</div>
