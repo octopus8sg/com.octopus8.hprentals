@@ -48,8 +48,8 @@ class CRM_Hprentals_Form_Payment extends CRM_Core_Form {
     public function preProcess()
     {
         parent::preProcess();
-        $cid = CRM_Utils_Request::retrieve('cid', 'Positive');
-        if ($cid) {
+        $cid = CRM_Utils_Request::retrieveValue('cid', 'Positive', 0);
+        if ($cid > 0) {
             $this->_cid = $cid;
         }
         U::writeLog($cid, 'preProcess cid');
@@ -126,15 +126,16 @@ class CRM_Hprentals_Form_Payment extends CRM_Core_Form {
 
             $id_field = $this->add('text', 'id', E::ts('ID'), ['class' => 'huge'],)->freeze();
 
-            $code = $this->add('text', 'code', E::ts('Code'), ['class' => 'huge']);
+            $code = $this->add('text', 'code', E::ts('Receipt No'), ['class' => 'huge']);
             $code->freeze();
 
             //
-            $tenant_id = $this->addEntityRef('tenant_id', E::ts('Tenant'), [], TRUE);
-            if ($action == CRM_Core_Action::PREVIEW) {
-                $tenant_id->freeze();
+            if(0 < intval($cid)){
+                $tenant_id = $this->add('hidden', 'tenant_id');
+            }else{
+                $tenant_id = $this->addEntityRef('tenant_id', "Tenant_" . $cid, [], TRUE);
             }
-            if ($cid) {
+            if ($action == CRM_Core_Action::PREVIEW) {
                 $tenant_id->freeze();
             }
             $method_id = $this->addEntityRef('method_id', E::ts('Method'), [

@@ -213,7 +213,7 @@ return [
                                     'icon' => 'fa-pencil',
                                     'text' => 'Edit',
                                     'style' => 'default',
-                                    'path' => 'civicrm/rentals/rental?id=[id]&action=update&reset=1',
+                                    'path' => 'civicrm/rentals/rental?id=[id]&action=update&reset=1&cid=[RentalsRental_Contact_tenant_id_01.id]',
                                     'condition' => [],
                                 ],
                                 [

@@ -115,6 +115,8 @@ CREATE TABLE `civicrm_o8_rental_invoice` (
   `description` varchar(1255) NOT NULL COMMENT 'Name',
   `rental_id` int unsigned COMMENT 'FK to RentalsRental',
   `amount` decimal(20,2) NOT NULL COMMENT 'Amount',
+  `start_date` date DEFAULT NULL COMMENT 'Invoice date',
+  `end_date` date DEFAULT NULL COMMENT 'Invoice End Date',
   `created_id` int unsigned COMMENT 'FK to civicrm_contact, who created this',
   `created_date` datetime COMMENT 'Date and time this was created.',
   `modified_id` int unsigned COMMENT 'FK to civicrm_contact, who modified this',

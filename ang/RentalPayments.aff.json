@@ -2,7 +2,7 @@
   "type": "search",
   "name": "afsearchSearchPayments",
   "requires": ["crmHprentals"],
-  "title": "Total Payments",
+  "title": "Search Payments",
   "description": "",
   "is_dashlet": "",
   "is_public": "",

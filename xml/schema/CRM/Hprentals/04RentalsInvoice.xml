@@ -37,7 +37,7 @@
         <length>12</length>
         <label>Code</label>
         <comment>Code</comment>
-<!--        <required>true</required>-->
+        <!--        <required>true</required>-->
         <import>true</import>
         <export>true</export>
         <html>
@@ -76,7 +76,7 @@
             <table>civicrm_o8_rental_rental</table>
             <keyColumn>id</keyColumn>
             <labelColumn>code</labelColumn>
-<!--            <condition>LIMIT 10</condition>-->
+            <!--            <condition>LIMIT 10</condition>-->
         </pseudoconstant>
         <html>
             <type>Select</type>
@@ -100,6 +100,32 @@
         <html>
             <type>Text</type>
             <label>Amount</label>
+        </html>
+    </field>
+
+    <field>
+        <name>start_date</name>
+        <type>date</type>
+        <label>Start date</label>
+        <comment>Invoice date</comment>
+        <default>NULL</default>
+        <html>
+            <label>Start date</label>
+            <type>Select Date</type>
+            <formatType>activityDate</formatType>
+        </html>
+    </field>
+
+    <field>
+        <name>end_date</name>
+        <type>date</type>
+        <label>End date</label>
+        <comment>Invoice End Date</comment>
+        <default>NULL</default>
+        <html>
+            <label>End date</label>
+            <type>Select Date</type>
+            <formatType>activityDate</formatType>
         </html>
     </field>
 

@@ -128,7 +128,7 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
 
             $id_field = $this->add('text', 'id', E::ts('ID'), ['class' => 'huge'],)->freeze();
 
-            $code = $this->add('text', 'code', E::ts('Code'), ['class' => 'huge']);
+            $code = $this->add('text', 'code', E::ts('Invoice No'), ['class' => 'huge']);
             $code->freeze();
 
             //
@@ -293,5 +293,12 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
         parent::postProcess();
     }
 
+    public static function generateInvoices(){
+        //Select all current rentals that does not start this month
+        //and they have invoices in this month
+        //if they is some in the list
+        //create invoice for the Types that are not onetyme
+        //if total length of rental is > 6 month - one price, if < 6m, another
+    }
 
 }

@@ -96,7 +96,7 @@ return [
                             'type' => 'field',
                             'key' => 'code',
                             'dataType' => 'String',
-                            'label' => 'Code',
+                            'label' => 'Receipt No',
                             'sortable' => TRUE,
                         ],
                         [
@@ -233,7 +233,7 @@ return [
                             'type' => 'field',
                             'key' => 'code',
                             'dataType' => 'String',
-                            'label' => 'Code',
+                            'label' => 'Receipt No',
                             'sortable' => TRUE,
                         ],
                         [
@@ -300,7 +300,7 @@ return [
                                     'icon' => 'fa-pencil',
                                     'text' => 'Edit',
                                     'style' => 'default',
-                                    'path' => 'civicrm/rentals/payment?id=[id]&action=update&reset=1',
+                                    'path' => 'civicrm/rentals/payment?id=[id]&action=update&reset=1&cid=[RentalsPayment_Contact_tenant_id_01.id]',
                                     'condition' => [],
                                 ],
                                 [
