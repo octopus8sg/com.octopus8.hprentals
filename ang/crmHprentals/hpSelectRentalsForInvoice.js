@@ -1,7 +1,6 @@
 (function (angular, $, _) {
     // "hpSelectRentalsForInvoice" is a basic skeletal directive.
     // Example usage: <hp-select-rentals-for-invoice></hp>
-    angular.module('crmHprentals').directive('hpSelectRentalsForInvoice', hpSRdde);
     const hpSRdde = function () {
         return {
             restrict: 'E',
@@ -53,29 +52,48 @@
                     months.sort();
 
                     // Map month numbers to month names
-                    return months.map( (monthNum) => monthNames[monthNum]);
+                    return months.map((monthNum) => {
+                        return {name: monthNames[monthNum], value: monthNum};
+                    });
                 };
 
                 function extractDates(rentals, selectedYear, selectedMonth) {
                     console.log("extractDates rentals", rentals);
-                    let matchingRentals = rentals.filter( (rental) => {
+                    let matchingRentals = rentals.filter((rental) => {
                         const admissionDate = new Date(rental.admission);
+                        const admissionYear = admissionDate.getFullYear();
+                        const admissionMonth = admissionDate.getMonth();
+                        console.log("selectedYear", selectedYear, "admissionYear", admissionYear);
+                        console.log("selectedMonth", selectedMonth, "admissionMonth", admissionMonth);
                         return admissionDate.getFullYear() === selectedYear && admissionDate.getMonth() === selectedMonth;
                     });
-
-                    let dates = _.uniq(matchingRentals.map((rental) => new Date(rental.admission).getDate() ).sort();
-
-                    return dates;
+                    console.log("matchingRentals", matchingRentals);
+                    const dateOptions = _.uniq(matchingRentals.map((rental) => {
+                        const date = new Date(rental.admission).getDate();
+                        return {
+                            id: rental.id,
+                            name: date
+                        };
+                    })).sort((a, b) => a.name - b.name);
+                    console.log("dateOptions", dateOptions);
+                    return dateOptions;
                 }
 
-                var rentaloptions = [];
+                let rentaloptions = [];
                 if (options) {
                     if (options.cid) {
                         let contact = options.cid;
                         if (contact) {
                             rentaloptions = {
                                 select: ["id", "admission", "invoices.rental_id"],
-                                join: [["RentalsInvoice AS invoices", "LEFT", ["id", "=", "invoices.rental_id"]]],
+                                join: [
+                                    ["RentalsInvoice AS invoices", "LEFT",
+                                        // [
+                                        ["id", "=", "invoices.rental_id"],
+                                        ["admission", "=", "invoices.start_date"]
+                                        // ]
+                                    ]
+                                ],
                                 where: [["invoices.rental_id", "IS NULL"], ["tenant_id", "=", contact]],
                                 limit: 0
                             };
@@ -93,7 +111,7 @@
                 $scope.months = [];
                 $scope.$watch('selectedYear', function (newValue, oldValue) {
                     if (newValue !== oldValue && newValue) {
-                        $scope.months = extractMonths($scope.myRentals, newValue);
+                        $scope.monthOptions = extractMonths($scope.myRentals, newValue);
                         // $scope.$apply();
                     }
                 });
@@ -101,13 +119,16 @@
                 $scope.$watchGroup(['selectedYear', 'selectedMonth'], function (newValues, oldValues) {
                     if (newValues != undefined) {
                         if (newValues[0] != undefined) {
-                            if ($scope.myRentals != undefined) {
-                                const rentals = $scope.myRentals;
-                                console.log('$watchGroup', rentals);
-                                const selectedYear = newValues[0];
-                                const selectedMonth = newValues[1];
-
-                                $scope.dates = extractDates(rentals, selectedYear, selectedMonth);
+                            if (newValues[1] != undefined) {
+                                if ($scope.myRentals != undefined) {
+                                    const rentals = $scope.myRentals;
+                                    console.log('$watchGroup', rentals);
+                                    const selectedYear = newValues[0];
+                                    const selectedMonth = newValues[1];
+                                    const dateOptions = extractDates(rentals, selectedYear, selectedMonth);
+                                    console.log('dateOptions', dateOptions);
+                                    $scope.dateOptions = dateOptions;
+                                }
                             }
                         }
                     }
@@ -115,4 +136,6 @@
             }
         };
     };
+    angular.module('crmHprentals').directive('hpSelectRentalsForInvoice', hpSRdde);
+
 })(angular, CRM.$, CRM._);

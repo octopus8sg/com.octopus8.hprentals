@@ -1,18 +1,25 @@
 <div>
-  <p>{{ts('Example directive (hp-select-rentals-for-invoice)')}}</p>
-  <pre>Options: {{myOptions|json}}</pre>
   <!-- Year select -->
-  <select ng-model="selectedYear" ng-options="year for year in years">
-    <option value="">-- Select year --</option>
-  </select>
-
+<!--  <label>-->
+<!--    Year<span style="color: red">*</span>:-->
+<!--    <select ng-model="selectedYear" ng-options="year for year in years">-->
+<!--      <option value="">&#45;&#45; Select year &#45;&#45;</option>-->
+<!--    </select>-->
+<!--  </label>-->
+  <af-field name="year" defn="{label: 'Year', input_attrs: {input_type: 'Select'}, required: true}" ng-model="selectedYear" ng-options="year for year in years"/>
   <!-- Month select -->
-  <select name="month" ng-model="selectedMonth" ng-options="month for month in months">
-    <option value="">-- Select month --</option>
-  </select>
+  <label>
+    Month<span style="color: red">*</span>:
+    <select name="month" ng-model="selectedMonth" ng-options="option.value as option.name for option in monthOptions">
+      <option value="">-- Select month --</option>
+    </select>
+  </label>
 
   <!-- Date select -->
-  <select name="date" ng-model="selectedDate" ng-options="date for date in dates">
-    <option value="">-- Select date --</option>
-  </select>
+  <label>
+    Day<span style="color: red">*</span>:
+    <select name="date" ng-model="selectedDate" ng-options="option.id as option.name for option in dateOptions">
+      <option value="">-- Select date --</option>
+    </select>
+  </label>
 </div>
