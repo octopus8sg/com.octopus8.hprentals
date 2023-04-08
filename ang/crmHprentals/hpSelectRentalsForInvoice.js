@@ -23,7 +23,7 @@
                 const getCodeById = (id, rentals) => {
                     for (let x = 0; x < rentals.length; x++) {
                         if (rentals[x].id === id) {
-                            console.log(rentals[x]);
+                            // console.log(rentals[x]);
                             return rentals[x].code;
                         }
                     }
@@ -32,7 +32,7 @@
                 const getStartById = (id, rentals) => {
                     for (let x = 0; x < rentals.length; x++) {
                         if (rentals[x].id === id) {
-                            console.log(rentals[x]);
+                            // console.log(rentals[x]);
                             return rentals[x].admission;
                         }
                     }
@@ -60,15 +60,24 @@
 
 // Calculates the prorated amount from the given date until the end of the month
                 const prorateTillTheEndOfMonth = (price, date_start_str) => {
-                    console.log("I have this", date_start_str);
+                    // console.log("I have this", date_start_str);
                     const date_start = new Date(date_start_str);
-                    console.log("I have this Date", date_start);
+                    // console.log("I have this Date", date_start);
                     const lastDayOfMonth = new Date(date_start.getFullYear(), date_start.getMonth() + 1, 0).getDate();
                     const daysInMonth = lastDayOfMonth - date_start.getDate() + 1;
                     const proratedAmount = price * (daysInMonth / lastDayOfMonth);
                     return proratedAmount.toFixed(2);
                 };
-
+                const lastDayForDate = (date_start_str) => {
+                    const date_start = new Date(date_start_str);
+                    let lastDay = new Date(date_start.getFullYear(), date_start.getMonth() + 1, 0).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });;
+                    return lastDay;
+                };
+                const firstDayForDate = (date_start_str) => {
+                    const date_start = new Date(date_start_str);
+                    let firstDay = date_start.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });;
+                    return firstDay;
+                };
 // Calculates the prorated amount between the start and end date
                 const prorateWithStartAndEnd = (price, date_start_str, date_end_str) => {
                     const date_end = new Date(date_end_str);
@@ -138,7 +147,22 @@
                     return dateOptions;
                 }
 
-                let rentaloptions = [];
+                let rentaloptions = {
+                    select: ["id", "admission", "invoices.rental_id"],
+                    join: [
+                        ["RentalsInvoice AS invoices", "LEFT",
+                            // [
+                            ["id", "=", "invoices.rental_id"],
+                            ["admission", "=", "invoices.start_date"]
+                            // ]
+                        ]
+                    ],
+                    where: [
+                        ["invoices.rental_id", "IS NULL"],
+                        ["discharge", "IS NULL"]
+                    ],
+                    limit: 0
+                };
                 if (options) {
                     if (options.cid) {
                         let contact = options.cid;
@@ -153,7 +177,11 @@
                                         // ]
                                     ]
                                 ],
-                                where: [["invoices.rental_id", "IS NULL"], ["tenant_id", "=", contact]],
+                                where: [
+                                    ["invoices.rental_id", "IS NULL"],
+                                    ["tenant_id", "=", contact],
+                                    ["discharge", "IS NULL"]
+                                ],
                                 limit: 0
                             };
                         }
@@ -204,7 +232,7 @@
                 });
 
                 $scope.$watch('selectedDate', (newValue, oldValue) => {
-                    console.log('rentalnewVal', newValue)
+                    // console.log('rentalnewVal', newValue)
                     const myRentals = $scope.myRentals;
                     const myExpenses = $scope.myExpenses;
                     const onceoffrequences = ["once_off", "every_month", "less_than_6_m"];
@@ -214,6 +242,8 @@
                         // console.log(myRentals);
                         const myRentalCode = getCodeById(newValue, myRentals);
                         const myRentalStart = getStartById(newValue, myRentals);
+                        const lastDayDate = lastDayForDate(myRentalStart);
+                        const firstDayDate = firstDayForDate(myRentalStart);
                         // console.log(myRentalStart);
                         // _.findWhere($scope.myExpenses, {name: 'Less than 6 month'});
                         $scope.hpRentalCode = myRentalCode; // output: 'c00353a211002d220106'
@@ -221,15 +251,24 @@
                             if (onceoffrequences.includes(expence.frequency)) {
                                 expence.checked = true;
                                 const price = expence.amount;
-                                if(expence.is_prorate == 1){
-                                expence.total = prorateTillTheEndOfMonth(price, myRentalStart);
+                                if (expence.is_prorate == 1) {
+                                    expence.total = prorateTillTheEndOfMonth(price, myRentalStart);
                                 }
-                                if(expence.is_prorate == 0){
-                                expence.total = price;
+                                if (expence.is_prorate == 0) {
+                                    expence.total = price;
                                 }
                             }
                         });
                         rentaltextarea.trigger('input');
+                        const end_date = $('af-field[name="end_date"]').find('input[type="text"]');
+                        const start_date = $('af-field[name="start_date"]').find('input[type="text"]');
+                        start_date.val(firstDayDate);
+                        start_date.trigger('input');
+                        start_date.trigger('change');
+                        end_date.val(lastDayDate);
+                        end_date.trigger('input');
+                        end_date.trigger('change');
+
                     }
                 });
 
@@ -263,4 +302,5 @@
     };
     angular.module('crmHprentals').directive('hpSelectRentalsForInvoice', hpSRdde);
 
-})(angular, CRM.$, CRM._);
+})
+(angular, CRM.$, CRM._);
