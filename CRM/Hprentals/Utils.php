@@ -698,8 +698,6 @@ class CRM_Hprentals_Utils
         usort($personRentals, function ($a, $b) {
             return strtotime($a['admission']) - strtotime($b['admission']);
         });
-        $lastIndex = count($personRentals) - 1;
-        unset($personRentals[$lastIndex]['endDate']);
 // Output the rentals array
         return $personRentals;
     }
@@ -714,23 +712,34 @@ class CRM_Hprentals_Utils
             $fak_id = intval($faker['contact_id']);
 //            echo $fak_id;
             $fakeDays = self::createFakerDateSets($firstDay, $lastDay);
+            $lastIndex = count($fakeDays) - 1;
+            $i = 0;
             foreach ($fakeDays as $fakeDay) {
+
                 $date_from = $fakeDay['admission'];
                 $date_to = $fakeDay['discharge'];
                 $existing_rent = self::getOverlappedRents($fak_id, $date_from, $date_to);
                 // If an overlap is found, set a validation error message
                 if ($existing_rent == 0) {
-                    $rentals_api = civicrm_api3('RentalsRental', 'create', [
-                        'tenant_id' => intval($fak_id),
-                        'admission' => $date_from,
-                        'discharge' => $date_to,
-                    ]);
+                    if ($i == $lastIndex) {
+                        $rentals_api = civicrm_api3('RentalsRental', 'create', [
+                            'tenant_id' => intval($fak_id),
+                            'admission' => $date_from
+                        ]);
+                    } else {
+                        $rentals_api = civicrm_api3('RentalsRental', 'create', [
+                            'tenant_id' => intval($fak_id),
+                            'admission' => $date_from,
+                            'discharge' => $date_to
+                        ]);
+                    }
                     self::writeLog($rentals_api, 'create Rentals Api');
                 }
                 if ($rentals_api['is_error']) {
                     // handle error
                     self::writeLog($rentals_api['error_message']);
                 }
+                $i++;
             }
         }
     }
@@ -745,6 +754,9 @@ class CRM_Hprentals_Utils
     {
         $rental_id = intval($rental_id);
         $my_rent_table = 'civicrm_o8_rental_rental';
+        if (!$date_to) {
+            $date_to = date('Y-m-d');
+        }
         // Retrieve the list of existing rents for the tenant
         $existing_rent = CRM_Core_DAO::singleValueQuery("
         SELECT COUNT(*) AS overlap
