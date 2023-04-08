@@ -1,25 +1,98 @@
 <div>
-  <!-- Year select -->
-<!--  <label>-->
-<!--    Year<span style="color: red">*</span>:-->
-<!--    <select ng-model="selectedYear" ng-options="year for year in years">-->
-<!--      <option value="">&#45;&#45; Select year &#45;&#45;</option>-->
-<!--    </select>-->
-<!--  </label>-->
-  <af-field name="year" defn="{label: 'Year', input_attrs: {input_type: 'Select'}, required: true}" ng-model="selectedYear" ng-options="year for year in years"/>
-  <!-- Month select -->
-  <label>
-    Month<span style="color: red">*</span>:
-    <select name="month" ng-model="selectedMonth" ng-options="option.value as option.name for option in monthOptions">
-      <option value="">-- Select month --</option>
-    </select>
-  </label>
+    <!-- Year select -->
 
-  <!-- Date select -->
-  <label>
-    Day<span style="color: red">*</span>:
-    <select name="date" ng-model="selectedDate" ng-options="option.id as option.name for option in dateOptions">
-      <option value="">-- Select date --</option>
-    </select>
-  </label>
+    <div>
+        <label>
+            Year<span style="color: red">*</span>:
+            <select
+                    name="selectedYear"
+                    ui-jq="select2"
+                    ui-options="{dropdownAutoWidth : true}"
+                    ng-model="selectedYear"
+                    ng-options="year for year in years"
+                    required>
+                <option value="">-- Select year --</option>
+            </select>
+        </label>
+    </div>
+    <div>
+        <label>
+            Month<span style="color: red">*</span>:
+            <select
+                    name="selectedMonth"
+                    ui-jq="select2"
+                    ui-options="{dropdownAutoWidth : true}"
+                    ng-model="selectedMonth"
+                    ng-options="option.value as option.name for option in monthOptions"
+                    required>
+                <option value="">-- Select month --</option>
+            </select>
+        </label>
+    </div>
+    <div>
+        <label>
+            Start Day<span style="color: red">*</span>:
+            <select
+                    name="date"
+                    ui-jq="select2"
+                    ui-options="{dropdownAutoWidth : true}"
+                    ng-model="selectedDate"
+                    ng-options="option.id as option.name for option in dateOptions"
+                    required>
+                <option value="">-- Select year --</option>
+            </select>
+        </label>
+    </div>
+    <div class="crm-container">
+
+        <div class="help">
+            <h3>Debug Invoice Calculated Data</h3>
+            <div class="col-4">Rental: {{hpRentalCode}}</div>
+            <div class="col-4">Pricelist: <br/>
+                <ul ng-repeat="rTotal in arrTotal">
+                    <li>{{rTotal}}</li>
+                </ul>
+            </div>
+            <div class="col-4">Total Amount: {{hpRentalAmount}}</div>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>{{ts('Add')}}</th>
+                <th>{{ts('ID')}}</th>
+                <th>{{ts('Name')}}</th>
+                <th>{{ts('Frequency')}}</th>
+                <th>{{ts('Is Refund?')}}</th>
+                <th>{{ts('Is Prorate?')}}</th>
+                <th>{{ts('Price')}}</th>
+                <th>{{ts('Amount')}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="myExpense in myExpenses">
+                <td><input type="checkbox" ng-model="myExpense.checked"></td>
+                <td>
+                    {{myExpense.id}}
+                </td>
+                <td>
+                    {{myExpense.name}}
+                </td>
+                <td>{{frequency[myExpense.frequency]}}</td>
+                <td>{{myExpense.is_refund == "1" ? ts('Refund') : ts('Non Refund')}}</td>
+                <td>{{myExpense.is_prorate == "1" ? ts('Prorate') : ts('Non Prorate')}}</td>
+                <td>{{myExpense.amount | currency}}</td>
+                <td>{{myExpense.total | currency}}</td>
+            </tr>
+            <tfoot>
+            <tr>
+                <th colspan=3>Sum</th>
+                <th colspan=2>Total: {{calculateTotal() | currency}}</th>
+            </tr>
+            </tfoot>
+            </tbody>
+        </table>
+
+    </div>
+
 </div>

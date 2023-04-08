@@ -13,21 +13,21 @@
                 min-width: 350px !important;
             }
         </style>
+<!--        <div class="row">-->
+<!--            <div class="col-md-4 col-xs-6">-->
+<!--                <select style="{min-width: 350px}"-->
+<!--                        crm-ui-select="{placeholder: 'Select a Rental Start Date', allowClear: true}"-->
+<!--                        ng-model="myrental">-->
+<!--                    <option style="{min-width: 350px}" value=""></option>-->
+<!--                    <option style="{min-width: 350px}" ng-repeat="myRental in myRentals" value="{{myRental.id}}">-->
+<!--                        {{myRental.display_name}} {{myRental.admission}}-->
+<!--                    </option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+
+
         <div class="row">
-            <div class="col-md-4 col-xs-6">
-                <select style="{min-width: 350px}"
-                        crm-ui-select="{placeholder: 'Select a Rental Start Date', allowClear: true}"
-                        ng-model="myrental">
-                    <option style="{min-width: 350px}" value=""></option>
-                    <option style="{min-width: 350px}" ng-repeat="myRental in myRentals" value="{{myRental.id}}">
-                        {{myRental.display_name}} {{myRental.admission}}
-                    </option>
-                </select>
-            </div>
-        </div>
-
-
-        <div class="row" hidden>
             <div class="col-4">
                 <af-field name="rental_id" defn="{input_type: 'TextArea', input_attrs: {}}"/>
             </div>
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <hp-expenses></hp-expenses>
+<!--        <hp-expenses></hp-expenses>-->
     </fieldset>
     <hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px"/>
     <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>

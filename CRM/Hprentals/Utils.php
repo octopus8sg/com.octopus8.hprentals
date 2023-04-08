@@ -1005,6 +1005,34 @@ class CRM_Hprentals_Utils
         $invoiceNumber = $paymentParams['prefix'] . str_pad($paymentParams['number'], 4, '0', STR_PAD_LEFT);
         return $invoiceNumber;
     }
+    // Prorate till the end of the month
+    public static function prorateTillTheEndOfMonth($price, $date_start) {
+        $start = new DateTime($date_start);
+        $end = new DateTime('last day of this month');
+        $days_in_month = $end->format('d');
+        $days = $start->diff($end)->format('%a');
+        $prorated_amount = round($price / $days_in_month * $days, 2);
+        return $prorated_amount;
+    }
+
+// Prorate from the start of the month
+    public static function prorateFromTheStartOfMonth($price, $date_end) {
+        $start = new DateTime('first day of this month');
+        $end = new DateTime($date_end);
+        $days_in_month = $start->format('t');
+        $days = $start->diff($end)->format('%a');
+        $prorated_amount = round($price / $days_in_month * $days, 2);
+        return $prorated_amount;
+    }
+
+// Prorate with start and end dates
+    public static function prorateWithStartAndEnd($price, $date_start, $date_end) {
+        $start = new DateTime($date_start);
+        $end = new DateTime($date_end);
+        $days = $start->diff($end)->format('%a');
+        $prorated_amount = round($price / 30 * $days, 2);
+        return $prorated_amount;
+    }
 }
 
 

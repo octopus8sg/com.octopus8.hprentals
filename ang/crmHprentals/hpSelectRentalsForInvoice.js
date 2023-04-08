@@ -10,17 +10,34 @@
             },
             link: function ($scope, $el, $attr) {
                 const options = $scope.$parent.routeParams;
-                console.log('scope.routeParams', options)
+                // console.log('scope.routeParams', options)
                 const ts = $scope.ts = CRM.ts('com.octopus8.hprentals');
                 const extractYears = (rentals) => {
 // Extract list of unique years from non-invoiced rentals
                     var years = _.uniq(rentals.map(function (rental) {
                         return new Date(rental.admission).getFullYear();
                     }));
-                    console.log(years);
+                    // console.log(years);
                     return years;
                 };
-
+                const getCodeById = (id, rentals) => {
+                    for (let x = 0; x < rentals.length; x++) {
+                        if (rentals[x].id === id) {
+                            console.log(rentals[x]);
+                            return rentals[x].code;
+                        }
+                    }
+                    return null; // or whatever you want to return if there's no match
+                };
+                const getStartById = (id, rentals) => {
+                    for (let x = 0; x < rentals.length; x++) {
+                        if (rentals[x].id === id) {
+                            console.log(rentals[x]);
+                            return rentals[x].admission;
+                        }
+                    }
+                    return null; // or whatever you want to return if there's no match
+                };
                 const monthNames = ['January',
                     'February',
                     'March',
@@ -33,7 +50,49 @@
                     'October',
                     'November',
                     'December'];
+                const prorateFromTheStartOfMonth = (price, date_end_str) => {
+                    const date_end = new Date(date_end_str);
+                    const lastDayOfMonth = new Date(date_end.getFullYear(), date_end.getMonth() + 1, 0).getDate();
+                    const daysInMonth = lastDayOfMonth - date_end.getDate() + 1;
+                    const proratedAmount = price * (daysInMonth / lastDayOfMonth);
+                    return proratedAmount.toFixed(2);
+                };
 
+// Calculates the prorated amount from the given date until the end of the month
+                const prorateTillTheEndOfMonth = (price, date_start_str) => {
+                    console.log("I have this", date_start_str);
+                    const date_start = new Date(date_start_str);
+                    console.log("I have this Date", date_start);
+                    const lastDayOfMonth = new Date(date_start.getFullYear(), date_start.getMonth() + 1, 0).getDate();
+                    const daysInMonth = lastDayOfMonth - date_start.getDate() + 1;
+                    const proratedAmount = price * (daysInMonth / lastDayOfMonth);
+                    return proratedAmount.toFixed(2);
+                };
+
+// Calculates the prorated amount between the start and end date
+                const prorateWithStartAndEnd = (price, date_start_str, date_end_str) => {
+                    const date_end = new Date(date_end_str);
+                    const date_start = new Date(date_start_str);
+                    const startDay = date_start.getDate();
+                    const endDay = date_end.getDate();
+                    const lastDayOfMonth = new Date(date_end.getFullYear(), date_end.getMonth() + 1, 0).getDate();
+                    const daysInMonth = lastDayOfMonth - startDay + 1;
+                    const proratedAmount = price * (daysInMonth / lastDayOfMonth);
+
+                    if (startDay === 1 && endDay === lastDayOfMonth) {
+                        return proratedAmount.toFixed(2);
+                    }
+
+                    const daysInRange = endDay - startDay + 1;
+                    const proratedAmountInRange = price * (daysInRange / lastDayOfMonth);
+                    return proratedAmountInRange.toFixed(2);
+                };
+                $scope.frequency = {
+                    "once_off": "Once Off",
+                    "every_month": "Every Month",
+                    "less_than_6_m": "Less than 6 months",
+                    "more_than_6_m": "More than 6 months"
+                };
 // Function to extract list of months from rentals for a given year
                 const extractMonths = (rentals, year) => {
                     var months = [];
@@ -58,16 +117,16 @@
                 };
 
                 function extractDates(rentals, selectedYear, selectedMonth) {
-                    console.log("extractDates rentals", rentals);
+                    // console.log("extractDates rentals", rentals);
                     let matchingRentals = rentals.filter((rental) => {
                         const admissionDate = new Date(rental.admission);
                         const admissionYear = admissionDate.getFullYear();
                         const admissionMonth = admissionDate.getMonth();
-                        console.log("selectedYear", selectedYear, "admissionYear", admissionYear);
-                        console.log("selectedMonth", selectedMonth, "admissionMonth", admissionMonth);
+                        // console.log("selectedYear", selectedYear, "admissionYear", admissionYear);
+                        // console.log("selectedMonth", selectedMonth, "admissionMonth", admissionMonth);
                         return admissionDate.getFullYear() === selectedYear && admissionDate.getMonth() === selectedMonth;
                     });
-                    console.log("matchingRentals", matchingRentals);
+                    // console.log("matchingRentals", matchingRentals);
                     const dateOptions = _.uniq(matchingRentals.map((rental) => {
                         const date = new Date(rental.admission).getDate();
                         return {
@@ -75,7 +134,7 @@
                             name: date
                         };
                     })).sort((a, b) => a.name - b.name);
-                    console.log("dateOptions", dateOptions);
+                    // console.log("dateOptions", dateOptions);
                     return dateOptions;
                 }
 
@@ -101,38 +160,104 @@
                     }
                 }
 
-                console.log(rentaloptions);
-                CRM.api4('RentalsRental', 'get', rentaloptions).then(function (result) {
+                // console.log(rentaloptions);
+                CRM.api4('RentalsRental', 'get', rentaloptions).then((result) => {
                     $scope.years = extractYears(result);
                     $scope.myRentals = result;
-                    console.log(result);
+                    // console.log(result);
                     $scope.$apply();
                 });
                 $scope.months = [];
-                $scope.$watch('selectedYear', function (newValue, oldValue) {
+                $scope.$watch('selectedYear', (newValue, oldValue) => {
                     if (newValue !== oldValue && newValue) {
                         $scope.monthOptions = extractMonths($scope.myRentals, newValue);
                         // $scope.$apply();
                     }
                 });
+                const roptions = {};
+                // Call API to get contacts
+                CRM.api4('RentalsExpense', 'get', {}).then((expenses) => {
+                    expenses.forEach((expense) => {
+                        expense.checked = false;
+                        expense.total = 0;
+                    });
+                    $scope.myExpenses = expenses;
+                    $scope.$apply();
+                });
 
-                $scope.$watchGroup(['selectedYear', 'selectedMonth'], function (newValues, oldValues) {
+                $scope.$watchGroup(['selectedYear', 'selectedMonth'], (newValues, oldValues) => {
                     if (newValues != undefined) {
                         if (newValues[0] != undefined) {
                             if (newValues[1] != undefined) {
                                 if ($scope.myRentals != undefined) {
                                     const rentals = $scope.myRentals;
-                                    console.log('$watchGroup', rentals);
+                                    // console.log('$watchGroup', rentals);
                                     const selectedYear = newValues[0];
                                     const selectedMonth = newValues[1];
                                     const dateOptions = extractDates(rentals, selectedYear, selectedMonth);
-                                    console.log('dateOptions', dateOptions);
+                                    // console.log('dateOptions', dateOptions);
                                     $scope.dateOptions = dateOptions;
                                 }
                             }
                         }
                     }
                 });
+
+                $scope.$watch('selectedDate', (newValue, oldValue) => {
+                    console.log('rentalnewVal', newValue)
+                    const myRentals = $scope.myRentals;
+                    const myExpenses = $scope.myExpenses;
+                    const onceoffrequences = ["once_off", "every_month", "less_than_6_m"];
+                    if (newValue) {
+                        const rentaltextarea = $('af-field[name="rental_id"]').find('textarea');
+                        rentaltextarea.val(newValue);
+                        // console.log(myRentals);
+                        const myRentalCode = getCodeById(newValue, myRentals);
+                        const myRentalStart = getStartById(newValue, myRentals);
+                        // console.log(myRentalStart);
+                        // _.findWhere($scope.myExpenses, {name: 'Less than 6 month'});
+                        $scope.hpRentalCode = myRentalCode; // output: 'c00353a211002d220106'
+                        myExpenses.forEach((expence) => {
+                            if (onceoffrequences.includes(expence.frequency)) {
+                                expence.checked = true;
+                                const price = expence.amount;
+                                if(expence.is_prorate == 1){
+                                expence.total = prorateTillTheEndOfMonth(price, myRentalStart);
+                                }
+                                if(expence.is_prorate == 0){
+                                expence.total = price;
+                                }
+                            }
+                        });
+                        rentaltextarea.trigger('input');
+                    }
+                });
+
+                $scope.calculateTotal = () => {
+                    let total = 0.00, arrtotal = [], desctotal = "", i = 1;
+
+                    angular.forEach($scope.myExpenses, function (myExpense) {
+                        if (myExpense.checked) {
+                            total += parseFloat(myExpense.total);
+                            desctotal += i + ". " + myExpense.name + " $" + myExpense.total + "\n";
+                            arrtotal.push(i + ". " + myExpense.name + " $" + myExpense.total + "\n");
+                            i = i + 1;
+                        }
+                    });
+                    // console.log(arrtotal, arrtotal);
+                    $scope.totalSum = total;
+                    $scope.arrTotal = arrtotal;
+                    $scope.hpRentalDescription = desctotal;
+                    $scope.hpRentalAmount = "$" + total;
+                    const descriptiontextarea = $('af-field[name="description"]').find('textarea');
+                    descriptiontextarea.val(desctotal);
+                    descriptiontextarea.trigger('input');
+                    const amounttext = $('af-field[name="amount"]').find('input[type="text"]');
+                    amounttext.val(total);
+                    amounttext.trigger('input');
+                    return total;
+
+                };
             }
         };
     };

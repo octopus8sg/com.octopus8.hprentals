@@ -59,14 +59,14 @@
                 });
                 // console.log('tenant lookfortenant', lookfortenant)
 
-                scope.$watch('myrental', function (newValue, oldValue) {
-                    // console.log('rentalnewVal', newValue)
+                scope.$watch('selectedDate', function (newValue, oldValue) {
+                    console.log('rentalnewVal', newValue)
                     let myRentalCode = "";
                     if (newValue) {
                         var rentaltextarea = $('af-field[name="rental_id"]').find('textarea');
                         rentaltextarea.val(newValue);
                         // console.log(innerrentals);
-                        myRentalCode = getCodeById(newValue, innerrentals);
+                        myRentalCode = getCodeById(newValue.id, innerrentals);
                         scope.hpRentalCode = myRentalCode; // output: 'c00353a211002d220106'
                         rentaltextarea.trigger('input');
                     }
@@ -105,7 +105,7 @@
                 };
                 const roptions = {};
                 // Call API to get contacts
-                CRM.api4('RentalsExpense', 'get', roptions).then(function (result) {
+                CRM.api4('RentalsExpense', 'get', {}).then(function (result) {
                     scope.myExpenses = result;
                     scope.$apply();
                 });
