@@ -280,7 +280,7 @@ class CRM_Hprentals_Utils
             self::SETUP_MENU
         ];
 
-        if ($test_mode==1) {
+        if ($test_mode == 1) {
             $menu = [
                 self::MAIN_MENU,
                 self::DASHBOARD_MENU,
@@ -293,7 +293,7 @@ class CRM_Hprentals_Utils
                 self::SETUP_MENU
             ];
         }
-return $menu;
+        return $menu;
     }
 
     public static function createDefaultExpenses()
@@ -695,7 +695,11 @@ return $menu;
         }
 
         // Add the person's rental sets to the rentals array
-
+        usort($personRentals, function ($a, $b) {
+            return strtotime($a['admission']) - strtotime($b['admission']);
+        });
+        $lastIndex = count($personRentals) - 1;
+        unset($personRentals[$lastIndex]['endDate']);
 // Output the rentals array
         return $personRentals;
     }
@@ -869,6 +873,7 @@ return $menu;
             }
         }
     }
+
     /**
      * @param $op
      * @param $objectName
@@ -945,6 +950,7 @@ return $menu;
         $invoiceNumber = $invoiceParams['prefix'] . str_pad($invoiceParams['number'], 4, '0', STR_PAD_LEFT);
         return $invoiceNumber;
     }
+
     public static function generatePaymentNumber($prefix = 'RC')
     {
         // Get the current year and month

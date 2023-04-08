@@ -88,7 +88,7 @@ CREATE TABLE `civicrm_o8_rental_rental` (
   `code` varchar(21) NULL DEFAULT NULL COMMENT 'Rental Code',
   `tenant_id` int unsigned COMMENT 'FK to Contact',
   `admission` date NOT NULL COMMENT 'Admission date',
-  `discharge` date NOT NULL COMMENT 'Discharge date',
+  `discharge` date DEFAULT NULL COMMENT 'Discharge date',
   `created_id` int unsigned COMMENT 'FK to civicrm_contact, who created this',
   `created_date` datetime COMMENT 'Date and time this was created.',
   `modified_id` int unsigned COMMENT 'FK to civicrm_contact, who modified this',
