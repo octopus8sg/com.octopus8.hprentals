@@ -38,6 +38,22 @@
                     }
                     return null; // or whatever you want to return if there's no match
                 };
+                const getEndById = (id, rentals) => {
+                    for (let x = 0; x < rentals.length; x++) {
+                        if (rentals[x].id === id) {
+                            console.log(rentals[x]);
+                            lastDateForRental = lastDayOfTheMonthForDate(rentals[x].admission);
+                            console.log('lastDateForRental', lastDateForRental);
+                            console.log('rentals[x].discharge', rentals[x].discharge);
+                            if (rentals[x].discharge !== null) {
+                                return rentals[x].discharge;
+                            } else {
+                                return lastDayOfTheMonthForDate(rentals[x].admission); // or whatever you want to return if there's no match
+                            }
+                        }
+                    }
+
+                };
                 const monthNames = ['January',
                     'February',
                     'March',
@@ -69,15 +85,51 @@
                     return proratedAmount.toFixed(2);
                 };
                 const lastDayForDate = (date_start_str) => {
-                    const date_start = new Date(date_start_str);
-                    let lastDay = new Date(date_start.getFullYear(), date_start.getMonth() + 1, 0).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });;
+                    const lastDay = new Date(date_start_str).toLocaleDateString('en-US', {
+                        month: '2-digit',
+                        day: '2-digit',
+                        year: 'numeric'
+                    });
+                    ;
                     return lastDay;
                 };
+                const lastDayOfTheMonthForDate = (date_str) => {
+                    const date = new Date(date_str);
+                    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+                    const year = date.getFullYear();
+                    let month = date.getMonth() + 1;
+                    if (month < 10) {
+                        month = "0" + month;
+                    }
+                    let dateString = year + "-" + month + "-" + lastDay;
+                    return dateString;
+                };
+
                 const firstDayForDate = (date_start_str) => {
                     const date_start = new Date(date_start_str);
-                    let firstDay = date_start.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });;
+                    let firstDay = date_start.toLocaleDateString('en-US', {
+                        month: '2-digit',
+                        day: '2-digit',
+                        year: 'numeric'
+                    });
+                    ;
                     return firstDay;
                 };
+                const firstDayOfTheMonthForDate = (date_str) => {
+                    const date = new Date(date_str);
+                    let firstDay = date.getDate();
+                    const year = date.getFullYear();
+                    let month = date.getMonth() + 1;
+                    if (month < 10) {
+                        month = "0" + month;
+                    }
+                    if (firstDay < 10) {
+                        firstDay = "0" + firstDay;
+                    }
+                    let dateString = year + "-" + month + "-" + firstDay;
+                    return dateString;
+                };
+
 // Calculates the prorated amount between the start and end date
                 const prorateWithStartAndEnd = (price, date_start_str, date_end_str) => {
                     const date_end = new Date(date_end_str);
@@ -147,8 +199,14 @@
                     return dateOptions;
                 }
 
+                const today = new Date();
+                const today_str = today.toDateString();
+                const lastDayOfCurrentMonth = lastDayOfTheMonthForDate(today_str);
+                const firstDayDateOfCurrentMonth = firstDayOfTheMonthForDate(today_str);
+                const currentMonth = today.getMonth() + 1; // Add 1 because getMonth() returns 0-based index
+                const currentYear = today.getFullYear();
                 let rentaloptions = {
-                    select: ["id", "admission", "invoices.rental_id"],
+                    select: ["id", "admission", "discharge", "invoices.rental_id"],
                     join: [
                         ["RentalsInvoice AS invoices", "LEFT",
                             // [
@@ -159,7 +217,7 @@
                     ],
                     where: [
                         ["invoices.rental_id", "IS NULL"],
-                        ["discharge", "IS NULL"]
+                        ["OR", [["discharge", "BETWEEN", [firstDayDateOfCurrentMonth, lastDayOfCurrentMonth]], ["discharge", "IS NULL"]]],
                     ],
                     limit: 0
                 };
@@ -168,7 +226,7 @@
                         let contact = options.cid;
                         if (contact) {
                             rentaloptions = {
-                                select: ["id", "admission", "invoices.rental_id"],
+                                select: ["id", "admission", "discharge", "invoices.rental_id"],
                                 join: [
                                     ["RentalsInvoice AS invoices", "LEFT",
                                         // [
@@ -180,7 +238,7 @@
                                 where: [
                                     ["invoices.rental_id", "IS NULL"],
                                     ["tenant_id", "=", contact],
-                                    ["discharge", "IS NULL"]
+                                    ["OR", [["discharge", "BETWEEN", [firstDayDateOfCurrentMonth, lastDayOfCurrentMonth]], ["discharge", "IS NULL"]]],
                                 ],
                                 limit: 0
                             };
@@ -188,7 +246,7 @@
                     }
                 }
 
-                // console.log(rentaloptions);
+                console.log(rentaloptions);
                 CRM.api4('RentalsRental', 'get', rentaloptions).then((result) => {
                     $scope.years = extractYears(result);
                     $scope.myRentals = result;
@@ -242,7 +300,10 @@
                         // console.log(myRentals);
                         const myRentalCode = getCodeById(newValue, myRentals);
                         const myRentalStart = getStartById(newValue, myRentals);
-                        const lastDayDate = lastDayForDate(myRentalStart);
+                        console.log(myRentalStart);
+                        const myRentalEnd = getEndById(newValue, myRentals);
+                        console.log(myRentalEnd);
+                        const lastDayDate = lastDayForDate(myRentalEnd);
                         const firstDayDate = firstDayForDate(myRentalStart);
                         // console.log(myRentalStart);
                         // _.findWhere($scope.myExpenses, {name: 'Less than 6 month'});
@@ -252,7 +313,7 @@
                                 expence.checked = true;
                                 const price = expence.amount;
                                 if (expence.is_prorate == 1) {
-                                    expence.total = prorateTillTheEndOfMonth(price, myRentalStart);
+                                    expence.total = prorateWithStartAndEnd(price, myRentalStart, myRentalEnd);
                                 }
                                 if (expence.is_prorate == 0) {
                                     expence.total = price;

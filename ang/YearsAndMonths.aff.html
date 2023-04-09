@@ -1,0 +1,35 @@
+<hm-add-button
+        name="add-expense"
+        label="Add Type"
+        url="civicrm/rentals/affexpense"
+        options="{{options}}"
+>
+</hm-add-button>
+
+<div class="crm-content-block">
+    <div af-fieldset="">
+        <div class="row">
+            <div class="col-md-2 col-xs-3">
+                <af-field name="id" defn="{label: 'ID', input_attrs: {}, required: false}"/>
+            </div>
+            <div class="col-md-2 col-xs-3">
+                <af-field name="name" defn="{required: false, input_attrs: {}}"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-xs-6">
+                <af-field name="frequency" defn="{input_attrs: {multiple: true}}"/>
+            </div>
+            <div class="col-md-4 col-xs-6">
+            </div>
+        </div>
+        <hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px"/>
+        <crm-search-display-table search-name="Expenses08" display-name="Expenses_Table08">
+
+        </crm-search-display-table>
+    </div>
+</div>
+
+
+

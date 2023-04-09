@@ -149,7 +149,7 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
                 $admission->freeze();
             }
 
-            $discharge = $this->add('datepicker', 'discharge', ts('Discharge'), $attributes, TRUE, $extra);
+            $discharge = $this->add('datepicker', 'discharge', ts('Discharge'), $attributes, FALSE, $extra);
             if ($action == CRM_Core_Action::PREVIEW) {
                 $discharge->freeze();
             }

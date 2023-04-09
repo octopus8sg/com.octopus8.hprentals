@@ -34,7 +34,7 @@
                         CRM.loadForm(href, {
                             dialog: {width: '50%', height: '50%'}
                         }).on('crmFormSuccess crmPopupFormSuccess crmFormSubmit', function (e, data) {
-                            $('.crm-sortable-col:first').click();
+                            $(this).closest('.crm-search-display-table').find('table.table-striped .crm-sortable-col:first').click();
                         }).close;
                 };
             }

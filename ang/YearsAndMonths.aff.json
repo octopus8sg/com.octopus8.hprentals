@@ -1,0 +1,19 @@
+{
+  "name": "afsearchSearchExpenses",
+  "requires": ["crmHprentals"],
+  "title": "Search Types",
+  "description": "",
+  "is_dashlet": false,
+  "is_public": false,
+  "is_token": false,
+  "permission": "access CiviCRM",
+  "type": "search",
+  "icon": "fa-home",
+  "server_route": "civicrm/rentals/expenses",
+  "entity_type": null,
+  "join_entity": null,
+  "contact_summary": null,
+  "redirect": null,
+  "create_submission": null,
+  "navigation": null
+}

@@ -72,4 +72,10 @@
     <title>RentalsTab</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/hprentals/makeinvoices</path>
+    <page_callback>CRM_Hprentals_Form_MakeInvoices</page_callback>
+    <title>MakeInvoices</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
