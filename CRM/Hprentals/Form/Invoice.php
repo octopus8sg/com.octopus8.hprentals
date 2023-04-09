@@ -54,7 +54,7 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
         if ($cid) {
             $this->_cid = $cid;
         }
-        U::writeLog($cid, 'preProcess cid');
+//        U::writeLog($cid, 'preProcess cid');
         $action = $this->getAction();
 //        U::writeLog($action, 'action before');
         $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
@@ -112,7 +112,7 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
     {
         $cid = $this->_cid;
         $fields = [];
-        U::writeLog($cid, 'buildQuickForm cid');
+//        U::writeLog($cid, 'buildQuickForm cid');
 
         $id = $this->getEntityId();
         $this->assign('id', $id);
@@ -170,6 +170,12 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
 //                $amount->freeze();
 //            }
             $this->addRule('amount', ts('Amount should be a positive decimal number, like "100.25"'), 'regex', '/^[+]?((\d+(\.\d{0,2})?)|(\.\d{0,2}))$/');
+            if ($action == CRM_Core_Action::PREVIEW) {
+                $year = $this->add('text', 'year', ts('Invoice Year'), ['size' => 8, 'maxlength' => 8], FALSE)->freeze();
+                $month = $this->add('text', 'month', ts('Invoice Month'), ['size' => 8, 'maxlength' => 8], FALSE)->freeze();
+
+            }
+
 
             $created_id = $this->addEntityRef('created_id', E::ts('Created By'),
                 false);
@@ -235,13 +241,18 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
         $cid = $this->_cid;
         if ($this->_myentity) {
             $defaults = $this->_myentity;
+            $month_name = date("F", strtotime($this->_myentity['start_date']));
+            $year_name = date("Y", strtotime($this->_myentity['start_date']));
+            $defaults['month'] = $month_name;
+            $defaults['year'] = $year_name;
         }
         if ($cid) {
             $defaults['tenant_id'] = $cid;
         }
 
-        U::writeLog($cid, "cid Defaults");
-        U::writeLog($defaults, "Rentals Defaults");
+
+//        U::writeLog($cid, "cid Defaults");
+//        U::writeLog($defaults, "Rentals Defaults");
         return $defaults;
     }
 
@@ -258,7 +269,7 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
         $entityName = $this->getDefaultEntityName();
         $action = $this->_action;
         $values = $this->controller->exportValues();
-        U::writeLog($values, $entityName . " values for " . $action);
+//        U::writeLog($values, $entityName . " values for " . $action);
         $params['rental_id'] = $values['rental_id'];
         $params['description'] = $values['description'];
         $params['amount'] = $values['amount'];
@@ -285,15 +296,16 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
                 break;
         }
         if (($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)) {
-            U::writeLog($params, $entityName . " params for " . $action);
+//            U::writeLog($params, $entityName . " params for " . $action);
             $result = civicrm_api4($entity, $apiAction, ['values' => $params]);
-            U::writeLog($result, $entityName . " is " . $action);
+//            U::writeLog($result, $entityName . " is " . $action);
         }
 
         parent::postProcess();
     }
 
-    public static function generateInvoices(){
+    public static function generateInvoices()
+    {
         //Select all current rentals that does not start this month
         //and they have invoices in this month
         //if they is some in the list

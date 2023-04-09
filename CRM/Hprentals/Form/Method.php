@@ -205,7 +205,7 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
         $entityName = $this->getDefaultEntityName();
         $action = $this->_action;
         $values = $this->controller->exportValues();
-        U::writeLog($values, $entityName . " values for " . $action);
+//        U::writeLog($values, $entityName . " values for " . $action);
         $params['name'] = $values['name'];
 
         $id = $this->getEntityId();
@@ -230,9 +230,9 @@ class CRM_Hprentals_Form_Method extends CRM_Core_Form
                 break;
         }
         if (($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)) {
-            U::writeLog($params, $entityName . " params for " . $action);
+//            U::writeLog($params, $entityName . " params for " . $action);
             $result = civicrm_api4($entity, $apiAction, ['values' => $params]);
-            U::writeLog($result, $entityName . " is " . $action);
+//            U::writeLog($result, $entityName . " is " . $action);
         }
 
         parent::postProcess();

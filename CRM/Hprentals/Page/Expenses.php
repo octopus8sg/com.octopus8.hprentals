@@ -37,8 +37,8 @@ class CRM_Hprentals_Page_Expenses extends CRM_Core_Page
     public function getAjax()
     {
 
-        U::writeLog($_REQUEST,'request');
-        U::writeLog($_POST,'post');
+//        U::writeLog($_REQUEST,'request');
+//        U::writeLog($_POST,'post');
 
 
         $expense_id = CRM_Utils_Request::retrieveValue('expense_id', 'Positive', null);

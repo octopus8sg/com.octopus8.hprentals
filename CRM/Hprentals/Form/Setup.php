@@ -37,7 +37,7 @@ class CRM_Hprentals_Form_Setup extends CRM_Core_Form
     {
         $defaults = [];
         $settings = CRM_Core_BAO_Setting::getItem(U::SETTINGS_NAME, U::SETTINGS_SLUG);
-        U::writeLog($settings, "before save");
+//        U::writeLog($settings, "before save");
         if (!empty($settings)) {
             $defaults = $settings;
         }
@@ -68,15 +68,15 @@ class CRM_Hprentals_Form_Setup extends CRM_Core_Form
             U::createDefaultMethods();
             U::create_fake_individuals();
             U::create_faker_rentals();
-            U::writeLog('fakers come');
+//            U::writeLog('fakers come');
             CRM_Core_Session::setStatus(E::ts('Fake contacts added', ['domain' => 'com.octopus8.hprentals']), 'Configuration Updated', 'success');
         }
         if (!$newTestMode) {
             U::delete_faker_contacts();
-            U::writeLog('fakers go');
+//            U::writeLog('fakers go');
             CRM_Core_Session::setStatus(E::ts('Fake contacts removed', ['domain' => 'com.octopus8.hprentals']), 'Configuration Updated', 'success');
         }
-        U::writeLog($settings, "after_submit");
+//        U::writeLog($settings, "after_submit");
         $s = CRM_Core_BAO_Setting::setItem($settings, U::SETTINGS_NAME, U::SETTINGS_SLUG);
 //        U::writeLog($s);
 

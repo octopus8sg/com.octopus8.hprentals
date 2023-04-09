@@ -16,7 +16,7 @@ class CRM_Hprentals_BAO_RentalsRental extends CRM_Hprentals_DAO_RentalsRental {
     $className = 'CRM_Hprentals_DAO_RentalsRental';
     $entityName = 'RentalsRental';
     $hook = empty($params['id']) ? 'create' : 'edit';
-    U::writeLog($params, $className);
+//    U::writeLog($params, $className);
     CRM_Utils_Hook::pre($hook, $entityName, CRM_Utils_Array::value('id', $params), $params);
     $instance = new $className();
     $instance->copyValues($params);

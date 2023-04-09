@@ -11,7 +11,7 @@ class CRM_Hprentals_Page_RentalsTab extends CRM_Core_Page
         // Example: Set the page-title dynamically; alternatively, declare a static title in xml/Menu/*.xml
         CRM_Utils_System::setTitle(E::ts('Rentals'));
         $cid = CRM_Utils_Request::retrieve('cid', 'String');
-        U::writeLog($cid, "cid in tabs");
+//        U::writeLog($cid, "cid in tabs");
         Civi::service('angularjs.loader')
             ->addModules('tenantRentalSearch');
         Civi::service('angularjs.loader')

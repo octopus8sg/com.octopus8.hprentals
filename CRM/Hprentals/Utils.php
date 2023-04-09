@@ -352,7 +352,7 @@ class CRM_Hprentals_Utils
                     $masquerade_input = $input;
                 }
                 if (is_array($masquerade_input)) {
-                    $fields_to_hide = ['Signature'];
+                    $fields_to_hide = ['Signature', 'qfKey'];
                     foreach ($fields_to_hide as $field_to_hide) {
                         unset($masquerade_input[$field_to_hide]);
                     }
@@ -733,7 +733,7 @@ class CRM_Hprentals_Utils
                             'discharge' => $date_to
                         ]);
                     }
-                    self::writeLog($rentals_api, 'create Rentals Api');
+//                    self::writeLog($rentals_api, 'create Rentals Api');
                 }
                 if ($rentals_api['is_error']) {
                     // handle error
@@ -785,14 +785,14 @@ class CRM_Hprentals_Utils
         $defaultEntities = self::DEFAULT_ENTITIES;
 
         if (in_array($objectName, $defaultEntities)) {
-            self::writeLog($params, 'before save');
-            self::writeLog($op, 'before save op');
+//            self::writeLog($params, 'before save');
+//            self::writeLog($op, 'before save op');
             $params = self::addCreatedByModifiedBy($op, $params);
             self::checkRentalOverlap($op, $objectName, $params);
             self::addRentalCode($op, $objectName, $params);
             self::addInvoiceCode($op, $objectName, $params);
             self::addPaymentCode($op, $objectName, $params);
-            self::writeLog($params, 'after save');
+//            self::writeLog($params, 'after save');
 
         }
     }
@@ -829,7 +829,7 @@ class CRM_Hprentals_Utils
     public static function checkRentalOverlap($op, $objectName, &$params): void
     {
         if ($objectName == 'RentalsRental') {
-            self::writeLog($params, 'before overlap');
+//            self::writeLog($params, 'before overlap');
             if ($op == 'create' || $op == 'edit' || $op == 'update') {
                 $date_from = $params['admission'];
                 $date_to = $params['discharge'];
@@ -842,7 +842,7 @@ class CRM_Hprentals_Utils
                     throw new CRM_Core_Exception(ts('You already have a rent during this period.'));
                 }
             }
-            self::writeLog($params, 'after overlap');
+//            self::writeLog($params, 'after overlap');
         }
     }
 
@@ -854,7 +854,7 @@ class CRM_Hprentals_Utils
     public static function addRentalCode($op, $objectName, &$params)
     {
         if ($objectName == 'RentalsRental') {
-            self::writeLog($params, 'before adding rental code');
+//            self::writeLog($params, 'before adding rental code');
             if ($op == 'create' || $op == 'edit' || $op == 'update') {
                 $date_from = $params['admission'];
                 $date_to = $params['discharge'];
@@ -862,7 +862,7 @@ class CRM_Hprentals_Utils
                 // If an overlap is found, set a validation error message
                 $code = self::generateRentalCode($tenant_id, $date_from, $date_to);
                 $params['code'] = $code;
-                self::writeLog($params, 'after adding rental code');
+//                self::writeLog($params, 'after adding rental code');
             }
         }
     }
@@ -875,13 +875,13 @@ class CRM_Hprentals_Utils
     public static function addInvoiceCode($op, $objectName, &$params)
     {
         if ($objectName == 'RentalsInvoice') {
-            self::writeLog($params, 'before adding invoice code');
+//            self::writeLog($params, 'before adding invoice code');
             if ($op == 'create') {
-                self::writeLog($params, 'before adding invoice code 2');
+//                self::writeLog($params, 'before adding invoice code 2');
                 $invoiceNumber = self::generateInvoiceNumber();
-                self::writeLog($invoiceNumber, 'before adding invoice code 3');
+//                self::writeLog($invoiceNumber, 'before adding invoice code 3');
                 $params['code'] = $invoiceNumber;
-                self::writeLog($params, 'after adding invoice code');
+//                self::writeLog($params, 'after adding invoice code');
             }
         }
     }
@@ -894,13 +894,13 @@ class CRM_Hprentals_Utils
     public static function addPaymentCode($op, $objectName, &$params)
     {
         if ($objectName == 'RentalsPayment') {
-            self::writeLog($params, 'before adding invoice code');
+//            self::writeLog($params, 'before adding invoice code');
             if ($op == 'create') {
-                self::writeLog($params, 'before adding invoice code 2');
+//                self::writeLog($params, 'before adding invoice code 2');
                 $invoiceNumber = self::generatePaymentNumber('RC');
-                self::writeLog($invoiceNumber, 'before adding invoice code 3');
+//                self::writeLog($invoiceNumber, 'before adding invoice code 3');
                 $params['code'] = $invoiceNumber;
-                self::writeLog($params, 'after adding invoice code');
+//                self::writeLog($params, 'after adding invoice code');
             }
         }
     }
@@ -945,7 +945,7 @@ class CRM_Hprentals_Utils
                     ['code', 'LIKE', $invoiceParams['prefix'] . '%'],
                 ],
             ]);
-            self::writeLog($lastInvoice, 'lastInvoice');
+//            self::writeLog($lastInvoice, 'lastInvoice');
         } catch (Exception $e) {
             self::writeLog($e->getMessage());
         }
@@ -954,7 +954,7 @@ class CRM_Hprentals_Utils
                 $lastInvoiceNumber = $lastInvoice[0]['code'];
                 $lastNumber = substr($lastInvoiceNumber, -4);
                 $invoiceParams['number'] = (int)$lastNumber + 1;
-                self::writeLog($lastInvoiceNumber, 'lastInvoiceNumber');
+//                self::writeLog($lastInvoiceNumber, 'lastInvoiceNumber');
             }
         } catch (Exception $e) {
             self::writeLog($e->getMessage());
@@ -988,7 +988,7 @@ class CRM_Hprentals_Utils
                     ['code', 'LIKE', $paymentParams['prefix'] . '%'],
                 ],
             ]);
-            self::writeLog($lastInvoice, 'lastInvoice');
+//            self::writeLog($lastInvoice, 'lastInvoice');
         } catch (Exception $e) {
             self::writeLog($e->getMessage());
         }
@@ -997,7 +997,7 @@ class CRM_Hprentals_Utils
                 $lastInvoiceNumber = $lastInvoice[0]['code'];
                 $lastNumber = substr($lastInvoiceNumber, -4);
                 $paymentParams['number'] = (int)$lastNumber + 1;
-                self::writeLog($lastInvoiceNumber, 'lastPaymentNumber');
+//                self::writeLog($lastInvoiceNumber, 'lastPaymentNumber');
             }
         } catch (Exception $e) {
             self::writeLog($e->getMessage());
@@ -1005,8 +1005,10 @@ class CRM_Hprentals_Utils
         $invoiceNumber = $paymentParams['prefix'] . str_pad($paymentParams['number'], 4, '0', STR_PAD_LEFT);
         return $invoiceNumber;
     }
+
     // Prorate till the end of the month
-    public static function prorateTillTheEndOfMonth($price, $date_start) {
+    public static function prorateTillTheEndOfMonth($price, $date_start)
+    {
         $start = new DateTime($date_start);
         $end = new DateTime('last day of this month');
         $days_in_month = $end->format('d');
@@ -1016,7 +1018,8 @@ class CRM_Hprentals_Utils
     }
 
 // Prorate from the start of the month
-    public static function prorateFromTheStartOfMonth($price, $date_end) {
+    public static function prorateFromTheStartOfMonth($price, $date_end)
+    {
         $start = new DateTime('first day of this month');
         $end = new DateTime($date_end);
         $days_in_month = $start->format('t');
@@ -1026,12 +1029,85 @@ class CRM_Hprentals_Utils
     }
 
 // Prorate with start and end dates
-    public static function prorateWithStartAndEnd($price, $date_start, $date_end) {
+    public static function prorateWithStartAndEnd($price, $date_start, $date_end)
+    {
         $start = new DateTime($date_start);
         $end = new DateTime($date_end);
         $days = $start->diff($end)->format('%a');
         $prorated_amount = round($price / 30 * $days, 2);
         return $prorated_amount;
+    }
+
+    public static function calculate_expenses($start_date, $end_date, $rental_start_date)
+    {
+        $rentalsExpenses = \Civi\Api4\RentalsExpense::get(FALSE)
+            ->addSelect('frequency:name', 'amount', 'name', 'is_prorate')
+            ->addWhere('frequency:name', '<>', 'once_off')
+            ->setLimit(0)
+            ->execute();
+        $description = "";
+        $total = 0;
+//        self::writeLog($rental_start_date, 'rental_start_date');
+//        self::writeLog($start_date, 'start_date');
+//        self::writeLog($end_date, 'end_date');
+        $months_between = self::months_between($rental_start_date, $end_date);
+//        self::writeLog($months_between, 'months_between');
+        foreach ($rentalsExpenses as $rentalsExpense) {
+            $frequency = $rentalsExpense['frequency:name'];
+            $prorate = $rentalsExpense['is_prorate'];
+            $expense_name = $rentalsExpense['name'];
+            $monthly_price = $rentalsExpense['amount'];
+            if ($prorate = 1) {
+                $prorate_price = self::calculateProrate($start_date, $end_date, $monthly_price);
+            } else {
+                $prorate_price = $monthly_price;
+            }
+            if ($months_between > 6) {
+                if ($frequency === "more_than_6_m") {
+                    $description = $description . "\n" . $expense_name . " $" . $prorate_price;
+                    $total = $total + $prorate_price;
+                }
+            }
+            if ($months_between <= 6) {
+                if ($frequency === "less_than_6_m") {
+                    $description = $description . "\n" . $expense_name . " $" . $prorate_price;
+                    $total = $total + $prorate_price;
+                }
+            }
+            if ($frequency === "every_month") {
+                $description = $description . "\n" . $expense_name . " $" . $prorate_price;
+                $total = $total + $prorate_price;
+            }
+        }
+        $calculated_expence = ['description' => trim($description),
+            'total' => $total];
+        return $calculated_expence;
+    }
+
+    public static function calculateProrate($start_date_str, $end_date_str, $monthly_price)
+    {
+        $start_date = new DateTime($start_date_str);
+        $end_date = new DateTime($end_date_str);
+
+        // Calculate number of days between start and end date
+        $num_days = $end_date->diff($start_date)->format('%a') + 1;
+
+        // Calculate prorated amount
+        $prorate_amount = round(($num_days / $start_date->format('t')) * $monthly_price, 2);
+
+        return $prorate_amount;
+    }
+
+    public static function months_between($start_date_str, $end_date_str)
+    {
+
+        $start_date = DateTime::createFromFormat('Y-m-d', $start_date_str);
+        $end_date = DateTime::createFromFormat('Y-m-d', $end_date_str);
+//        self::writeLog($start_date);
+//        self::writeLog($end_date);
+        $interval = $start_date->diff($end_date);
+        $months = $interval->y * 12 + $interval->m;
+        return $months;
     }
 }
 

@@ -53,7 +53,7 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         if ($cid > 0) {
             $this->_cid = $cid;
         }
-        U::writeLog($cid, 'preProcess cid');
+//        U::writeLog($cid, 'preProcess cid');
         $action = $this->getAction();
 //        U::writeLog($action, 'action before');
         $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
@@ -111,7 +111,7 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
     {
         $cid = $this->_cid;
         $fields = [];
-        U::writeLog($cid, 'buildQuickForm cid');
+//        U::writeLog($cid, 'buildQuickForm cid');
 
         $id = $this->getEntityId();
         $this->assign('id', $id);
@@ -222,8 +222,8 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
             $defaults['tenant_id'] = $cid;
         }
 
-        U::writeLog($cid, "cid Defaults");
-        U::writeLog($defaults, "Rentals Defaults");
+//        U::writeLog($cid, "cid Defaults");
+//        U::writeLog($defaults, "Rentals Defaults");
         return $defaults;
     }
 
@@ -263,7 +263,7 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         $entityName = $this->getDefaultEntityName();
         $action = $this->_action;
         $values = $this->controller->exportValues();
-        U::writeLog($values, $entityName . " values for " . $action);
+//        U::writeLog($values, $entityName . " values for " . $action);
         $params['tenant_id'] = $values['tenant_id'];
         $params['admission'] = $values['admission'];
         $params['discharge'] = $values['discharge'];
@@ -290,9 +290,9 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
                 break;
         }
         if (($action == CRM_Core_Action::ADD) || ($action == CRM_Core_Action::UPDATE)) {
-            U::writeLog($params, $entityName . " params for " . $action);
+//            U::writeLog($params, $entityName . " params for " . $action);
             $result = civicrm_api4($entity, $apiAction, ['values' => $params]);
-            U::writeLog($result, $entityName . " is " . $action);
+//            U::writeLog($result, $entityName . " is " . $action);
         }
 
         parent::postProcess();
