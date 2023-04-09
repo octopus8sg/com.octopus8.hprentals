@@ -87,7 +87,7 @@ class CRM_Hprentals_Form_MakeInvoices extends CRM_Core_Form
         $values = $this->exportValues();
         $year = $values['year'];
         $month = $values['month'];
-        $first_day = "$year-$month-1";
+        $first_day = "$year-$month-01";
         $sql = "
 SELECT distinct r.id,
        r.admission,
@@ -97,8 +97,9 @@ FROM civicrm_o8_rental_rental r
 WHERE (r.admission < '$first_day')
   AND (r.discharge IS NULL
            or
-       (YEAR(r.discharge) = YEAR(CURRENT_DATE())
+       ((YEAR(r.discharge) = YEAR(CURRENT_DATE())
            AND MONTH(r.discharge) = MONTH(CURRENT_DATE()))
+           AND r.discharge >= '$first_day')
       )
   AND r.id not in (select rental_id
                    from civicrm_o8_rental_invoice rin

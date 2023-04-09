@@ -27,6 +27,8 @@ return [
                         'rental_id',
                         'RentalsInvoice_RentalsRental_rental_id_01_RentalsRental_Contact_tenant_id_01.display_name',
                         'RentalsInvoice_RentalsRental_rental_id_01.admission',
+                        'YEAR(start_date) AS YEAR_start_date',
+                        'MONTH(start_date) AS MONTH_start_date',
                     ],
                     'orderBy' => [],
                     'where' => [],
@@ -93,6 +95,20 @@ return [
                         ],
                         [
                             'type' => 'field',
+                            'key' => 'YEAR_start_date',
+                            'dataType' => 'Integer',
+                            'label' => 'Year',
+                            'sortable' => TRUE,
+                        ],
+                        [
+                            'type' => 'field',
+                            'key' => 'MONTH_start_date',
+                            'dataType' => 'Integer',
+                            'label' => 'Month',
+                            'sortable' => TRUE,
+                        ],
+                        [
+                            'type' => 'field',
                             'key' => 'code',
                             'dataType' => 'String',
                             'label' => 'Invoice No',
@@ -100,6 +116,20 @@ return [
                             'tally' => [
                                 'fn' => NULL,
                             ],
+                        ],
+                        [
+                            'type' => 'field',
+                            'key' => 'RentalsInvoice_RentalsRental_rental_id_01_RentalsRental_Contact_tenant_id_01.display_name',
+                            'dataType' => 'String',
+                            'label' => 'Tenant',
+                            'sortable' => TRUE,
+                        ],
+                        [
+                            'type' => 'field',
+                            'key' => 'RentalsInvoice_RentalsRental_rental_id_01.admission',
+                            'dataType' => 'Date',
+                            'label' => 'Admission',
+                            'sortable' => TRUE,
                         ],
                         [
                             'type' => 'field',
