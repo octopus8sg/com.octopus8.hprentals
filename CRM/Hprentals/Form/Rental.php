@@ -133,9 +133,9 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
             //
 
             //
-            if(0 < intval($cid)){
+            if (0 < intval($cid)) {
                 $tenant_id = $this->add('hidden', 'tenant_id');
-            }else{
+            } else {
                 $tenant_id = $this->addEntityRef('tenant_id', "Tenant_" . $cid, [], TRUE);
             }
             if ($action == CRM_Core_Action::PREVIEW) {
@@ -232,23 +232,39 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
     {
         // Call the parent validate method
         $errors = parent::validate();
-
+        $action = $this->_action;
+        if ($action == CRM_Core_Action::DELETE || $action == CRM_Core_Action::PREVIEW) {
+            return empty($this->_errors) ? true : false;
+        }
         // Retrieve the values of the date_from and date_to fields
         $date_from = $this->_submitValues['admission'];
         $date_to = $this->_submitValues['discharge'];
         $rental_id = $this->_submitValues['id'];
+        $tenant_id = $this->_submitValues['tenant_id'];
 
         // Retrieve the ID of the tenant from the URL parameters
-        $tenant_id = CRM_Utils_Request::retrieve('tenant_id', 'Positive', $this);
-        $existing_rent = U::getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id);
-
+//        $tenant_id = CRM_Utils_Request::retrieve('tenant_id', 'Positive', $this);
+        // If open rent is found, set a validation error message
+        U::writeLog($tenant_id, 'tenant in validate');
+        U::writeLog($date_from, 'date_from in validate');
+        U::writeLog($date_to, 'date_to in validate');
+        U::writeLog($rental_id, 'rental_id in validate');
+        $existing_rent = U::getUnfinishedRents($tenant_id, $rental_id);
+        if ($existing_rent > 0) {
+            $this->_errors['admission'] = ts('You have an unfinished rent.');
+            return empty($this->_errors) ? true : false;
+        }
+        $existing_rent = U::getEarlierRents($tenant_id, $date_from, $rental_id);
+        if ($existing_rent > 0) {
+            $this->_errors['admission'] = ts('You already have a rent after this rent.');
+            return empty($this->_errors) ? true : false;
+        }
         // If an overlap is found, set a validation error message
+        $existing_rent = U::getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id);
         if ($existing_rent > 0) {
             $this->_errors['admission'] = ts('You already have a rent during this period.');
         }
-
         return empty($this->_errors) ? true : false;
-
     }
 
     /**

@@ -758,7 +758,22 @@ class CRM_Hprentals_Utils
             $date_to = date('Y-m-d');
         }
         // Retrieve the list of existing rents for the tenant
-        $existing_rent = CRM_Core_DAO::singleValueQuery("
+        if ($rental_id == 0) {
+            $existing_rent = CRM_Core_DAO::singleValueQuery("
+        SELECT COUNT(*) AS overlap
+        FROM {$my_rent_table}
+        WHERE tenant_id = %1
+            AND ((admission <= %2 AND discharge >= %2)
+                 OR (admission <= %3 AND discharge >= %3)
+                 OR (admission >= %2 AND discharge <= %3))
+    ", [
+                1 => [$tenant_id, 'Integer'],
+                2 => [$date_from, 'String'],
+                3 => [$date_to, 'String'],
+            ]);
+        }
+        if ($rental_id != 0) {
+            $existing_rent = CRM_Core_DAO::singleValueQuery("
         SELECT COUNT(*) AS overlap
         FROM {$my_rent_table}
         WHERE tenant_id = %1
@@ -767,11 +782,86 @@ class CRM_Hprentals_Utils
                  OR (admission >= %2 AND discharge <= %3))
             AND id != %4
     ", [
-            1 => [$tenant_id, 'Integer'],
-            2 => [$date_from, 'String'],
-            3 => [$date_to, 'String'],
-            4 => [$rental_id, 'Integer'],
-        ]);
+                1 => [$tenant_id, 'Integer'],
+                2 => [$date_from, 'String'],
+                3 => [$date_to, 'String'],
+                4 => [$rental_id, 'Integer'],
+            ]);
+        }
+        return $existing_rent;
+    }
+
+    /**
+     * @param $tenant_id
+     * @param $date_from
+     * @param $date_to
+     * @return mixed
+     */
+    public static function getEarlierRents($tenant_id, $date_from, $rental_id = 0)
+    {
+        $rental_id = intval($rental_id);
+        $my_rent_table = 'civicrm_o8_rental_rental';
+        // Retrieve the list of existing rents for the tenant
+        if ($rental_id == 0) {
+            $existing_rent = CRM_Core_DAO::singleValueQuery("
+        SELECT COUNT(*) AS overlap
+        FROM {$my_rent_table}
+        WHERE tenant_id = %1
+            AND admission >= %2 
+    ", [
+                1 => [$tenant_id, 'Integer'],
+                2 => [$date_from, 'String'],
+            ]);
+        }
+        if ($rental_id != 0) {
+            $existing_rent = CRM_Core_DAO::singleValueQuery("
+        SELECT COUNT(*) AS overlap
+        FROM {$my_rent_table}
+        WHERE tenant_id = %1
+            AND admission <= %2 
+            AND id != %3
+    ", [
+                1 => [$tenant_id, 'Integer'],
+                2 => [$date_from, 'String'],
+                3 => [$rental_id, 'Integer'],
+            ]);
+        }
+        return $existing_rent;
+    }
+
+    /**
+     * @param $tenant_id
+     * @param $date_from
+     * @param $date_to
+     * @return mixed
+     */
+    public static function getUnfinishedRents($tenant_id, $rental_id = 0)
+    {
+        $rental_id = intval($rental_id);
+        $my_rent_table = 'civicrm_o8_rental_rental';
+        // Retrieve the list of existing rents for the tenant
+        if ($rental_id == 0) {
+            $existing_rent = CRM_Core_DAO::singleValueQuery("
+        SELECT COUNT(*) AS overlap
+        FROM {$my_rent_table}
+        WHERE tenant_id = %1
+            AND discharge IS NULL
+    ", [
+                1 => [$tenant_id, 'Integer'],
+            ]);
+        }
+        if ($rental_id != 0) {
+            $existing_rent = CRM_Core_DAO::singleValueQuery("
+        SELECT COUNT(*) AS overlap
+        FROM {$my_rent_table}
+        WHERE tenant_id = %1
+            AND discharge IS NULL
+            AND id != %2
+    ", [
+                1 => [$tenant_id, 'Integer'],
+                2 => [$rental_id, 'Integer'],
+            ]);
+        }
         return $existing_rent;
     }
 
