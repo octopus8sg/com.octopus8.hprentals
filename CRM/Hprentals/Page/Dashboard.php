@@ -42,8 +42,8 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
     public function getInvoices()
     {
 
-//        U::writeLog($_REQUEST,'invoices request');
-//        U::writeLog($_POST,'invoices request');
+        U::writeLog($_REQUEST,'invoices request');
+        U::writeLog($_POST,'invoices request');
 
 
         $tenant_id = CRM_Utils_Request::retrieveValue('tenant_id', 'Positive', null);
@@ -59,7 +59,7 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
             0 => 'id',
             1 => 'code',
             2 => 'display_name',
-            3 => 'created_at',
+            3 => 'created_date',
             4 => 'amount',
         ];
 
@@ -151,8 +151,8 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
     public function getPayments()
     {
 
-//        U::writeLog($_REQUEST,'invoices request');
-//        U::writeLog($_POST,'invoices request');
+        U::writeLog($_REQUEST,'payments request');
+        U::writeLog($_POST,'payments request');
 
 
         $tenant_id = CRM_Utils_Request::retrieveValue('tenant_id', 'Positive', null);
@@ -168,7 +168,7 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
             0 => 'id',
             1 => 'code',
             2 => 'display_name',
-            3 => 'created_at',
+            3 => 'created_date',
             4 => 'method',
             5 => 'amount',
         ];
@@ -264,8 +264,8 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
     public function getRentals()
     {
 
-//        U::writeLog($_REQUEST,'invoices request');
-//        U::writeLog($_POST,'invoices request');
+        U::writeLog($_REQUEST,'rentals request');
+        U::writeLog($_POST,'rentals request');
 
 
         $tenant_id = CRM_Utils_Request::retrieveValue('tenant_id', 'Positive', null);

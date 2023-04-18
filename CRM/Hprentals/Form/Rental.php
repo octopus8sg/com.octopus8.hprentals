@@ -245,10 +245,10 @@ class CRM_Hprentals_Form_Rental extends CRM_Core_Form
         // Retrieve the ID of the tenant from the URL parameters
 //        $tenant_id = CRM_Utils_Request::retrieve('tenant_id', 'Positive', $this);
         // If open rent is found, set a validation error message
-        U::writeLog($tenant_id, 'tenant in validate');
-        U::writeLog($date_from, 'date_from in validate');
-        U::writeLog($date_to, 'date_to in validate');
-        U::writeLog($rental_id, 'rental_id in validate');
+//        U::writeLog($tenant_id, 'tenant in validate');
+//        U::writeLog($date_from, 'date_from in validate');
+//        U::writeLog($date_to, 'date_to in validate');
+//        U::writeLog($rental_id, 'rental_id in validate');
         $existing_rent = U::getUnfinishedRents($tenant_id, $rental_id);
         if ($existing_rent > 0) {
             $this->_errors['admission'] = ts('You have an unfinished rent.');

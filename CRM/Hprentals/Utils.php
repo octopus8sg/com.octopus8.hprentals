@@ -818,7 +818,7 @@ class CRM_Hprentals_Utils
         SELECT COUNT(*) AS overlap
         FROM {$my_rent_table}
         WHERE tenant_id = %1
-            AND admission <= %2 
+            AND admission >= %2 
             AND id != %3
     ", [
                 1 => [$tenant_id, 'Integer'],
