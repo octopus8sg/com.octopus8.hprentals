@@ -1128,29 +1128,48 @@ class CRM_Hprentals_Utils
         return $prorated_amount;
     }
 
-    public static function calculate_expenses($start_date, $end_date, $rental_start_date)
+    public static function calculate_expenses($invoice_start_date, $invoice_end_date, $rental_start_date)
     {
+        $include_once_off = false;
+        self::writeLog("$invoice_start_date ? $rental_start_date");
+        if($rental_start_date == $invoice_start_date){
+            $include_once_off = true;
+            self::writeLog('$include_once_off is true');
+        }
+        if($include_once_off == false){
         $rentalsExpenses = \Civi\Api4\RentalsExpense::get(FALSE)
             ->addSelect('frequency:name', 'amount', 'name', 'is_prorate')
             ->addWhere('frequency:name', '<>', 'once_off')
             ->setLimit(0)
             ->execute();
+        }
+        if($include_once_off == true){
+        $rentalsExpenses = \Civi\Api4\RentalsExpense::get(FALSE)
+            ->addSelect('frequency:name', 'amount', 'name', 'is_prorate')
+            ->setLimit(0)
+            ->execute();
+        }
+
         $description = "";
         $total = 0;
 //        self::writeLog($rental_start_date, 'rental_start_date');
 //        self::writeLog($start_date, 'start_date');
 //        self::writeLog($end_date, 'end_date');
-        $months_between = self::months_between($rental_start_date, $end_date);
+        $months_between = self::months_between($rental_start_date, $invoice_end_date);
 //        self::writeLog($months_between, 'months_between');
         foreach ($rentalsExpenses as $rentalsExpense) {
             $frequency = $rentalsExpense['frequency:name'];
             $prorate = $rentalsExpense['is_prorate'];
             $expense_name = $rentalsExpense['name'];
             $monthly_price = $rentalsExpense['amount'];
-            if ($prorate = 1) {
-                $prorate_price = self::calculateProrate($start_date, $end_date, $monthly_price);
+            if ($prorate == 1) {
+                $prorate_price = self::calculateProrate($invoice_start_date, $invoice_end_date, $monthly_price);
             } else {
                 $prorate_price = $monthly_price;
+            }
+            if ($frequency === "once_off") {
+                $description = $description . "\n" . $expense_name . " $" . $prorate_price;
+                $total = $total + $prorate_price;
             }
             if ($months_between > 6) {
                 if ($frequency === "more_than_6_m") {

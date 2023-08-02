@@ -89,9 +89,6 @@ return [
                             'dataType' => 'Integer',
                             'label' => 'ID',
                             'sortable' => TRUE,
-                            'tally' => [
-                                'fn' => 'COUNT',
-                            ],
                         ],
                         [
                             'type' => 'field',
@@ -113,9 +110,7 @@ return [
                             'dataType' => 'String',
                             'label' => 'Invoice No',
                             'sortable' => TRUE,
-                            'tally' => [
-                                'fn' => NULL,
-                            ],
+
                         ],
                         [
                             'type' => 'field',
@@ -137,9 +132,7 @@ return [
                             'dataType' => 'Money',
                             'label' => 'Amount',
                             'sortable' => TRUE,
-                            'tally' => [
-                                'fn' => 'SUM',
-                            ],
+
                         ],
                         [
                             'type' => 'field',
@@ -147,9 +140,7 @@ return [
                             'dataType' => 'String',
                             'label' => 'Created By',
                             'sortable' => TRUE,
-                            'tally' => [
-                                'fn' => NULL,
-                            ],
+
                         ],
                         [
                             'type' => 'field',
@@ -157,9 +148,7 @@ return [
                             'dataType' => 'Timestamp',
                             'label' => 'Created Date',
                             'sortable' => TRUE,
-                            'tally' => [
-                                'fn' => NULL,
-                            ],
+
                         ],
                         [
                             'type' => 'field',
@@ -167,9 +156,7 @@ return [
                             'dataType' => 'String',
                             'label' => 'Modified By',
                             'sortable' => TRUE,
-                            'tally' => [
-                                'fn' => NULL,
-                            ],
+
                         ],
                         [
                             'type' => 'field',
@@ -177,9 +164,7 @@ return [
                             'dataType' => 'Timestamp',
                             'label' => 'Modified Date',
                             'sortable' => TRUE,
-                            'tally' => [
-                                'fn' => NULL,
-                            ],
+
                         ],
                         [
                             'links' => [
@@ -221,9 +206,6 @@ return [
                             'alignment' => 'text-right',
                             'label' => 'Actions',
                         ],
-                    ],
-                    'tally' => [
-                        'label' => 'Total',
                     ],
                 ],
                 'acl_bypass' => FALSE,
