@@ -48,7 +48,13 @@
                         {ts}Tenant{/ts}
                     </th>
                     <th scope="col">
-                        {ts}Invoice date{/ts}
+                        {ts}Start date{/ts}
+                    </th>
+                    <th scope="col">
+                        {ts}End date{/ts}
+                    </th>
+                    <th scope="col">
+                        {ts}Issue date{/ts}
                     </th>
                     <th scope="col">
                         {ts}Amount{/ts}
@@ -57,7 +63,7 @@
                 </thead>
                 <tfoot id="i_total">
                 <tr>
-                    <td colspan="5" id="i_total_td" style="text-align: right;"><b>Total: <span id="i_total_sum"></span></b></td>
+                    <td colspan="7" id="i_total_td" style="text-align: right;"><b>Total: <span id="i_total_sum"></span></b></td>
                 </tr>
                 </tfoot>
             </table>
@@ -101,7 +107,38 @@
             </table>
         </div>
     </div>
+    <div class="clear"></div>
+    <div class="clear"></div>
+    <div class="crm-results-block">
+        <h3>Balance Summary</h3>
+        <div class="crm-search-results">
+            {include file="CRM/common/enableDisableApi.tpl"}
+            {include file="CRM/common/jsortable.tpl"}
+            <table class="selector-balance row-highlight pagerDisplay" id="DashboardBalance" name="DashboardBalance">
+                <thead class="sticky">
+                <tr>
+                    <th id="sortable" scope="col">
+                        {ts}Tenant ID{/ts}
+                    </th>
+                    <th scope="col">
+                        {ts}Tenant{/ts}
+                    </th>
+                    <th scope="col">
+                        {ts}Invoice Amount{/ts}
+                    </th>
+                    <th scope="col">
+                        {ts}Payment Amount{/ts}
+                    </th>
+                    <th scope="col">
+                        {ts}Balance{/ts}
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
 {crmScript ext=com.octopus8.hprentals file=js/dashboardrentals.js}
 {crmScript ext=com.octopus8.hprentals file=js/dashboardpayments.js}
 {crmScript ext=com.octopus8.hprentals file=js/dashboardinvoices.js}
+{crmScript ext=com.octopus8.hprentals file=js/dashboardbalance.js}
 {/crmScope}

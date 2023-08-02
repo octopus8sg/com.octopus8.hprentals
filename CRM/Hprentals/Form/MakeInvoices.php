@@ -136,56 +136,6 @@ class CRM_Hprentals_Form_MakeInvoices extends CRM_Core_Form
     }
 
     /**
-     * Get an array of rental months for each rental record in the database.
-     *
-     * @return array An array containing rental_id-year-month values for all rental records.
-     * @throws Exception
-     * @author Dr. Khindol Madraimov <khindol.madraimov@gmail.com>
-     */
-    public static function getRentalMonths()
-    {
-        $rental_table = self::RENTAL_TABLE;
-        $sql = "SELECT  
-                id,
-                admission,
-                discharge 
-        FROM $rental_table";
-        $dao = CRM_Core_DAO::executeQuery($sql);
-        $rental_months = [];
-        $interval = \DateInterval::createFromDateString('1 month');
-
-        while ($dao->fetch()) {
-            $start = new \DateTime($dao->admission);
-            if (!$dao->discharge) {
-                $finished = false;
-            }
-            if ($dao->discharge) {
-                $finished = true;
-            }
-            $end = new \DateTime($dao->discharge);
-            $end->add($interval);
-            $period = new \DatePeriod($start, $interval, $end);
-
-            foreach ($period as $dt) {
-                $year = intval($dt->format('Y'));
-                $month = intval($dt->format('m'));
-                $is_current_month = self::isTheCurrentMonth($year, $month);
-                if (!$is_current_month) {
-                    $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
-                }
-                if ($is_current_month) {
-                    if ($finished) {
-                        $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
-                    }
-                }
-
-            }
-
-        }
-        return $rental_months;
-    }
-
-    /**
      * Get an array of invoice months for each invoice record in the database.
      *
      * @return array An array containing rental_id-year-month values for all invoice records.
@@ -217,43 +167,11 @@ class CRM_Hprentals_Form_MakeInvoices extends CRM_Core_Form
      */
     public static function getUninvoicedMonths()
     {
-        $rental_months = self::getRentalMonths();
+        $rental_months = U::getRentalMonths();
         $invoiced_months = self::getInvoiceMonths();
         $uninvoiced_months = array_diff($rental_months, $invoiced_months);
         return $uninvoiced_months;
 
-    }
-
-    /**
-     * Convert the array of rental_id-year-month into separate arrays for years and months.
-     *
-     * @param array $rent_and_months An array containing rental_id-year-month values.
-     * @return array An array with 'years' and 'months' keys, each containing hierarchical arrays.
-     * @throws Exception
-     * @author Dr. Khindol Madraimov <khindol.madraimov@gmail.com>
-     */
-    public static function getHierSelectArrays($rent_and_months)
-    {
-        $years = [];
-        $months = [];
-
-        foreach ($rent_and_months as $month) {
-            list($rental_id, $year, $month_number) = explode('-', $month);
-
-            // Add the year to the $years array if it doesn't exist
-            if (!isset($years[$year])) {
-                $years[$year] = $year;
-            }
-
-            // Convert the month number to month name (e.g., 1 => "January", 2 => "February", etc.)
-            $month_name = date("F", mktime(0, 0, 0, $month_number, 1));
-            $year = intval($year);
-            $month_number = intval($month_number);
-
-            // Add the month to the $months array
-            $months[$year][$month_number] = $month_name;
-        }
-        return ['years' => $years, 'months' => $months];
     }
 
     /**
@@ -266,7 +184,7 @@ class CRM_Hprentals_Form_MakeInvoices extends CRM_Core_Form
     public static function getUninvoicedMonthsHierSelectArrays()
     {
         $uninvoiced_months = self::getUninvoicedMonths();
-        $hierSelectArrays = self::getHierSelectArrays($uninvoiced_months);
+        $hierSelectArrays = U::getHierSelectArrays($uninvoiced_months);
         return $hierSelectArrays;
     }
 
@@ -278,7 +196,7 @@ class CRM_Hprentals_Form_MakeInvoices extends CRM_Core_Form
         $end_of_month->modify('last day of this month');
         $start_of_month_str = $start_of_month->format('Y-m-d');
         $end_of_month_str = $end_of_month->format('Y-m-d');
-        $is_the_current_months = self::isTheCurrentMonth($year, $month);
+        $is_the_current_months = U::isTheCurrentMonth($year, $month);
         $sql = "SELECT  
             id,
             admission,
@@ -353,22 +271,6 @@ class CRM_Hprentals_Form_MakeInvoices extends CRM_Core_Form
         $invoiced_months = self::getInvoiceForMonth($year, $month);
         $uninvoiced_rentals = array_diff($rental_months, $invoiced_months);
         return $uninvoiced_rentals;
-    }
-
-    public static function isTheCurrentMonth($year, $month)
-    {
-        // Get the current year and month
-        $currentYear = date('Y');
-        $currentMonth = date('m');
-
-        // Convert the input year and month to integers
-        $currentYear = intval($currentYear);
-        $currentMonth = intval($currentMonth);
-        $year = intval($year);
-        $month = intval($month);
-
-        // Compare the input year and month with the current year and month
-        return ($year === $currentYear && $month === $currentMonth);
     }
 
     /**

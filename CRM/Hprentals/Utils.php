@@ -16,6 +16,12 @@ class CRM_Hprentals_Utils
     public const SETTINGS_SLUG = 'hprentals_settings';
     public const FAKER_GROUP = 'HpRentals Faker Group';
     public const FAKER_COUNT = 10;
+    const TENANT_TABLE = 'civicrm_contact';
+    const EXPENSE_TABLE = 'civicrm_o8_rental_expense';
+    const INVOICE_TABLE = 'civicrm_o8_rental_invoice';
+    const PAYMENT_TABLE = 'civicrm_o8_rental_payment';
+    const METHOD_TABLE = 'civicrm_o8_rental_method';
+    const RENTAL_TABLE = 'civicrm_o8_rental_rental';
 
     public const SAVE_LOG = [
         'slug' => 'save_log',
@@ -1218,7 +1224,150 @@ class CRM_Hprentals_Utils
         $months = $interval->y * 12 + $interval->m;
         return $months;
     }
+
+    /**
+     * Convert the array of rental_id-year-month into separate arrays for years and months.
+     *
+     * @param array $rent_and_months An array containing rental_id-year-month values.
+     * @return array An array with 'years' and 'months' keys, each containing hierarchical arrays.
+     * @throws Exception
+     * @author Dr. Khindol Madraimov <khindol.madraimov@gmail.com>
+     */
+    public static function getHierSelectArrays($rent_and_months)
+    {
+        $years = [];
+        $months = [];
+
+        foreach ($rent_and_months as $month) {
+            list($rental_id, $year, $month_number) = explode('-', $month);
+
+            // Add the year to the $years array if it doesn't exist
+            if (!isset($years[$year])) {
+                $years[$year] = $year;
+            }
+
+            // Convert the month number to month name (e.g., 1 => "January", 2 => "February", etc.)
+            $month_name = date("F", mktime(0, 0, 0, $month_number, 1));
+            $year = intval($year);
+            $month_number = intval($month_number);
+
+            // Add the month to the $months array
+            $months[$year][$month_number] = $month_name;
+        }
+        return ['years' => $years, 'months' => $months];
+    }
+
+    /**
+     * Get an array of rental months for each rental record in the database.
+     *
+     * @return array An array containing rental_id-year-month values for all rental records.
+     * @throws Exception
+     * @author Dr. Khindol Madraimov <khindol.madraimov@gmail.com>
+     */
+    public static function getRentalMonths()
+    {
+        $rental_table = self::RENTAL_TABLE;
+        $sql = "SELECT  
+                id,
+                admission,
+                discharge 
+        FROM $rental_table";
+        $dao = CRM_Core_DAO::executeQuery($sql);
+        $rental_months = [];
+        $interval = \DateInterval::createFromDateString('1 month');
+
+        while ($dao->fetch()) {
+            $start = new \DateTime($dao->admission);
+            if (!$dao->discharge) {
+                $finished = false;
+            }
+            if ($dao->discharge) {
+                $finished = true;
+            }
+            $end = new \DateTime($dao->discharge);
+            $end->add($interval);
+            $period = new \DatePeriod($start, $interval, $end);
+
+            foreach ($period as $dt) {
+                $year = intval($dt->format('Y'));
+                $month = intval($dt->format('m'));
+                $is_current_month = self::isTheCurrentMonth($year, $month);
+                if (!$is_current_month) {
+                    $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
+                }
+                if ($is_current_month) {
+                    if ($finished) {
+                        $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
+                    }
+                }
+
+            }
+
+        }
+        return $rental_months;
+    }
+
+    public static function isTheCurrentMonth($year, $month)
+    {
+        // Get the current year and month
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+
+        // Convert the input year and month to integers
+        $currentYear = intval($currentYear);
+        $currentMonth = intval($currentMonth);
+        $year = intval($year);
+        $month = intval($month);
+
+        // Compare the input year and month with the current year and month
+        return ($year === $currentYear && $month === $currentMonth);
+    }
+
+    public static function getInvoiceTotalAmountByTenantId($tenant_id){
+        $rentalsInvoice = null;
+        $invoiceTotalAmountByTenantId = 0;
+        $rentalsInvoices = \Civi\Api4\RentalsInvoice::get(FALSE)
+            ->addSelect('SUM(amount)', 'rental_id.tenant_id')
+            ->setLimit(25)
+            ->addGroupBy('rental_id.tenant_id')
+            ->setHaving([
+                ['rental_id.tenant_id', '=', $tenant_id],
+            ])
+            ->execute();
+        if($rentalsInvoices){
+            $rentalsInvoice = $rentalsInvoices[0];
+        }
+        self::writeLog($rentalsInvoice);
+        if($rentalsInvoice){
+            $invoiceTotalAmountByTenantId = $rentalsInvoice["SUM:amount"];
+        }
+        return $invoiceTotalAmountByTenantId;
+    }
+
+    public static function getPaymentTotalAmountByTenantId($tenant_id){
+        $rentalsPayment = null;
+        $paymentTotalAmountByTenantId = 0;
+        $rentalsPayments = \Civi\Api4\RentalsPayment::get(FALSE)
+            ->addSelect('tenant_id', 'SUM(amount)')
+            ->setLimit(25)
+            ->addGroupBy('tenant_id')
+            ->setHaving([
+                ['tenant_id', '=', $tenant_id],
+            ])
+            ->execute();;
+        if($rentalsPayments){
+            $rentalsPayment = $rentalsPayments[0];
+        }
+        self::writeLog($rentalsPayment);
+        if($rentalsPayment){
+            $paymentTotalAmountByTenantId = $rentalsPayment["SUM:amount"];
+        }
+        return $paymentTotalAmountByTenantId;
+    }
+
 }
+
+
 
 
 

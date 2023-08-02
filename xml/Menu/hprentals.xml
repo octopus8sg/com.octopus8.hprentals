@@ -61,6 +61,12 @@
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
+    <path>civicrm/rentals/dashboard_ajax_balance</path>
+    <page_callback>CRM_Hprentals_Page_Dashboard::getBalance</page_callback>
+    <title>Dashboard Rentals</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
     <path>civicrm/rentals/reports</path>
     <page_callback>CRM_Hprentals_Page_Reports</page_callback>
     <title>Reports</title>

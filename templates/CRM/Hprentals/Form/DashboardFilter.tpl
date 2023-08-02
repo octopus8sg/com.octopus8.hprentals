@@ -11,6 +11,10 @@
                         <td class="label">{$form.tenant_id.label}</td>
                         <td>{$form.tenant_id.html}</td>
                     </tr>
+                    <tr>
+                        <td class="label">{$form.months.label}</td>
+                        <td>{$form.months.html}</td>
+                    </tr>
                     </tbody>
                 </table>
 

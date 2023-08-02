@@ -18,9 +18,9 @@ class CRM_Hprentals_Page_RentalsTab extends CRM_Core_Page
             ->addModules('tenantInvoiceSearch');
         Civi::service('angularjs.loader')
             ->addModules('tenantPaymentSearch');
-        $optionalVars = ['contact_id' => $cid];
 
-        $this->assign('myAfformVars', $optionalVars);
+
+
         $rentalCount = \Civi\Api4\RentalsRental::get(FALSE)
             ->selectRowCount()
             ->addWhere('tenant_id', '=', $cid)
@@ -35,6 +35,18 @@ class CRM_Hprentals_Page_RentalsTab extends CRM_Core_Page
             ->addWhere('rental_id.tenant_id', '=', $cid)
             ->execute()->count();
         // Example: Assign a variable for use in a template
+        $total_invoice = U::getInvoiceTotalAmountByTenantId($cid);
+        $total_payment = U::getPaymentTotalAmountByTenantId($cid);
+        $balance = $total_invoice - $total_payment;
+        $optionalVars = [
+            'contact_id' => $cid,
+            'total_rentals' => $rentalCount,
+            'total_invoices' => $invoiceCount,
+            'total_payments' => $paymentCount,
+            'invoice_sum' => CRM_Utils_Money::format($total_invoice),
+            'payment_sum' => CRM_Utils_Money::format($total_payment),
+            'balance' => CRM_Utils_Money::format($balance)];
+        $this->assign('myAfformVars', $optionalVars);
         $this->assign('rentalCount', $rentalCount);
         $this->assign('invoiceCount', $invoiceCount);
         $this->assign('paymentCount', $paymentCount);

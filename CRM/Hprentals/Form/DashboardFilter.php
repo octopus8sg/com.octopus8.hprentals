@@ -61,6 +61,34 @@ class CRM_Hprentals_Form_DashboardFilter extends CRM_Core_Form
                 $props,
                 false);
         }
+        $rental_months = U::getRentalMonths();
+        $hierSelectArrays = U::getHierSelectArrays($rental_months);
+
+        $years = $hierSelectArrays['years'];
+
+//        $yearsAssoc = array_combine($years, $years);
+        $months = $hierSelectArrays['months'];
+        $sel =& $this->addElement('hierselect', 'months', 'Choose Rental Months', null, ['style' => 'width: 200px;'], $defaultOptionValue);
+        $sel->setMainOptions($years);
+        $sel->setSecOptions($months);
+
+        $defaultYear = null;
+        $defaultMonth = null;
+
+        if (!empty($months)) {
+            // Extract the last year from the array keys
+            $yearsKeys = array_keys($months);
+            $defaultYear = end($yearsKeys);
+
+            // Extract the last month from the array values
+            $monthsOfYear = end($months);
+            $monthsKeys = array_keys($monthsOfYear);
+            $defaultMonth = end($monthsKeys);
+        }
+
+// Now you can set the default value for the hierselect element
+        $this->setDefaults(['months' => [$defaultYear, $defaultMonth]]);
+
 
     }
 

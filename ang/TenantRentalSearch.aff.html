@@ -5,12 +5,67 @@
         Add Rental
     </a>
 </div>
+<div class="contact_panel">
+    <div class="contactCardLeft">
+        <div class="crm-summary-basic-block crm-summary-block">
+            <div class="crm-clear crm-inline-block-content">
+                <div class="crm-summary-row">
+                    <div class="crm-label">
+                        Total Rentals
+                    </div>
+                    <div class="crm-content">
+                        {{ options.total_rentals }}
+                    </div>
+                </div>
+                <div class="crm-summary-row">
+                    <div class="crm-label">Total Invoices</div>
+                    <div class="crm-content">
+                        {{ options.total_invoices }}
+                    </div>
+                </div>
+                <div class="crm-summary-row">
+                    <div class="crm-label">Total Payment</div>
+                    <div class="crm-content">
+                        {{ options.total_payments }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="contactCardRight">
+        <div class="crm-summary-basic-block crm-summary-block">
+            <div class="crm-clear crm-inline-block-content">
+                <div class="crm-summary-row">
+                    <div class="crm-label">Invoice Sum</div>
+                    <div class="crm-content">
+                        {{ options.invoice_sum }}
+                    </div>
+                </div>
+                <div class="crm-summary-row">
+                    <div class="crm-label">Payment Sum</div>
+                    <div class="crm-content">
+                        {{ options.payment_sum }}
+                    </div>
+                </div>
+                <div class="crm-summary-row">
+                    <div class="crm-label">Balance</div>
+                    <div class="crm-content">
+                        {{ options.balance }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <hr style="height: 1px; opacity: 0%; background-color: #ccc; border: none; margin-bottom: 0px; padding-bottom: 0px"/>
 <div af-fieldset="" af-title="">
     <div class="row">
-        <div class="col-md-4 col-xs-6">
+        <div class="col-md-6 col-xs-6">
             <af-field name="id"/>
+        </div>
+        <div class="col-md-6 col-xs-6">
+
         </div>
     </div>
     <div class="row">
@@ -21,7 +76,6 @@
             <af-field name="discharge" defn="{input_attrs: {time:false}}"/>
         </div>
     </div>
-
 
     <crm-search-display-table
             search-name="Rentals08"

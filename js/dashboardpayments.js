@@ -96,6 +96,10 @@ CRM.$(function ($) {
         payments_dtsettings.fnServerData = function ( sSource, aoData, fnCallback ) {
             aoData.push({ "name": "tenant_id",
                 "value": $('#tenant_id').val() });
+            aoData.push({ "name": "year",
+                "value": $('#months_0  :selected').val() });
+            aoData.push({ "name": "month",
+                "value": $('#months_1  :selected').val() });
             $.ajax( {
                 "dataType": 'json',
                 "type": "POST",

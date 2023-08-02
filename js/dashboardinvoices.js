@@ -34,6 +34,8 @@ CRM.$(function ($) {
             null,
             null,
             null,
+            null,
+            null,
             { "sClass": "right", "mRender": function(data, type, row) {
                     return '$' + data;
                 } }
@@ -43,7 +45,7 @@ CRM.$(function ($) {
         invoices_dtsettings.fnFooterCallback = function (nFoot, aData, iStart, iEnd, aiDisplay) {
             var total = 0;
             for (var i = iStart; i < iEnd; i++) {
-                total += parseFloat(aData[aiDisplay[i]][4]);
+                total += parseFloat(aData[aiDisplay[i]][6]);
             }
             // console.log($(nFoot));
             $(nFoot).find('#i_total_sum').html('<i>$' + total.toFixed(2) + '</i>');
@@ -94,6 +96,10 @@ CRM.$(function ($) {
         invoices_dtsettings.fnServerData = function ( sSource, aoData, fnCallback ) {
             aoData.push({ "name": "tenant_id",
                 "value": $('#tenant_id').val() });
+            aoData.push({ "name": "year",
+                "value": $('#months_0  :selected').val() });
+            aoData.push({ "name": "month",
+                "value": $('#months_1  :selected').val() });
             $.ajax( {
                 "dataType": 'json',
                 "type": "POST",
