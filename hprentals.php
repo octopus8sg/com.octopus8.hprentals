@@ -164,23 +164,3 @@ function hprentals_civicrm_tabset($path, &$tabs, $context)
             }
 }
 
-function hprentals_civicrm_angularModules(&$angularModules)
-{
-
-//        $angularModules['myAngularModule'] = [
-//        'ext' => 'org.example.mymod',
-//        'js' => ['js/myAngularModule.js'],
-//    ];
-//    $angularModules['myBigAngularModule'] = [
-//        'ext' => 'org.example.mymod',
-//        'requires' => ['ngRoute', 'crmUi', 'myAngularModule'],
-//        'basePages' => ['civicrm/a'],
-//        'js' => ['ang/myBigAngularModule.js', 'ang/myBigAngularModule/*.js'],
-//        'css' => ['css/myAngularModule.css'],
-//        'partials' => ['partials/myBigAngularModule'],
-//        'permissions' => ['administer CiviCRM'],
-//        'settingsCallback' => ['\Civi\Example\Utils', 'getBigAngularData'],
-//    ];
-
-}
-

@@ -1,13 +1,11 @@
 CRM.$(function ($) {
 
-    $("a.add-payment").click(function( event ) {
+    $("a.add-payment").click(function (event) {
         event.preventDefault();
         var href = $(this).attr('href');
-        href = href + "&dialogue=1";
-        // alert(href);
-        var $el =CRM.loadForm(href, {
-            dialog: {width: '50%', height: '50%'}
-        }).on('crmFormSuccess', function() {
+        var $el = CRM.loadForm(href, {
+            dialog: {width: '50%', height: '50%'},
+        }).on('crmFormSuccess', function () {
             var hm_tab = $('.selector-payments');
             var hm_table = hm_tab.DataTable();
             hm_table.draw();
@@ -37,9 +35,11 @@ CRM.$(function ($) {
             null,
             null,
             null,
-            { "sClass": "right", "mRender": function(data, type, row) {
+            {
+                "sClass": "right", "mRender": function (data, type, row) {
                     return '$' + data;
-                } }
+                }
+            }
         ];
 
         payments_dtsettings.fnFooterCallback = function (nFoot, aData, iStart, iEnd, aiDisplay) {
@@ -56,10 +56,10 @@ CRM.$(function ($) {
                 event.preventDefault();
                 var href = $(this).attr('href');
                 href = href + "&dialogue=1"
-                // alert(href);
-                var $el =CRM.loadForm(href, {
+                alert(href);
+                var $el = CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
-                }).on('crmFormSuccess', function() {
+                }).on('crmFormSuccess', function () {
                     var hm_tab = $('.selector-payments');
                     var hm_table = hm_tab.DataTable();
                     hm_table.draw();
@@ -71,9 +71,9 @@ CRM.$(function ($) {
                 var href = $(this).attr('href');
                 href = href + "&dialogue=1"
                 // alert(href);
-                var $el =CRM.loadForm(href, {
+                var $el = CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
-                }).on('crmFormSuccess', function() {
+                }).on('crmFormSuccess', function () {
                     var hm_tab = $('.selector-payments');
                     var hm_table = hm_tab.DataTable();
                     hm_table.draw();
@@ -84,23 +84,29 @@ CRM.$(function ($) {
                 var href = $(this).attr('href');
                 href = href + "&dialogue=1"
                 // alert(href);
-                var $el =CRM.loadForm(href, {
+                var $el = CRM.loadForm(href, {
                     dialog: {width: '50%', height: '50%'}
-                }).on('crmFormSuccess', function() {
+                }).on('crmFormSuccess', function () {
                     var hm_tab = $('.selector-payments');
                     var hm_table = hm_tab.DataTable();
                     hm_table.draw();
                 }).close;
             });
         };
-        payments_dtsettings.fnServerData = function ( sSource, aoData, fnCallback ) {
-            aoData.push({ "name": "tenant_id",
-                "value": $('#tenant_id').val() });
-            aoData.push({ "name": "year",
-                "value": $('#months_0  :selected').val() });
-            aoData.push({ "name": "month",
-                "value": $('#months_1  :selected').val() });
-            $.ajax( {
+        payments_dtsettings.fnServerData = function (sSource, aoData, fnCallback) {
+            aoData.push({
+                "name": "tenant_id",
+                "value": $('#tenant_id').val()
+            });
+            aoData.push({
+                "name": "year",
+                "value": $('#months_0  :selected').val()
+            });
+            aoData.push({
+                "name": "month",
+                "value": $('#months_1  :selected').val()
+            });
+            $.ajax({
                 "dataType": 'json',
                 "type": "POST",
                 "url": sSource,
@@ -111,7 +117,7 @@ CRM.$(function ($) {
         payments_table.destroy();
         var new_payments_table = payments_tab.DataTable(payments_dtsettings);
         //End Reset Table
-        $('.dashboard-filter :input').change(function(){
+        $('.dashboard-filter :input').change(function () {
             // alert('Filter Changed!');
             new_payments_table.draw();
         });

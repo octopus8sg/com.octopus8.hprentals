@@ -2,13 +2,20 @@
 
 use CRM_Hprentals_ExtensionUtil as E;
 use CRM_Hprentals_Utils as U;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+//use GuzzleHttp\Client;
+//use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Form controller class
  *
  * @see https://docs.civicrm.org/dev/en/latest/framework/quickform/
  */
-class CRM_Hprentals_Form_Payment extends CRM_Core_Form {
+class CRM_Hprentals_Form_Payment extends CRM_Core_Form
+{
+    use CRM_Contact_Form_Task_PDFTrait;
     protected $_id;
 
     protected $_cid;
@@ -35,6 +42,137 @@ class CRM_Hprentals_Form_Payment extends CRM_Core_Form {
     public function getEntityId()
     {
         return $this->_id;
+    }
+
+    public function getPaymentCode()
+    {
+        return $this->_myentity['code'];
+    }
+
+    public function getTenantName()
+    {
+        return CRM_Contact_BAO_Contact::displayName($this->_myentity['tenant_id']);
+    }
+
+    public function getLastAdmission()
+    {
+        $tenant_id = $this->_myentity['tenant_id'];
+        $rental = \Civi\Api4\RentalsRental::get(FALSE)
+            ->addSelect('admission')
+            ->addWhere('tenant_id', '=', $tenant_id)
+            ->addOrderBy('admission', 'DESC')
+            ->setLimit(1)
+            ->execute()->single();
+        if(!$rental){
+            return "";
+        }
+        $date = new DateTime($rental['admission']);
+        return $date->format('j/n/Y');
+    }
+
+    public function getPaymentMethod()
+    {
+        $method_id = $this->_myentity['method_id'];
+        $method = \Civi\Api4\RentalsMethod::get(FALSE)
+            ->addSelect('name')
+            ->addWhere('id', '=', $method_id)
+            ->setLimit(1)
+            ->execute()->single();
+        if(!$method){
+            return "";
+        }
+        $name = $method['name'];
+        return $name;
+    }
+
+    public function getCurrentDate()
+    {
+        $date = new DateTime();
+        // Format the date as "1/4/2023 12:10 PM"
+        return $date->format('j/n/Y g:i A');
+    }
+
+    public function getPaymentDate()
+    {
+        $date = new DateTime($this->_myentity['created_date']);
+        // Format the date as "1/4/2023 12:10 PM"
+        return $date->format('j/n/Y');
+    }
+
+    public function getPaymentAmount()
+    {
+        return CRM_Utils_Money::format($this->_myentity['amount']);
+    }
+
+    public function getPdfFileName()
+    {
+        return $this->_myentity['code'] . '_' . $this->_myentity['id'] . '.pdf';
+    }
+
+    public function getPdfFilePath()
+    {
+        $pdfFileName = $this->getPdfFileName();
+        return E::path('PDF' . DIRECTORY_SEPARATOR . 'payments' . DIRECTORY_SEPARATOR . $pdfFileName);
+    }
+
+    public function getTemplateFilePath()
+    {
+        $templateFileName = 'payment.html';
+        return E::path('PDF' . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . $templateFileName);
+    }
+
+    public function hasPdfFile()
+    {
+        $pdfFilePath = $this->getPdfFilePath();
+        return file_exists($pdfFilePath);
+    }
+
+    public function putPdfFile()
+    {
+        $pdf_filename = $this->getPdfFilePath();
+        $logo_path = E::path('PDF' . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'logo.jpg');
+        $templateFilePath = $this->getTemplateFilePath();
+
+        $options = new Options();
+        $options->setChroot(E::path('PDF' . DIRECTORY_SEPARATOR . 'template'));
+        $options->setIsRemoteEnabled(true);
+        $options->setPdfBackend('CPDF');
+        $domPdf = new Dompdf($options);
+        $domPdf->setPaper("A4", "portrait");
+
+
+
+        $html = file_get_contents($templateFilePath);
+        $html = str_replace([
+            "{{ logo_path }}",
+            "{{ print_date }}",
+            "{{ tenant_name }}",
+            "{{ last_rental_admission }}",
+            "{{ payment_code }}",
+            "{{ payment_date }}",
+            "{{ payment_method }}",
+            "{{ payment_amount }}",
+        ], [
+            $logo_path,
+            $this->getCurrentDate(),
+            $this->getTenantName(),
+            $this->getLastAdmission(),
+            $this->getPaymentCode(),
+            $this->getPaymentDate(),
+            $this->getPaymentMethod(),
+            $this->getPaymentAmount(),
+        ], $html);
+        $domPdf->loadHtml($html);
+        $domPdf->render();
+        $pdf = $domPdf->output();
+        file_put_contents($pdf_filename, $pdf);
+        return $pdf_filename;
+    }
+
+    public function getPdfFileUrl()
+    {
+        $pdfFileName = $this->getPdfFileName();
+        return E::url('PDF' . DIRECTORY_SEPARATOR . 'payments' . DIRECTORY_SEPARATOR . $pdfFileName);
     }
 
     /**
@@ -130,9 +268,9 @@ class CRM_Hprentals_Form_Payment extends CRM_Core_Form {
             $code->freeze();
 
             //
-            if(0 < intval($cid)){
+            if (0 < intval($cid)) {
                 $tenant_id = $this->add('hidden', 'tenant_id');
-            }else{
+            } else {
                 $tenant_id = $this->addEntityRef('tenant_id', "Tenant_" . $cid, [], TRUE);
             }
             if ($action == CRM_Core_Action::PREVIEW) {
@@ -178,19 +316,26 @@ class CRM_Hprentals_Form_Payment extends CRM_Core_Form {
             $modified_id->freeze();
             $modified_at = $this->add('datepicker', 'modified_date', E::ts('Updated At'));
             $modified_at->freeze();
-            $submit = [
+            $submits = [[
                 'type' => 'submit',
                 'name' => E::ts('Submit'),
                 'isDefault' => TRUE,
-            ];
+            ]];
             if ($action == CRM_Core_Action::PREVIEW) {
-                $submit = [
-                    'type' => 'submit',
-                    'name' => E::ts('Close'),
-                    'isDefault' => TRUE,
+
+                $hasPdfFile = $this->hasPdfFile();
+                if (!$hasPdfFile) {
+                    $this->putPdfFile();
+                }
+                $fileUrl = $this->getPdfFileUrl();
+                $fileName = $this->getPdfFileName();
+                //
+                $this->addElement('link', 'pdfurl', 'Pdf', $fileUrl, $fileName);
+                $submits = [
+                    ['type' => 'submit', 'name' => E::ts('Close'), 'isDefault' => TRUE]
                 ];
             }
-            $this->addButtons([$submit]);
+            $this->addButtons($submits);
         }
         // export form elements
         $this->assign('elementNames', $this->getRenderableElementNames());
@@ -271,6 +416,7 @@ class CRM_Hprentals_Form_Payment extends CRM_Core_Form {
                 $apiAction = "update";
                 break;
             case CRM_Core_Action::PREVIEW:
+                CRM_Utils_System::civiExit();
                 return;
                 break;
 
@@ -286,8 +432,9 @@ class CRM_Hprentals_Form_Payment extends CRM_Core_Form {
             $result = civicrm_api4($entity, $apiAction, ['values' => $params]);
 //            U::writeLog($result, $entityName . " is " . $action);
         }
-
         parent::postProcess();
+//        CRM_Utils_System::civiExit();
     }
+
 
 }

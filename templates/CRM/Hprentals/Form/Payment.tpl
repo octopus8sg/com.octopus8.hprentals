@@ -10,6 +10,8 @@
     {include file="CRM/common/formButtons.tpl" location="bottom"}
   </div>
 {else}
+
+
   {foreach from=$elementNames item=elementName}
     <div class="crm-section">
       <div class="label">{$form.$elementName.label}</div>

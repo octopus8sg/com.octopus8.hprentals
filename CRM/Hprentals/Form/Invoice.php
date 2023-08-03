@@ -2,6 +2,8 @@
 
 use CRM_Hprentals_ExtensionUtil as E;
 use CRM_Hprentals_Utils as U;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 /**
  * Form controller class
@@ -18,6 +20,8 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
     protected $_myentity;
 
     protected $_dialog;
+
+    protected $_myrental;
 
     public function getDefaultEntity()
     {
@@ -38,6 +42,180 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
     {
         return $this->_id;
     }
+
+    public function getInvoiceCode()
+    {
+        return $this->_myentity['code'];
+    }
+
+    public function getTenantName()
+    {
+        $rental_id = $this->_myentity['rental_id'];
+        $rental = \Civi\Api4\RentalsRental::get(FALSE)
+            ->addSelect('tenant_id')
+            ->addWhere('id', '=', $rental_id)
+            ->setLimit(1)
+            ->execute()->single();
+        if(!$rental){
+            return "";
+        }
+        $tenant_id = $rental['tenant_id'];
+        $this->_myentity['tenant_id'] = $tenant_id;
+        $this->_myrental = $rental;
+        return CRM_Contact_BAO_Contact::displayName($this->_myentity['tenant_id']);
+    }
+
+    public function getLastAdmission()
+    {
+        $tenant_id = $this->_myentity['tenant_id'];
+        if(!$tenant_id){
+            return "";
+        }
+        $rental = \Civi\Api4\RentalsRental::get(FALSE)
+            ->addSelect('admission')
+            ->addWhere('tenant_id', '=', $tenant_id)
+            ->addOrderBy('admission', 'DESC')
+            ->setLimit(1)
+            ->execute()->single();
+        if(!$rental){
+            return "";
+        }
+        $date = new DateTime($rental['admission']);
+        return $date->format('j/n/Y');
+    }
+
+
+    public function getCurrentDate()
+    {
+        $date = new DateTime();
+        // Format the date as "1/4/2023 12:10 PM"
+        return $date->format('j/n/Y g:i A');
+    }
+
+    public function getInvoiceDate()
+    {
+        $date = new DateTime($this->_myentity['created_date']);
+        // Format the date as "1/4/2023 12:10 PM"
+        return $date->format('j/n/Y');
+    }
+
+    public function getStartDate()
+    {
+        $date = new DateTime($this->_myentity['start_date']);
+        // Format the date as "1/4/2023 12:10 PM"
+        return $date->format('j/n/Y');
+    }
+
+    public function getEndDate()
+    {
+        $date = new DateTime($this->_myentity['end_date']);
+        // Format the date as "1/4/2023 12:10 PM"
+        return $date->format('j/n/Y');
+    }
+
+    public function getInvoiceYear()
+    {
+
+        $year_name = date("Y", strtotime($this->_myentity['start_date']));
+        return $year_name;
+    }
+
+    public function getInvoiceMonth()
+    {
+        $month_name = date("F", strtotime($this->_myentity['start_date']));
+        return $month_name;
+    }
+
+    public function getDescription()
+    {
+        $description = nl2br(htmlspecialchars($this->_myentity['description']));
+        return $description;
+    }
+
+    public function getInvoiceAmount()
+    {
+        return CRM_Utils_Money::format($this->_myentity['amount']);
+    }
+
+    public function getPdfFileName()
+    {
+        return $this->_myentity['code'] . '_' . $this->_myentity['id'] . '.pdf';
+    }
+
+    public function getPdfFilePath()
+    {
+        $pdfFileName = $this->getPdfFileName();
+        return E::path('PDF' . DIRECTORY_SEPARATOR . 'invoices' . DIRECTORY_SEPARATOR . $pdfFileName);
+    }
+
+    public function getTemplateFilePath()
+    {
+        $templateFileName = 'invoice.html';
+        return E::path('PDF' . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . $templateFileName);
+    }
+
+    public function hasPdfFile()
+    {
+        $pdfFilePath = $this->getPdfFilePath();
+        return file_exists($pdfFilePath);
+    }
+
+    public function putPdfFile()
+    {
+        $pdf_filename = $this->getPdfFilePath();
+        $logo_path = E::path('PDF' . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'logo.jpg');
+        $templateFilePath = $this->getTemplateFilePath();
+
+        $options = new Options();
+        $options->setChroot(E::path('PDF' . DIRECTORY_SEPARATOR . 'template'));
+        $options->setIsRemoteEnabled(true);
+        $options->setPdfBackend('CPDF');
+        $domPdf = new Dompdf($options);
+        $domPdf->setPaper("A4", "portrait");
+
+
+
+        $html = file_get_contents($templateFilePath);
+        $html = str_replace([
+            "{{ logo_path }}",
+            "{{ print_date }}",
+            "{{ tenant_name }}",
+            "{{ last_rental_admission }}",
+            "{{ invoice_code }}",
+            "{{ invoice_date }}",
+            "{{ invoice_year }}",
+            "{{ invoice_month }}",
+            "{{ start_date }}",
+            "{{ end_date }}",
+            "{{ description }}",
+            "{{ invoice_amount }}",
+        ], [
+            $logo_path,
+            $this->getCurrentDate(),
+            $this->getTenantName(),
+            $this->getLastAdmission(),
+            $this->getInvoiceCode(),
+            $this->getInvoiceDate(),
+            $this->getInvoiceYear(),
+            $this->getInvoiceMonth(),
+            $this->getStartDate(),
+            $this->getEndDate(),
+            $this->getDescription(),
+            $this->getInvoiceAmount(),
+        ], $html);
+        $domPdf->loadHtml($html);
+        $domPdf->render();
+        $pdf = $domPdf->output();
+        file_put_contents($pdf_filename, $pdf);
+        return $pdf_filename;
+    }
+
+    public function getPdfFileUrl()
+    {
+        $pdfFileName = $this->getPdfFileName();
+        return E::url('PDF' . DIRECTORY_SEPARATOR . 'invoices' . DIRECTORY_SEPARATOR . $pdfFileName);
+    }
+
 
     /**
      * Preprocess form.
@@ -193,6 +371,14 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
                 'isDefault' => TRUE,
             ];
             if ($action == CRM_Core_Action::PREVIEW) {
+                $hasPdfFile = $this->hasPdfFile();
+                if (!$hasPdfFile) {
+                    $this->putPdfFile();
+                }
+                $fileUrl = $this->getPdfFileUrl();
+                $fileName = $this->getPdfFileName();
+                //
+                $this->addElement('link', 'pdfurl', 'Pdf', $fileUrl, $fileName);
                 $submit = [
                     'type' => 'submit',
                     'name' => E::ts('Close'),
@@ -285,6 +471,7 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
                 $apiAction = "update";
                 break;
             case CRM_Core_Action::PREVIEW:
+                CRM_Utils_System::civiExit();
                 return;
                 break;
 

@@ -116,8 +116,8 @@ class CRM_Hprentals_Form_MakeInvoices extends CRM_Core_Form
             $invoice['description'] = $calculate_expenses['description'];
             $invoice['amount'] = $calculate_expenses['total'];
             $invoice['rental_id'] = $rental_id;
-            if ($rental_end_date) {
-                $invoice['end_date'] = $rental_end_date;
+            if ($last_date) {
+                $invoice['end_date'] = $last_date;
             }
             $invoice['start_date'] = $first_day;
 //            U::writeLog($invoice, "RentalsInvoice");

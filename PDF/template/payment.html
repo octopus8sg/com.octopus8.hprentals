@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gutenberg-css@0.6.1/dist/gutenberg.min.css">
+    <style>
+        .logo-container {
+            width: 100%;
+            height: 100px;
+            background-color: white;
+            text-align: center;
+        }
+
+        .logo-container img {
+            width: 200px;
+            margin: auto;
+            display: inline;
+        }
+        .right-align {
+            text-align: right;
+        }
+        table,th,td {
+            border-bottom: none
+        }
+    </style>
+    <title>Payment</title>
+</head>
+<body>
+<div class="logo-container">
+    <img src="{{ logo_path }}" alt="Logo" />
+</div>
+<div class="right-align">{{ print_date }}</div>
+<h3>Tenant</h3>
+<table class="small">
+    <thead>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Name</td>
+        <td>{{ tenant_name }}</td>
+    </tr>
+    <tr>
+        <td>Last Rental Admission</td>
+        <td>{{ last_rental_admission }}</td>
+    </tr>
+    </tbody>
+</table>
+<h3>Receipt</h3>
+<table class="small">
+    <thead>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Receipt No</td>
+        <td>{{ payment_code }}</td>
+    </tr>
+    <tr>
+        <td>Date</td>
+        <td>{{ payment_date }}</td>
+    </tr>
+    <tr>
+        <td>Method</td>
+        <td>{{ payment_method }}</td>
+    </tr>
+    <tr>
+        <td>Amount</td>
+        <td>{{ payment_amount }}</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

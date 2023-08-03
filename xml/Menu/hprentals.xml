@@ -1,87 +1,87 @@
 <?xml version="1.0"?>
 <menu>
-  <item>
-    <path>civicrm/rentals/expense</path>
-    <page_callback>CRM_Hprentals_Form_Expense</page_callback>
-    <title>Expense</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/method</path>
-    <page_callback>CRM_Hprentals_Form_Method</page_callback>
-    <title>Payment Method</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/invoice</path>
-    <page_callback>CRM_Hprentals_Form_Invoice</page_callback>
-    <title>Invoice</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/rental</path>
-    <page_callback>CRM_Hprentals_Form_Rental</page_callback>
-    <title>Rental</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/payment</path>
-    <page_callback>CRM_Hprentals_Form_Payment</page_callback>
-    <title>Rental</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/setup</path>
-    <page_callback>CRM_Hprentals_Form_Setup</page_callback>
-    <title>Setup</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/dashboard</path>
-    <page_callback>CRM_Hprentals_Page_Dashboard</page_callback>
-    <title>Dashboard</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/dashboard_ajax_invoice</path>
-    <page_callback>CRM_Hprentals_Page_Dashboard::getInvoices</page_callback>
-    <title>Dashboard Invoices</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/dashboard_ajax_payment</path>
-    <page_callback>CRM_Hprentals_Page_Dashboard::getPayments</page_callback>
-    <title>Dashboard Payments</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/dashboard_ajax_rental</path>
-    <page_callback>CRM_Hprentals_Page_Dashboard::getRentals</page_callback>
-    <title>Dashboard Rentals</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/dashboard_ajax_balance</path>
-    <page_callback>CRM_Hprentals_Page_Dashboard::getBalance</page_callback>
-    <title>Dashboard Rentals</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/reports</path>
-    <page_callback>CRM_Hprentals_Page_Reports</page_callback>
-    <title>Reports</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/rentals/tab</path>
-    <page_callback>CRM_Hprentals_Page_RentalsTab</page_callback>
-    <title>RentalsTab</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/hprentals/makeinvoices</path>
-    <page_callback>CRM_Hprentals_Form_MakeInvoices</page_callback>
-    <title>MakeInvoices</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
+    <item>
+        <path>civicrm/rentals/expense</path>
+        <page_callback>CRM_Hprentals_Form_Expense</page_callback>
+        <title>Expense</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/method</path>
+        <page_callback>CRM_Hprentals_Form_Method</page_callback>
+        <title>Payment Method</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/invoice</path>
+        <page_callback>CRM_Hprentals_Form_Invoice</page_callback>
+        <title>Invoice</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/rental</path>
+        <page_callback>CRM_Hprentals_Form_Rental</page_callback>
+        <title>Rental</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/payment</path>
+        <page_callback>CRM_Hprentals_Form_Payment</page_callback>
+        <title>Rental</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/setup</path>
+        <page_callback>CRM_Hprentals_Form_Setup</page_callback>
+        <title>Setup</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/dashboard</path>
+        <page_callback>CRM_Hprentals_Page_Dashboard</page_callback>
+        <title>Dashboard</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/dashboard_ajax_invoice</path>
+        <page_callback>CRM_Hprentals_Page_Dashboard::getInvoices</page_callback>
+        <title>Dashboard Invoices</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/dashboard_ajax_payment</path>
+        <page_callback>CRM_Hprentals_Page_Dashboard::getPayments</page_callback>
+        <title>Dashboard Payments</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/dashboard_ajax_rental</path>
+        <page_callback>CRM_Hprentals_Page_Dashboard::getRentals</page_callback>
+        <title>Dashboard Rentals</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/dashboard_ajax_balance</path>
+        <page_callback>CRM_Hprentals_Page_Dashboard::getBalance</page_callback>
+        <title>Dashboard Rentals</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/reports</path>
+        <page_callback>CRM_Hprentals_Page_Reports</page_callback>
+        <title>Reports</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/rentals/tab</path>
+        <page_callback>CRM_Hprentals_Page_RentalsTab</page_callback>
+        <title>RentalsTab</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/hprentals/makeinvoices</path>
+        <page_callback>CRM_Hprentals_Form_MakeInvoices</page_callback>
+        <title>MakeInvoices</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
 </menu>
