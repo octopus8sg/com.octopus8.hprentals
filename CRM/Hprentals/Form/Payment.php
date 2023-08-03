@@ -416,7 +416,7 @@ class CRM_Hprentals_Form_Payment extends CRM_Core_Form
                 $apiAction = "update";
                 break;
             case CRM_Core_Action::PREVIEW:
-                CRM_Utils_System::civiExit();
+
                 return;
                 break;
 
