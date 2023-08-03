@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gutenberg-css@0.6.1/dist/gutenberg.min.css">
+    <style>
+        .logo-container {
+            width: 100%;
+            height: 100px;
+            background-color: white;
+            text-align: center;
+        }
+
+        .logo-container img {
+            width: 200px;
+            margin: auto;
+            display: inline;
+        }
+        .right-align {
+            text-align: right;
+        }
+        table,th,td {
+            border-bottom: none;
+            vertical-align: top;
+        }
+    </style>
+    <title>Invoice</title>
+</head>
+<body>
+<div class="logo-container">
+    <img src="{{ logo_path }}" alt="Logo" />
+</div>
+<div class="right-align">{{ print_date }}</div>
+<h3>Tenant</h3>
+<table class="small">
+    <thead>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Name</td>
+        <td>{{ tenant_name }}</td>
+    </tr>
+    <tr>
+        <td>Last Rental Admission</td>
+        <td>{{ last_rental_admission }}</td>
+    </tr>
+    </tbody>
+</table>
+<h3>Invoice</h3>
+<table class="small">
+    <thead>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Invoice Number</td>
+        <td>{{ invoice_code }}</td>
+    </tr>
+    <tr>
+        <td>Date</td>
+        <td>{{ invoice_date }}</td>
+    </tr>
+
+    </tbody>
+</table>
+<h2>&nbsp;</h2>
+<table class="small">
+    <thead>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Invoice Year</td>
+        <td>{{ invoice_year }}</td>
+    </tr>
+    <tr>
+        <td>Invoice Month</td>
+        <td>{{ invoice_month }}</td>
+    </tr>
+    <tr>
+        <td>Invoice Period Start Date</td>
+        <td>{{ start_date }}</td>
+    </tr>
+    <tr>
+        <td>Invoice Period End Date</td>
+        <td>{{ end_date }}</td>
+    </tr>
+    <tr>
+        <td>Details</td>
+        <td>{{ description }}</td>
+    </tr>
+    <tr>
+        <td>Amount</td>
+        <td>{{ invoice_amount }}</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
