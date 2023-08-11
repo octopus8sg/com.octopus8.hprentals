@@ -1296,9 +1296,9 @@ class CRM_Hprentals_Utils
                     $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
                 }
                 if ($is_current_month) {
-                    if ($finished) {
+//                    if ($finished) {
                         $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
-                    }
+//                    }
                 }
 
             }
