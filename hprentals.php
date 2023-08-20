@@ -146,7 +146,7 @@ function hprentals_civicrm_tabset($path, &$tabs, $context)
          */
                 // add a tab to the contact summary screen
                 $contactId = $context['contact_id'];
-                $url = CRM_Utils_System::url('civicrm/rentals/tab', ['cid' => $contactId]);
+                $url = CRM_Utils_System::url('civicrm/rentals/tab', ['cid' => $contactId, 'reset' => 1]);
 
                 $myEntities = \Civi\Api4\RentalsRental::get()
                     ->selectRowCount()
@@ -159,8 +159,26 @@ function hprentals_civicrm_tabset($path, &$tabs, $context)
                     'count' => $myEntities->count(),
                     'title' => E::ts('Rentals'),
                     'weight' => 1000,
-                    'icon' => 'crm-i fa-home',
+                    'icon' => 'crm-i fa-home'
                 );
             }
+}
+
+/**
+ * Implementation of hook_civicrm_tabset
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_tabset
+ */
+function hprentals_civicrm_summaryActions(&$actions, $contactID)
+{
+    $url = CRM_Utils_System::url('civicrm/rentals/tab', ['cid' => $contactID, 'reset' => 1]);
+    $actions['otherActions']['rentals'] = array(
+        'title' => 'Rentals',
+        'weight' => 999,
+        'ref' => 'record-rentals',
+        'key' => 'rentals',
+        'href' => $url,
+        'class' => 'no-popup',
+        'icon' => 'crm-i fa-home',
+    );
 }
 
