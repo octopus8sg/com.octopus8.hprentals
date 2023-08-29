@@ -347,7 +347,7 @@ class CRM_Hprentals_Form_Invoice extends CRM_Core_Form
 //            if ($cid) {
 //                $amount->freeze();
 //            }
-            $this->addRule('amount', ts('Amount should be a positive decimal number, like "100.25"'), 'regex', '/^[+]?((\d+(\.\d{0,2})?)|(\.\d{0,2}))$/');
+//            $this->addRule('amount', ts('Amount should be a positive decimal number, like "100.25"'), 'regex', '/^[+]?((\d+(\.\d{0,2})?)|(\.\d{0,2}))$/');
             if ($action == CRM_Core_Action::PREVIEW) {
                 $year = $this->add('text', 'year', ts('Invoice Year'), ['size' => 8, 'maxlength' => 8], FALSE)->freeze();
                 $month = $this->add('text', 'month', ts('Invoice Month'), ['size' => 8, 'maxlength' => 8], FALSE)->freeze();

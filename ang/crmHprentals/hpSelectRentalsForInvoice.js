@@ -43,8 +43,8 @@
                         if (rentals[x].id === id) {
                             console.log(rentals[x]);
                             lastDateForRental = lastDayOfTheMonthForDate(rentals[x].admission);
-                            console.log('lastDateForRental', lastDateForRental);
-                            console.log('rentals[x].discharge', rentals[x].discharge);
+                            // console.log('lastDateForRental', lastDateForRental);
+                            // console.log('rentals[x].discharge', rentals[x].discharge);
                             if (rentals[x].discharge !== null) {
                                 return rentals[x].discharge;
                             } else {

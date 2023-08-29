@@ -1134,27 +1134,27 @@ class CRM_Hprentals_Utils
         return $prorated_amount;
     }
 
-    public static function calculate_expenses($invoice_start_date, $invoice_end_date, $rental_start_date)
+    public static function calculate_expenses($invoice_start_date, $invoice_end_date, $rental_start_date, $closed = false)
     {
         $include_once_off = false;
         self::writeLog("$invoice_start_date ? $rental_start_date");
-        if($rental_start_date == $invoice_start_date){
+        if ($rental_start_date == $invoice_start_date) {
             $include_once_off = true;
             self::writeLog('$include_once_off is true');
         }
-        if($include_once_off == false){
+//        if ($include_once_off == false) {
+//            $rentalsExpenses = \Civi\Api4\RentalsExpense::get(FALSE)
+//                ->addSelect('frequency:name', 'amount', 'name', 'is_prorate', 'is_refund')
+//                ->addWhere('frequency:name', '<>', 'once_off')
+//                ->setLimit(0)
+//                ->execute();
+//        }
+//        if ($include_once_off == true) {
         $rentalsExpenses = \Civi\Api4\RentalsExpense::get(FALSE)
-            ->addSelect('frequency:name', 'amount', 'name', 'is_prorate')
-            ->addWhere('frequency:name', '<>', 'once_off')
+            ->addSelect('frequency:name', 'amount', 'name', 'is_prorate', 'is_refund')
             ->setLimit(0)
             ->execute();
-        }
-        if($include_once_off == true){
-        $rentalsExpenses = \Civi\Api4\RentalsExpense::get(FALSE)
-            ->addSelect('frequency:name', 'amount', 'name', 'is_prorate')
-            ->setLimit(0)
-            ->execute();
-        }
+//        }
 
         $description = "";
         $total = 0;
@@ -1166,6 +1166,7 @@ class CRM_Hprentals_Utils
         foreach ($rentalsExpenses as $rentalsExpense) {
             $frequency = $rentalsExpense['frequency:name'];
             $prorate = $rentalsExpense['is_prorate'];
+            $is_refund = $rentalsExpense['is_refund'];
             $expense_name = $rentalsExpense['name'];
             $monthly_price = $rentalsExpense['amount'];
             if ($prorate == 1) {
@@ -1174,8 +1175,10 @@ class CRM_Hprentals_Utils
                 $prorate_price = $monthly_price;
             }
             if ($frequency === "once_off") {
-                $description = $description . "\n" . $expense_name . " $" . $prorate_price;
-                $total = $total + $prorate_price;
+                if ($include_once_off != false) {
+                    $description = $description . "\n" . $expense_name . " $" . $prorate_price;
+                    $total = $total + $prorate_price;
+                }
             }
             if ($months_between > 6) {
                 if ($frequency === "more_than_6_m") {
@@ -1192,6 +1195,12 @@ class CRM_Hprentals_Utils
             if ($frequency === "every_month") {
                 $description = $description . "\n" . $expense_name . " $" . $prorate_price;
                 $total = $total + $prorate_price;
+            }
+            if ($is_refund == 1) {
+                if ($closed) {
+                    $description = $description . "\n" . $expense_name . " -$" . $prorate_price;
+                    $total = $total - $prorate_price;
+                }
             }
         }
         $calculated_expence = ['description' => trim($description),
@@ -1297,7 +1306,7 @@ class CRM_Hprentals_Utils
                 }
                 if ($is_current_month) {
 //                    if ($finished) {
-                        $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
+                    $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
 //                    }
                 }
 
@@ -1323,7 +1332,8 @@ class CRM_Hprentals_Utils
         return ($year === $currentYear && $month === $currentMonth);
     }
 
-    public static function getInvoiceTotalAmountByTenantId($tenant_id){
+    public static function getInvoiceTotalAmountByTenantId($tenant_id)
+    {
         $rentalsInvoice = null;
         $invoiceTotalAmountByTenantId = 0;
         $rentalsInvoices = \Civi\Api4\RentalsInvoice::get(FALSE)
@@ -1334,17 +1344,18 @@ class CRM_Hprentals_Utils
                 ['rental_id.tenant_id', '=', $tenant_id],
             ])
             ->execute();
-        if($rentalsInvoices){
+        if ($rentalsInvoices) {
             $rentalsInvoice = $rentalsInvoices[0];
         }
         self::writeLog($rentalsInvoice);
-        if($rentalsInvoice){
+        if ($rentalsInvoice) {
             $invoiceTotalAmountByTenantId = $rentalsInvoice["SUM:amount"];
         }
         return $invoiceTotalAmountByTenantId;
     }
 
-    public static function getPaymentTotalAmountByTenantId($tenant_id){
+    public static function getPaymentTotalAmountByTenantId($tenant_id)
+    {
         $rentalsPayment = null;
         $paymentTotalAmountByTenantId = 0;
         $rentalsPayments = \Civi\Api4\RentalsPayment::get(FALSE)
@@ -1355,11 +1366,11 @@ class CRM_Hprentals_Utils
                 ['tenant_id', '=', $tenant_id],
             ])
             ->execute();;
-        if($rentalsPayments){
+        if ($rentalsPayments) {
             $rentalsPayment = $rentalsPayments[0];
         }
         self::writeLog($rentalsPayment);
-        if($rentalsPayment){
+        if ($rentalsPayment) {
             $paymentTotalAmountByTenantId = $rentalsPayment["SUM:amount"];
         }
         return $paymentTotalAmountByTenantId;
