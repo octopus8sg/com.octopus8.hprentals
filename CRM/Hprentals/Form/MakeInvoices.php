@@ -107,9 +107,11 @@ class CRM_Hprentals_Form_MakeInvoices extends CRM_Core_Form
             $last_date = $end_of_month_str;
             $closed = false;
             if ($rental_end_date) {
+//                U::writeLog("$rental_end_date == $last_date");
                 if ($last_date >= $rental_end_date) {
                     $last_date = $rental_end_date;
                     $closed = true;
+//                    U::writeLog("$closed closed");
                 }
             }
             $calculate_expenses = U::calculate_expenses($first_day, $last_date, $rental_start_date, $closed);
