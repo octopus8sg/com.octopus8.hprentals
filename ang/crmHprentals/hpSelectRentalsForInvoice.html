@@ -31,15 +31,15 @@
     </div>
     <div>
         <label>
-            Start Day<span style="color: red">*</span>:
+            Rental<span style="color: red">*</span>:
             <select
                     name="date"
                     ui-jq="select2"
                     ui-options="{dropdownAutoWidth : true}"
-                    ng-model="selectedDate"
-                    ng-options="option.id as option.name for option in dateOptions"
+                    ng-model="selectedRental"
+                    ng-options="option.id as option.name for option in rentalOptions"
                     required>
-                <option value="">-- Select day --</option>
+                <option value="">-- Select Rental --</option>
             </select>
         </label>
     </div>
@@ -48,6 +48,13 @@
         <div class="help" hidden>
             <h3>Debug Invoice Calculated Data</h3>
             <div class="col-4">Rental: {{hpRentalCode}}</div>
+            <div class="col-4">hpRentalStart: {{hpRentalStart}}</div>
+            <div class="col-4">hpRentalEnd: {{hpRentalEnd}}</div>
+            <div class="col-4">hpRentalLength: {{hpRentalLength}}</div>
+            <div class="col-4">hpRentalStartYear: {{hpRentalStartYear}}</div>
+            <div class="col-4">hpRentalStartMonth: {{hpRentalStartMonth}}</div>
+            <div class="col-4">hpSelectedYear: {{hpSelectedYear}}</div>
+            <div class="col-4">hpSelectedMonth: {{hpSelectedMonth}}</div>
             <div class="col-4">Pricelist: <br/>
                 <ul ng-repeat="rTotal in arrTotal">
                     <li>{{rTotal}}</li>
