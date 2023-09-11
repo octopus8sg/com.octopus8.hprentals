@@ -148,7 +148,7 @@ function hprentals_civicrm_tabset($path, &$tabs, $context)
                 $contactId = $context['contact_id'];
                 $url = CRM_Utils_System::url('civicrm/rentals/tab', ['cid' => $contactId, 'reset' => 1]);
 
-                $myEntities = \Civi\Api4\RentalsRental::get()
+                $myEntities = \Civi\Api4\RentalsRental::get(false)
                     ->selectRowCount()
                     ->addWhere('tenant_id', '=', $contactId)
                     ->execute();
