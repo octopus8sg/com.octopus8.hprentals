@@ -109,9 +109,9 @@
                 };
 
                 const lastDayForDate = (date_start_str) => {
-                    const lastDay = new Date(date_start_str).toLocaleDateString('en-US', {
-                        month: '2-digit',
+                    const lastDay = new Date(date_start_str).toLocaleDateString('en-GB', {
                         day: '2-digit',
+                        month: '2-digit',
                         year: 'numeric'
                     });
                     ;
@@ -132,9 +132,9 @@
 
                 const firstDayForDate = (date_start_str) => {
                     const date_start = new Date(date_start_str);
-                    let firstDay = date_start.toLocaleDateString('en-US', {
-                        month: '2-digit',
+                    let firstDay = date_start.toLocaleDateString('en-GB', {
                         day: '2-digit',
+                        month: '2-digit',
                         year: 'numeric'
                     });
                     ;
