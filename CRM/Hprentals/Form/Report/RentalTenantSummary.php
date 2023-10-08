@@ -394,48 +394,49 @@ function groupBy()
         $admission_start_date = $admission_end_date = $discharge_start_date =  $discharge_end_date = null;
 
         foreach ($whereClauses as $key => $element) {
-            U::writeLog($element, $key);
-            // Check for 'o8_rental_rental_civireport.admission >='
-            if (preg_match('/admission >= (\d{14})/', $element, $matches)) {
-                $admission_start_date = $matches[1];
-                U::writeLog($matches);
-            }
-
-            // Check for 'o8_rental_rental_civireport.admission <='
-            if (preg_match('/admission <= (\d{14})/', $element, $matches)) {
-                $admission_end_date = $matches[1];
-                U::writeLog($matches);
-            }
-
-            if (preg_match('/discharge >= (\d{14})/', $element, $matches)) {
-                $discharge_start_date = $matches[1];
-                U::writeLog($matches);
-            }
-
-            // Check for 'o8_rental_rental_civireport.discharge <='
-            if (preg_match('/discharge <= (\d{14})/', $element, $matches)) {
-                $discharge_end_date = $matches[1];
-                U::writeLog($matches);
-            }
+//            U::writeLog($element, $key);
+//            // Check for 'o8_rental_rental_civireport.admission >='
+//            if (preg_match('/admission >= (\d{14})/', $element, $matches)) {
+//                $admission_start_date = $matches[1];
+//                U::writeLog($matches);
+//            }
+//
+//            // Check for 'o8_rental_rental_civireport.admission <='
+//            if (preg_match('/admission <= (\d{14})/', $element, $matches)) {
+//                $admission_end_date = $matches[1];
+//                U::writeLog($matches);
+//            }
+//
+//            if (preg_match('/discharge >= (\d{14})/', $element, $matches)) {
+//                $discharge_start_date = $matches[1];
+//                U::writeLog($matches);
+//            }
+//
+//            // Check for 'o8_rental_rental_civireport.discharge <='
+//            if (preg_match('/discharge <= (\d{14})/', $element, $matches)) {
+//                $discharge_end_date = $matches[1];
+//                U::writeLog($matches);
+//            }
+//
             if (preg_match('/created_date >= (\d{14})/', $element, $matches)) {
                 $this->_created_date_start_date = $matches[1];
-                U::writeLog($matches);
+//                U::writeLog($matches);
                 unset($whereClauses[$key]);
             }
             if (preg_match('/created_date <= (\d{14})/', $element, $matches)) {
                 $this->_created_date_end_date = $matches[1];
-                U::writeLog($matches);
+//                U::writeLog($matches);
                 unset($whereClauses[$key]);
             }
         }
 
 // Check if both dates were found
-        if ($admission_start_date !== null && $admission_end_date !== null) {
-            U::writeLog("Admission Start Date: $admission_start_date\n");
-            U::writeLog("Admission End Date: $admission_end_date\n");
-        } else {
-            U::writeLog("Dates not found in the array.\n");
-        }
+//        if ($admission_start_date !== null && $admission_end_date !== null) {
+//            U::writeLog("Admission Start Date: $admission_start_date\n");
+//            U::writeLog("Admission End Date: $admission_end_date\n");
+//        } else {
+//            U::writeLog("Dates not found in the array.\n");
+//        }
 //
 //        $this->_whereClauses[] = "{$this->_aliases['civicrm_membership']}.is_test = 0 AND
 //                              {$this->_aliases['civicrm_contact']}.is_deleted = 0";
@@ -594,9 +595,10 @@ function alterDisplay(&$rows)
 //            U::writeLog($payment_amount_count, '$rentalsPayments');
 //            U::writeLog($payment_amount_avg, '$rentalsPayments');
 //            U::writeLog($rentalsInvoices, '$rentalsInvoices');
-            $url = '#';
+            $url = CRM_Utils_System::url('civicrm/contact/view',
+                ['reset' => 1, 'cid' => $tenant_id, 'selectedChild' => 'contact_rentals_tab']);
             $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
-            $rows[$rowNum]['civicrm_contact_sort_name_hover'] = ts("Lists rentals(s) for this contact.");
+            $rows[$rowNum]['civicrm_contact_sort_name_hover'] = ts("This contact.");
 
             $rows[$rowNum]['civicrm_o8_rental_payment_payment_amount_count'] = $payment_amount_count;
             $rows[$rowNum]['civicrm_o8_rental_payment_payment_amount_sum'] = $payment_amount_sum;
