@@ -68,6 +68,7 @@ class CRM_Hprentals_Form_Setup extends CRM_Core_Form
             U::createDefaultMethods();
             U::create_fake_individuals();
             U::create_faker_rentals();
+            U::create_faker_payments();
 //            U::writeLog('fakers come');
             CRM_Core_Session::setStatus(E::ts('Fake contacts added', ['domain' => 'com.octopus8.hprentals']), 'Configuration Updated', 'success');
         }

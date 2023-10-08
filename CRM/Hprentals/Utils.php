@@ -605,7 +605,7 @@ class CRM_Hprentals_Utils
             $contact_api = civicrm_api3('Contact', 'getsingle', array(
                 'id' => $contact_id,
             ));
-            if ($contact_api['is_error']) {
+            if (isset($contact_api['is_error'])) {
                 // handle error
                 self::writeLog($contact_api['error_message']);
             } else {
@@ -750,22 +750,83 @@ class CRM_Hprentals_Utils
         }
     }
 
-    /**
-     * @param $tenant_id
-     * @param $date_from
-     * @param $date_to
-     * @return mixed
-     */
-    public static function getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id = 0)
+    public static function create_faker_payments()
     {
-        $rental_id = intval($rental_id);
-        $my_rent_table = 'civicrm_o8_rental_rental';
-        if (!$date_to) {
-            $date_to = date('Y-m-d');
+        $fakers = self::get_faker_contacts();
+//        echo sizeof($fakers);
+        foreach ($fakers as $faker) {
+            $lastDay = date('Y-m-t');;
+            $twoYearsAgo = new DateTime('-2 years');
+            $firstDay = $twoYearsAgo->format('Y-m-t');
+            $fak_id = intval($faker['contact_id']);
+//            echo $fak_id;
+            $fakeDays = self::createFakerDateSets($firstDay, $lastDay);
+            $lastIndex = count($fakeDays) - 1;
+            $i = 0;
+            foreach ($fakeDays as $fakeDay) {
+                $first_date = $fakeDay['admission'];
+                $last_date = $fakeDay['discharge'];
+
+                $method = random_int(1,6);
+                $amount = random_int(1,10) * 10;
+                $code = self::generatePaymentNumber('RC');
+//                echo $method;
+//                echo $amount;
+//                echo $code;
+                // If an overlap is found, set a validation error message
+                $payment_api = civicrm_api3('RentalsPayment', 'create', [
+                    'code' => $code,
+                    'tenant_id' => $fak_id,
+                    'method_id' => $method,
+                    'amount' => $amount,
+                    'created_date' => $first_date,
+                    'created_id' => $fak_id
+                ]);
+                $method = random_int(1,6);
+                $amount = random_int(1,10) * 5;
+                $code = self::generatePaymentNumber('RC');
+//                echo $method;
+//                echo $amount;
+//                echo $code;
+//                echo $payment_api;
+                // If an overlap is found, set a validation error message
+                $payment_api = civicrm_api3('RentalsPayment', 'create', [
+                    'code' => $code,
+                    'tenant_id' => $fak_id,
+                    'method_id' => $method,
+                    'amount' => $amount,
+                    'created_date' => $last_date,
+                    'created_id' => $fak_id
+                ]);
+//                echo $payment_api;
+//                    self::writeLog($rentals_api, 'create Rentals Api');
+            }
+            if ($payment_api['is_error']) {
+                // handle error
+                self::writeLog($payment_api['error_message']);
+            }
+            $i++;
         }
-        // Retrieve the list of existing rents for the tenant
-        if ($rental_id == 0) {
-            $existing_rent = CRM_Core_DAO::singleValueQuery("
+    }
+
+
+/**
+ * @param $tenant_id
+ * @param $date_from
+ * @param $date_to
+ * @return mixed
+ */
+public
+static function getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id = 0)
+{
+    $rental_id = intval($rental_id);
+    $my_rent_table = 'civicrm_o8_rental_rental';
+    if (!$date_to) {
+        $date_to = date('Y-m-d');
+    }
+    // Retrieve the list of existing rents for the tenant
+    if ($rental_id == 0) {
+        $existing_rent = CRM_Core_DAO::singleValueQuery("
         SELECT COUNT(*) AS overlap
         FROM {$my_rent_table}
         WHERE tenant_id = %1
@@ -773,13 +834,13 @@ class CRM_Hprentals_Utils
                  OR (admission <= %3 AND discharge >= %3)
                  OR (admission >= %2 AND discharge <= %3))
     ", [
-                1 => [$tenant_id, 'Integer'],
-                2 => [$date_from, 'String'],
-                3 => [$date_to, 'String'],
-            ]);
-        }
-        if ($rental_id != 0) {
-            $existing_rent = CRM_Core_DAO::singleValueQuery("
+            1 => [$tenant_id, 'Integer'],
+            2 => [$date_from, 'String'],
+            3 => [$date_to, 'String'],
+        ]);
+    }
+    if ($rental_id != 0) {
+        $existing_rent = CRM_Core_DAO::singleValueQuery("
         SELECT COUNT(*) AS overlap
         FROM {$my_rent_table}
         WHERE tenant_id = %1
@@ -788,360 +849,375 @@ class CRM_Hprentals_Utils
                  OR (admission >= %2 AND discharge <= %3))
             AND id != %4
     ", [
-                1 => [$tenant_id, 'Integer'],
-                2 => [$date_from, 'String'],
-                3 => [$date_to, 'String'],
-                4 => [$rental_id, 'Integer'],
-            ]);
-        }
-        return $existing_rent;
+            1 => [$tenant_id, 'Integer'],
+            2 => [$date_from, 'String'],
+            3 => [$date_to, 'String'],
+            4 => [$rental_id, 'Integer'],
+        ]);
     }
+    return $existing_rent;
+}
 
-    /**
-     * @param $tenant_id
-     * @param $date_from
-     * @param $date_to
-     * @return mixed
-     */
-    public static function getEarlierRents($tenant_id, $date_from, $rental_id = 0)
-    {
-        $rental_id = intval($rental_id);
-        $my_rent_table = 'civicrm_o8_rental_rental';
-        // Retrieve the list of existing rents for the tenant
-        if ($rental_id == 0) {
-            $existing_rent = CRM_Core_DAO::singleValueQuery("
+/**
+ * @param $tenant_id
+ * @param $date_from
+ * @param $date_to
+ * @return mixed
+ */
+public
+static function getEarlierRents($tenant_id, $date_from, $rental_id = 0)
+{
+    $rental_id = intval($rental_id);
+    $my_rent_table = 'civicrm_o8_rental_rental';
+    // Retrieve the list of existing rents for the tenant
+    if ($rental_id == 0) {
+        $existing_rent = CRM_Core_DAO::singleValueQuery("
         SELECT COUNT(*) AS overlap
         FROM {$my_rent_table}
         WHERE tenant_id = %1
             AND admission >= %2 
     ", [
-                1 => [$tenant_id, 'Integer'],
-                2 => [$date_from, 'String'],
-            ]);
-        }
-        if ($rental_id != 0) {
-            $existing_rent = CRM_Core_DAO::singleValueQuery("
+            1 => [$tenant_id, 'Integer'],
+            2 => [$date_from, 'String'],
+        ]);
+    }
+    if ($rental_id != 0) {
+        $existing_rent = CRM_Core_DAO::singleValueQuery("
         SELECT COUNT(*) AS overlap
         FROM {$my_rent_table}
         WHERE tenant_id = %1
             AND admission >= %2 
             AND id != %3
     ", [
-                1 => [$tenant_id, 'Integer'],
-                2 => [$date_from, 'String'],
-                3 => [$rental_id, 'Integer'],
-            ]);
-        }
-        return $existing_rent;
+            1 => [$tenant_id, 'Integer'],
+            2 => [$date_from, 'String'],
+            3 => [$rental_id, 'Integer'],
+        ]);
     }
+    return $existing_rent;
+}
 
-    /**
-     * @param $tenant_id
-     * @param $date_from
-     * @param $date_to
-     * @return mixed
-     */
-    public static function getUnfinishedRents($tenant_id, $rental_id = 0)
-    {
-        $rental_id = intval($rental_id);
-        $my_rent_table = 'civicrm_o8_rental_rental';
-        // Retrieve the list of existing rents for the tenant
-        if ($rental_id == 0) {
-            $existing_rent = CRM_Core_DAO::singleValueQuery("
+/**
+ * @param $tenant_id
+ * @param $date_from
+ * @param $date_to
+ * @return mixed
+ */
+public
+static function getUnfinishedRents($tenant_id, $rental_id = 0)
+{
+    $rental_id = intval($rental_id);
+    $my_rent_table = 'civicrm_o8_rental_rental';
+    // Retrieve the list of existing rents for the tenant
+    if ($rental_id == 0) {
+        $existing_rent = CRM_Core_DAO::singleValueQuery("
         SELECT COUNT(*) AS overlap
         FROM {$my_rent_table}
         WHERE tenant_id = %1
             AND discharge IS NULL
     ", [
-                1 => [$tenant_id, 'Integer'],
-            ]);
-        }
-        if ($rental_id != 0) {
-            $existing_rent = CRM_Core_DAO::singleValueQuery("
+            1 => [$tenant_id, 'Integer'],
+        ]);
+    }
+    if ($rental_id != 0) {
+        $existing_rent = CRM_Core_DAO::singleValueQuery("
         SELECT COUNT(*) AS overlap
         FROM {$my_rent_table}
         WHERE tenant_id = %1
             AND discharge IS NULL
             AND id != %2
     ", [
-                1 => [$tenant_id, 'Integer'],
-                2 => [$rental_id, 'Integer'],
-            ]);
-        }
-        return $existing_rent;
+            1 => [$tenant_id, 'Integer'],
+            2 => [$rental_id, 'Integer'],
+        ]);
     }
+    return $existing_rent;
+}
 
-    /**
-     * @param $op
-     * @param $objectName
-     * @param $params
-     */
-    public static function beforeSavingDo($op, $objectName, &$params): void
-    {
-        $defaultEntities = self::DEFAULT_ENTITIES;
+/**
+ * @param $op
+ * @param $objectName
+ * @param $params
+ */
+public
+static function beforeSavingDo($op, $objectName, &$params): void
+{
+    $defaultEntities = self::DEFAULT_ENTITIES;
 
-        if (in_array($objectName, $defaultEntities)) {
+    if (in_array($objectName, $defaultEntities)) {
 //            self::writeLog($params, 'before save');
 //            self::writeLog($op, 'before save op');
-            $params = self::addCreatedByModifiedBy($op, $params);
-            self::checkRentalOverlap($op, $objectName, $params);
-            self::addRentalCode($op, $objectName, $params);
-            self::addInvoiceCode($op, $objectName, $params);
-            self::addPaymentCode($op, $objectName, $params);
+        $params = self::addCreatedByModifiedBy($op, $params);
+        self::checkRentalOverlap($op, $objectName, $params);
+        self::addRentalCode($op, $objectName, $params);
+        self::addInvoiceCode($op, $objectName, $params);
+        self::addPaymentCode($op, $objectName, $params);
 //            self::writeLog($params, 'after save');
 
-        }
     }
+}
 
-    /**
-     * @param $op
-     * @param $params
-     * @return mixed
-     */
-    public static function addCreatedByModifiedBy($op, &$params)
-    {
-        if ($op == 'create' || $op == 'update' || $op == 'edit') {
-            $userId = CRM_Core_Session::singleton()->getLoggedInContactID();
-            $now = date('YmdHis');
+/**
+ * @param $op
+ * @param $params
+ * @return mixed
+ */
+public
+static function addCreatedByModifiedBy($op, &$params)
+{
+    if ($op == 'create' || $op == 'update' || $op == 'edit') {
+        $userId = CRM_Core_Session::singleton()->getLoggedInContactID();
+        $now = date('YmdHis');
 
-            if ($op == 'create') {
-                $params['created_id'] = $userId;
-                $params['created_date'] = $now;
-            }
-            if ($op == 'update' || $op == 'edit') {
-                $params['modified_id'] = $userId;
-                $params['modified_date'] = $now;
-            }
-
+        if ($op == 'create') {
+            $params['created_id'] = $userId;
+            $params['created_date'] = $now;
         }
-        return $params;
-    }
+        if ($op == 'update' || $op == 'edit') {
+            $params['modified_id'] = $userId;
+            $params['modified_date'] = $now;
+        }
 
-    /**
-     * @param $op
-     * @param $objectName
-     * @param $params
-     */
-    public static function checkRentalOverlap($op, $objectName, &$params): void
-    {
-        if ($objectName == 'RentalsRental') {
+    }
+    return $params;
+}
+
+/**
+ * @param $op
+ * @param $objectName
+ * @param $params
+ */
+public
+static function checkRentalOverlap($op, $objectName, &$params): void
+{
+    if ($objectName == 'RentalsRental') {
 //            self::writeLog($params, 'before overlap');
-            if ($op == 'create' || $op == 'edit' || $op == 'update') {
-                $date_from = $params['admission'];
-                $date_to = $params['discharge'];
-                $rental_id = $params['id'];
-                $tenant_id = $params['tenant_id'];
-                $existing_rent = self::getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id);
-                // If an overlap is found, set a validation error message
-                if ($existing_rent > 0) {
-                    self::showErrorMessage(ts('You already have a rent during this period.'), 'Date Overlap');
-                    throw new CRM_Core_Exception(ts('You already have a rent during this period.'));
-                }
+        if ($op == 'create' || $op == 'edit' || $op == 'update') {
+            $date_from = $params['admission'];
+            $date_to = $params['discharge'];
+            $rental_id = $params['id'];
+            $tenant_id = $params['tenant_id'];
+            $existing_rent = self::getOverlappedRents($tenant_id, $date_from, $date_to, $rental_id);
+            // If an overlap is found, set a validation error message
+            if ($existing_rent > 0) {
+                self::showErrorMessage(ts('You already have a rent during this period.'), 'Date Overlap');
+                throw new CRM_Core_Exception(ts('You already have a rent during this period.'));
             }
+        }
 //            self::writeLog($params, 'after overlap');
-        }
     }
+}
 
-    /**
-     * @param $op
-     * @param $objectName
-     * @param $params
-     */
-    public static function addRentalCode($op, $objectName, &$params)
-    {
-        if ($objectName == 'RentalsRental') {
+/**
+ * @param $op
+ * @param $objectName
+ * @param $params
+ */
+public
+static function addRentalCode($op, $objectName, &$params)
+{
+    if ($objectName == 'RentalsRental') {
 //            self::writeLog($params, 'before adding rental code');
-            if ($op == 'create' || $op == 'edit' || $op == 'update') {
-                $date_from = $params['admission'];
-                $date_to = $params['discharge'];
-                $tenant_id = $params['tenant_id'];
-                // If an overlap is found, set a validation error message
-                $code = self::generateRentalCode($tenant_id, $date_from, $date_to);
-                $params['code'] = $code;
+        if ($op == 'create' || $op == 'edit' || $op == 'update') {
+            $date_from = $params['admission'];
+            $date_to = $params['discharge'];
+            $tenant_id = $params['tenant_id'];
+            // If an overlap is found, set a validation error message
+            $code = self::generateRentalCode($tenant_id, $date_from, $date_to);
+            $params['code'] = $code;
 //                self::writeLog($params, 'after adding rental code');
-            }
         }
     }
+}
 
-    /**
-     * @param $op
-     * @param $objectName
-     * @param $params
-     */
-    public static function addInvoiceCode($op, $objectName, &$params)
-    {
-        if ($objectName == 'RentalsInvoice') {
+/**
+ * @param $op
+ * @param $objectName
+ * @param $params
+ */
+public
+static function addInvoiceCode($op, $objectName, &$params)
+{
+    if ($objectName == 'RentalsInvoice') {
 //            self::writeLog($params, 'before adding invoice code');
-            if ($op == 'create') {
+        if ($op == 'create') {
 //                self::writeLog($params, 'before adding invoice code 2');
-                $invoiceNumber = self::generateInvoiceNumber();
+            $invoiceNumber = self::generateInvoiceNumber();
 //                self::writeLog($invoiceNumber, 'before adding invoice code 3');
-                $params['code'] = $invoiceNumber;
+            $params['code'] = $invoiceNumber;
 //                self::writeLog($params, 'after adding invoice code');
-            }
         }
     }
+}
 
-    /**
-     * @param $op
-     * @param $objectName
-     * @param $params
-     */
-    public static function addPaymentCode($op, $objectName, &$params)
-    {
-        if ($objectName == 'RentalsPayment') {
+/**
+ * @param $op
+ * @param $objectName
+ * @param $params
+ */
+public
+static function addPaymentCode($op, $objectName, &$params)
+{
+    if ($objectName == 'RentalsPayment') {
 //            self::writeLog($params, 'before adding invoice code');
-            if ($op == 'create') {
+        if ($op == 'create') {
 //                self::writeLog($params, 'before adding invoice code 2');
-                $invoiceNumber = self::generatePaymentNumber('RC');
+            $invoiceNumber = self::generatePaymentNumber('RC');
 //                self::writeLog($invoiceNumber, 'before adding invoice code 3');
-                $params['code'] = $invoiceNumber;
+            $params['code'] = $invoiceNumber;
 //                self::writeLog($params, 'after adding invoice code');
-            }
         }
     }
+}
 
-    public static function generateRentalCode($clientId, $startDate, $endDate)
-    {
-        // Convert the dates to the required format.
-        $startDateFormatted = date('ymd', strtotime($startDate));
-        $endDateFormatted = date('ymd', strtotime($endDate));
+public
+static function generateRentalCode($clientId, $startDate, $endDate)
+{
+    // Convert the dates to the required format.
+    $startDateFormatted = date('ymd', strtotime($startDate));
+    $endDateFormatted = date('ymd', strtotime($endDate));
 
-        // Pad the client ID with leading zeros up to 5 digits.
-        $clientIdFormatted = str_pad($clientId, 5, '0', STR_PAD_LEFT);
+    // Pad the client ID with leading zeros up to 5 digits.
+    $clientIdFormatted = str_pad($clientId, 5, '0', STR_PAD_LEFT);
 
-        // Concatenate the formatted client ID and dates to generate the entity label.
-        $entityLabel = 'c' . $clientIdFormatted . 'a' . $startDateFormatted . 'd' . $endDateFormatted;
+    // Concatenate the formatted client ID and dates to generate the entity label.
+    $entityLabel = 'c' . $clientIdFormatted . 'a' . $startDateFormatted . 'd' . $endDateFormatted;
 
-        return $entityLabel;
-    }
+    return $entityLabel;
+}
 
-    public static function generateInvoiceNumber($prefix = 'HP')
-    {
-        // Get the current year and month
-        $today = new DateTime();
-        $monthYear = $today->format('ym');
-        $invoiceParams = [
-            'sequential' => 1,
-            'prefix' => $prefix . $monthYear,
-            'suffix' => '',
-            'number' => 1,
-        ];
-        try {
-            $lastInvoice = civicrm_api4('RentalsInvoice', 'get', [
-                'select' => [
-                    'code',
-                ],
-                'orderBy' => [
-                    'code' => 'DESC',
-                ],
-                'limit' => 1,
-                'checkPermissions' => FALSE,
-                'where' => [
-                    ['code', 'LIKE', $invoiceParams['prefix'] . '%'],
-                ],
-            ]);
+public
+static function generateInvoiceNumber($prefix = 'HP')
+{
+    // Get the current year and month
+    $today = new DateTime();
+    $monthYear = $today->format('ym');
+    $invoiceParams = [
+        'sequential' => 1,
+        'prefix' => $prefix . $monthYear,
+        'suffix' => '',
+        'number' => 1,
+    ];
+    try {
+        $lastInvoice = civicrm_api4('RentalsInvoice', 'get', [
+            'select' => [
+                'code',
+            ],
+            'orderBy' => [
+                'code' => 'DESC',
+            ],
+            'limit' => 1,
+            'checkPermissions' => FALSE,
+            'where' => [
+                ['code', 'LIKE', $invoiceParams['prefix'] . '%'],
+            ],
+        ]);
 //            self::writeLog($lastInvoice, 'lastInvoice');
-        } catch (Exception $e) {
-            self::writeLog($e->getMessage());
-        }
-        try {
-            if (!empty($lastInvoice)) {
-                $lastInvoiceNumber = $lastInvoice[0]['code'];
-                $lastNumber = substr($lastInvoiceNumber, -4);
-                $invoiceParams['number'] = (int)$lastNumber + 1;
+    } catch (Exception $e) {
+        self::writeLog($e->getMessage());
+    }
+    try {
+        if (!empty($lastInvoice)) {
+            $lastInvoiceNumber = $lastInvoice[0]['code'];
+            $lastNumber = substr($lastInvoiceNumber, -4);
+            $invoiceParams['number'] = (int)$lastNumber + 1;
 //                self::writeLog($lastInvoiceNumber, 'lastInvoiceNumber');
-            }
-        } catch (Exception $e) {
-            self::writeLog($e->getMessage());
         }
-        $invoiceNumber = $invoiceParams['prefix'] . str_pad($invoiceParams['number'], 4, '0', STR_PAD_LEFT);
-        return $invoiceNumber;
+    } catch (Exception $e) {
+        self::writeLog($e->getMessage());
     }
+    $invoiceNumber = $invoiceParams['prefix'] . str_pad($invoiceParams['number'], 4, '0', STR_PAD_LEFT);
+    return $invoiceNumber;
+}
 
-    public static function generatePaymentNumber($prefix = 'RC')
-    {
-        // Get the current year and month
-        $today = new DateTime();
-        $monthYear = $today->format('ym');
-        $paymentParams = [
-            'sequential' => 1,
-            'prefix' => $prefix . $monthYear,
-            'suffix' => '',
-            'number' => 1,
-        ];
-        try {
-            $lastInvoice = civicrm_api4('RentalsPayment', 'get', [
-                'select' => [
-                    'code',
-                ],
-                'orderBy' => [
-                    'code' => 'DESC',
-                ],
-                'limit' => 1,
-                'checkPermissions' => FALSE,
-                'where' => [
-                    ['code', 'LIKE', $paymentParams['prefix'] . '%'],
-                ],
-            ]);
+public
+static function generatePaymentNumber($prefix = 'RC')
+{
+    // Get the current year and month
+    $today = new DateTime();
+    $monthYear = $today->format('ym');
+    $paymentParams = [
+        'sequential' => 1,
+        'prefix' => $prefix . $monthYear,
+        'suffix' => '',
+        'number' => 1,
+    ];
+    try {
+        $lastInvoice = civicrm_api4('RentalsPayment', 'get', [
+            'select' => [
+                'code',
+            ],
+            'orderBy' => [
+                'code' => 'DESC',
+            ],
+            'limit' => 1,
+            'checkPermissions' => FALSE,
+            'where' => [
+                ['code', 'LIKE', $paymentParams['prefix'] . '%'],
+            ],
+        ]);
 //            self::writeLog($lastInvoice, 'lastInvoice');
-        } catch (Exception $e) {
-            self::writeLog($e->getMessage());
-        }
-        try {
-            if (!empty($lastInvoice)) {
-                $lastInvoiceNumber = $lastInvoice[0]['code'];
-                $lastNumber = substr($lastInvoiceNumber, -4);
-                $paymentParams['number'] = (int)$lastNumber + 1;
+    } catch (Exception $e) {
+        self::writeLog($e->getMessage());
+    }
+    try {
+        if (!empty($lastInvoice)) {
+            $lastInvoiceNumber = $lastInvoice[0]['code'];
+            $lastNumber = substr($lastInvoiceNumber, -4);
+            $paymentParams['number'] = (int)$lastNumber + 1;
 //                self::writeLog($lastInvoiceNumber, 'lastPaymentNumber');
-            }
-        } catch (Exception $e) {
-            self::writeLog($e->getMessage());
         }
-        $invoiceNumber = $paymentParams['prefix'] . str_pad($paymentParams['number'], 4, '0', STR_PAD_LEFT);
-        return $invoiceNumber;
+    } catch (Exception $e) {
+        self::writeLog($e->getMessage());
     }
+    $invoiceNumber = $paymentParams['prefix'] . str_pad($paymentParams['number'], 4, '0', STR_PAD_LEFT);
+    return $invoiceNumber;
+}
 
-    // Prorate till the end of the month
-    public static function prorateTillTheEndOfMonth($price, $date_start)
-    {
-        $start = new DateTime($date_start);
-        $end = new DateTime('last day of this month');
-        $days_in_month = $end->format('d');
-        $days = $start->diff($end)->format('%a');
-        $prorated_amount = round($price / $days_in_month * $days, 2);
-        return $prorated_amount;
-    }
+// Prorate till the end of the month
+public
+static function prorateTillTheEndOfMonth($price, $date_start)
+{
+    $start = new DateTime($date_start);
+    $end = new DateTime('last day of this month');
+    $days_in_month = $end->format('d');
+    $days = $start->diff($end)->format('%a');
+    $prorated_amount = round($price / $days_in_month * $days, 2);
+    return $prorated_amount;
+}
 
 // Prorate from the start of the month
-    public static function prorateFromTheStartOfMonth($price, $date_end)
-    {
-        $start = new DateTime('first day of this month');
-        $end = new DateTime($date_end);
-        $days_in_month = $start->format('t');
-        $days = $start->diff($end)->format('%a');
-        $prorated_amount = round($price / $days_in_month * $days, 2);
-        return $prorated_amount;
-    }
+public
+static function prorateFromTheStartOfMonth($price, $date_end)
+{
+    $start = new DateTime('first day of this month');
+    $end = new DateTime($date_end);
+    $days_in_month = $start->format('t');
+    $days = $start->diff($end)->format('%a');
+    $prorated_amount = round($price / $days_in_month * $days, 2);
+    return $prorated_amount;
+}
 
 // Prorate with start and end dates
-    public static function prorateWithStartAndEnd($price, $date_start, $date_end)
-    {
-        $start = new DateTime($date_start);
-        $end = new DateTime($date_end);
-        $days = $start->diff($end)->format('%a');
-        $prorated_amount = round($price / 30 * $days, 2);
-        return $prorated_amount;
-    }
+public
+static function prorateWithStartAndEnd($price, $date_start, $date_end)
+{
+    $start = new DateTime($date_start);
+    $end = new DateTime($date_end);
+    $days = $start->diff($end)->format('%a');
+    $prorated_amount = round($price / 30 * $days, 2);
+    return $prorated_amount;
+}
 
-    public static function calculate_expenses($invoice_start_date, $invoice_end_date, $rental_start_date, $closed = false)
-    {
-        $include_once_off = false;
-        self::writeLog("$invoice_start_date ? $rental_start_date");
-        if ($rental_start_date == $invoice_start_date) {
-            $include_once_off = true;
-            self::writeLog('$include_once_off is true');
-        }
+public
+static function calculate_expenses($invoice_start_date, $invoice_end_date, $rental_start_date, $closed = false)
+{
+    $include_once_off = false;
+    self::writeLog("$invoice_start_date ? $rental_start_date");
+    if ($rental_start_date == $invoice_start_date) {
+        $include_once_off = true;
+        self::writeLog('$include_once_off is true');
+    }
 //        if ($include_once_off == false) {
 //            $rentalsExpenses = \Civi\Api4\RentalsExpense::get(FALSE)
 //                ->addSelect('frequency:name', 'amount', 'name', 'is_prorate', 'is_refund')
@@ -1150,231 +1226,238 @@ class CRM_Hprentals_Utils
 //                ->execute();
 //        }
 //        if ($include_once_off == true) {
-        $rentalsExpenses = \Civi\Api4\RentalsExpense::get(FALSE)
-            ->addSelect('frequency:name', 'amount', 'name', 'is_prorate', 'is_refund')
-            ->setLimit(0)
-            ->execute();
+    $rentalsExpenses = \Civi\Api4\RentalsExpense::get(FALSE)
+        ->addSelect('frequency:name', 'amount', 'name', 'is_prorate', 'is_refund')
+        ->setLimit(0)
+        ->execute();
 //        }
 
-        $description = "";
-        $total = 0;
+    $description = "";
+    $total = 0;
 //        self::writeLog($rental_start_date, 'rental_start_date');
 //        self::writeLog($start_date, 'start_date');
 //        self::writeLog($end_date, 'end_date');
-        $months_between = self::months_between($rental_start_date, $invoice_end_date);
+    $months_between = self::months_between($rental_start_date, $invoice_end_date);
 //        self::writeLog($months_between, 'months_between');
-        foreach ($rentalsExpenses as $rentalsExpense) {
-            $frequency = $rentalsExpense['frequency:name'];
-            $prorate = $rentalsExpense['is_prorate'];
-            $is_refund = $rentalsExpense['is_refund'];
-            $expense_name = $rentalsExpense['name'];
-            $monthly_price = $rentalsExpense['amount'];
-            if ($prorate == 1) {
-                $prorate_price = self::calculateProrate($invoice_start_date, $invoice_end_date, $monthly_price);
-            } else {
-                $prorate_price = $monthly_price;
-            }
-            if ($frequency === "once_off") {
-                if ($include_once_off != false) {
-                    $description = $description . "\n" . $expense_name . " $" . $prorate_price;
-                    $total = $total + $prorate_price;
-                }
-            }
-            if ($months_between > 6) {
-                if ($frequency === "more_than_6_m") {
-                    $description = $description . "\n" . $expense_name . " $" . $prorate_price;
-                    $total = $total + $prorate_price;
-                }
-            }
-            if ($months_between <= 6) {
-                if ($frequency === "less_than_6_m") {
-                    $description = $description . "\n" . $expense_name . " $" . $prorate_price;
-                    $total = $total + $prorate_price;
-                }
-            }
-            if ($frequency === "every_month") {
+    foreach ($rentalsExpenses as $rentalsExpense) {
+        $frequency = $rentalsExpense['frequency:name'];
+        $prorate = $rentalsExpense['is_prorate'];
+        $is_refund = $rentalsExpense['is_refund'];
+        $expense_name = $rentalsExpense['name'];
+        $monthly_price = $rentalsExpense['amount'];
+        if ($prorate == 1) {
+            $prorate_price = self::calculateProrate($invoice_start_date, $invoice_end_date, $monthly_price);
+        } else {
+            $prorate_price = $monthly_price;
+        }
+        if ($frequency === "once_off") {
+            if ($include_once_off != false) {
                 $description = $description . "\n" . $expense_name . " $" . $prorate_price;
                 $total = $total + $prorate_price;
             }
-            if ($is_refund == 1) {
-                if ($closed) {
-                    $description = $description . "\n" . $expense_name . " -$" . $prorate_price;
-                    $total = $total - $prorate_price;
-                }
+        }
+        if ($months_between > 6) {
+            if ($frequency === "more_than_6_m") {
+                $description = $description . "\n" . $expense_name . " $" . $prorate_price;
+                $total = $total + $prorate_price;
             }
         }
-        $calculated_expence = ['description' => trim($description),
-            'total' => $total];
-        return $calculated_expence;
+        if ($months_between <= 6) {
+            if ($frequency === "less_than_6_m") {
+                $description = $description . "\n" . $expense_name . " $" . $prorate_price;
+                $total = $total + $prorate_price;
+            }
+        }
+        if ($frequency === "every_month") {
+            $description = $description . "\n" . $expense_name . " $" . $prorate_price;
+            $total = $total + $prorate_price;
+        }
+        if ($is_refund == 1) {
+            if ($closed) {
+                $description = $description . "\n" . $expense_name . " -$" . $prorate_price;
+                $total = $total - $prorate_price;
+            }
+        }
     }
+    $calculated_expence = ['description' => trim($description),
+        'total' => $total];
+    return $calculated_expence;
+}
 
-    public static function calculateProrate($start_date_str, $end_date_str, $monthly_price)
-    {
-        $start_date = new DateTime($start_date_str);
-        $end_date = new DateTime($end_date_str);
+public
+static function calculateProrate($start_date_str, $end_date_str, $monthly_price)
+{
+    $start_date = new DateTime($start_date_str);
+    $end_date = new DateTime($end_date_str);
 
-        // Calculate number of days between start and end date
-        $num_days = $end_date->diff($start_date)->format('%a') + 1;
+    // Calculate number of days between start and end date
+    $num_days = $end_date->diff($start_date)->format('%a') + 1;
 
-        // Calculate prorated amount
-        $prorate_amount = round(($num_days / $start_date->format('t')) * $monthly_price, 2);
+    // Calculate prorated amount
+    $prorate_amount = round(($num_days / $start_date->format('t')) * $monthly_price, 2);
 
-        return $prorate_amount;
-    }
+    return $prorate_amount;
+}
 
-    public static function months_between($start_date_str, $end_date_str)
-    {
+public
+static function months_between($start_date_str, $end_date_str)
+{
 
-        $start_date = DateTime::createFromFormat('Y-m-d', $start_date_str);
-        $end_date = DateTime::createFromFormat('Y-m-d', $end_date_str);
+    $start_date = DateTime::createFromFormat('Y-m-d', $start_date_str);
+    $end_date = DateTime::createFromFormat('Y-m-d', $end_date_str);
 //        self::writeLog($start_date);
 //        self::writeLog($end_date);
-        $interval = $start_date->diff($end_date);
-        $months = $interval->y * 12 + $interval->m;
-        return $months;
-    }
+    $interval = $start_date->diff($end_date);
+    $months = $interval->y * 12 + $interval->m;
+    return $months;
+}
 
-    /**
-     * Convert the array of rental_id-year-month into separate arrays for years and months.
-     *
-     * @param array $rent_and_months An array containing rental_id-year-month values.
-     * @return array An array with 'years' and 'months' keys, each containing hierarchical arrays.
-     * @throws Exception
-     * @author Dr. Khindol Madraimov <khindol.madraimov@gmail.com>
-     */
-    public static function getHierSelectArrays($rent_and_months)
-    {
-        $years = [];
-        $months = [];
+/**
+ * Convert the array of rental_id-year-month into separate arrays for years and months.
+ *
+ * @param array $rent_and_months An array containing rental_id-year-month values.
+ * @return array An array with 'years' and 'months' keys, each containing hierarchical arrays.
+ * @throws Exception
+ * @author Dr. Khindol Madraimov <khindol.madraimov@gmail.com>
+ */
+public
+static function getHierSelectArrays($rent_and_months)
+{
+    $years = [];
+    $months = [];
 
-        foreach ($rent_and_months as $month) {
-            list($rental_id, $year, $month_number) = explode('-', $month);
+    foreach ($rent_and_months as $month) {
+        list($rental_id, $year, $month_number) = explode('-', $month);
 
-            // Add the year to the $years array if it doesn't exist
-            if (!isset($years[$year])) {
-                $years[$year] = $year;
-            }
-
-            // Convert the month number to month name (e.g., 1 => "January", 2 => "February", etc.)
-            $month_name = date("F", mktime(0, 0, 0, $month_number, 1));
-            $year = intval($year);
-            $month_number = intval($month_number);
-
-            // Add the month to the $months array
-            $months[$year][$month_number] = $month_name;
+        // Add the year to the $years array if it doesn't exist
+        if (!isset($years[$year])) {
+            $years[$year] = $year;
         }
-        return ['years' => $years, 'months' => $months];
-    }
 
-    /**
-     * Get an array of rental months for each rental record in the database.
-     *
-     * @return array An array containing rental_id-year-month values for all rental records.
-     * @throws Exception
-     * @author Dr. Khindol Madraimov <khindol.madraimov@gmail.com>
-     */
-    public static function getRentalMonths()
-    {
-        $rental_table = self::RENTAL_TABLE;
-        $sql = "SELECT  
+        // Convert the month number to month name (e.g., 1 => "January", 2 => "February", etc.)
+        $month_name = date("F", mktime(0, 0, 0, $month_number, 1));
+        $year = intval($year);
+        $month_number = intval($month_number);
+
+        // Add the month to the $months array
+        $months[$year][$month_number] = $month_name;
+    }
+    return ['years' => $years, 'months' => $months];
+}
+
+/**
+ * Get an array of rental months for each rental record in the database.
+ *
+ * @return array An array containing rental_id-year-month values for all rental records.
+ * @throws Exception
+ * @author Dr. Khindol Madraimov <khindol.madraimov@gmail.com>
+ */
+public
+static function getRentalMonths()
+{
+    $rental_table = self::RENTAL_TABLE;
+    $sql = "SELECT  
                 id,
                 admission,
                 discharge 
         FROM $rental_table";
-        $dao = CRM_Core_DAO::executeQuery($sql);
-        $rental_months = [];
-        $interval = \DateInterval::createFromDateString('1 month');
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    $rental_months = [];
+    $interval = \DateInterval::createFromDateString('1 month');
 
-        while ($dao->fetch()) {
-            $start = new \DateTime($dao->admission);
-            if (!$dao->discharge) {
-                $finished = false;
-            }
-            if ($dao->discharge) {
-                $finished = true;
-            }
-            $end = new \DateTime($dao->discharge);
-            $end->add($interval);
-            $period = new \DatePeriod($start, $interval, $end);
+    while ($dao->fetch()) {
+        $start = new \DateTime($dao->admission);
+        if (!$dao->discharge) {
+            $finished = false;
+        }
+        if ($dao->discharge) {
+            $finished = true;
+        }
+        $end = new \DateTime($dao->discharge);
+        $end->add($interval);
+        $period = new \DatePeriod($start, $interval, $end);
 
-            foreach ($period as $dt) {
-                $year = intval($dt->format('Y'));
-                $month = intval($dt->format('m'));
-                $is_current_month = self::isTheCurrentMonth($year, $month);
-                if (!$is_current_month) {
-                    $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
-                }
-                if ($is_current_month) {
+        foreach ($period as $dt) {
+            $year = intval($dt->format('Y'));
+            $month = intval($dt->format('m'));
+            $is_current_month = self::isTheCurrentMonth($year, $month);
+            if (!$is_current_month) {
+                $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
+            }
+            if ($is_current_month) {
 //                    if ($finished) {
-                    $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
+                $rental_months[] = $dao->id . '-' . $dt->format('Y-m');
 //                    }
-                }
-
             }
 
         }
-        return $rental_months;
+
     }
+    return $rental_months;
+}
 
-    public static function isTheCurrentMonth($year, $month)
-    {
-        // Get the current year and month
-        $currentYear = date('Y');
-        $currentMonth = date('m');
+public
+static function isTheCurrentMonth($year, $month)
+{
+    // Get the current year and month
+    $currentYear = date('Y');
+    $currentMonth = date('m');
 
-        // Convert the input year and month to integers
-        $currentYear = intval($currentYear);
-        $currentMonth = intval($currentMonth);
-        $year = intval($year);
-        $month = intval($month);
+    // Convert the input year and month to integers
+    $currentYear = intval($currentYear);
+    $currentMonth = intval($currentMonth);
+    $year = intval($year);
+    $month = intval($month);
 
-        // Compare the input year and month with the current year and month
-        return ($year === $currentYear && $month === $currentMonth);
+    // Compare the input year and month with the current year and month
+    return ($year === $currentYear && $month === $currentMonth);
+}
+
+public
+static function getInvoiceTotalAmountByTenantId($tenant_id)
+{
+    $rentalsInvoice = null;
+    $invoiceTotalAmountByTenantId = 0;
+    $rentalsInvoices = \Civi\Api4\RentalsInvoice::get(FALSE)
+        ->addSelect('SUM(amount)', 'rental_id.tenant_id')
+        ->setLimit(25)
+        ->addGroupBy('rental_id.tenant_id')
+        ->setHaving([
+            ['rental_id.tenant_id', '=', $tenant_id],
+        ])
+        ->execute();
+    if ($rentalsInvoices) {
+        $rentalsInvoice = $rentalsInvoices[0];
     }
-
-    public static function getInvoiceTotalAmountByTenantId($tenant_id)
-    {
-        $rentalsInvoice = null;
-        $invoiceTotalAmountByTenantId = 0;
-        $rentalsInvoices = \Civi\Api4\RentalsInvoice::get(FALSE)
-            ->addSelect('SUM(amount)', 'rental_id.tenant_id')
-            ->setLimit(25)
-            ->addGroupBy('rental_id.tenant_id')
-            ->setHaving([
-                ['rental_id.tenant_id', '=', $tenant_id],
-            ])
-            ->execute();
-        if ($rentalsInvoices) {
-            $rentalsInvoice = $rentalsInvoices[0];
-        }
-        self::writeLog($rentalsInvoice);
-        if ($rentalsInvoice) {
-            $invoiceTotalAmountByTenantId = $rentalsInvoice["SUM:amount"];
-        }
-        return $invoiceTotalAmountByTenantId;
+    self::writeLog($rentalsInvoice);
+    if ($rentalsInvoice) {
+        $invoiceTotalAmountByTenantId = $rentalsInvoice["SUM:amount"];
     }
+    return $invoiceTotalAmountByTenantId;
+}
 
-    public static function getPaymentTotalAmountByTenantId($tenant_id)
-    {
-        $rentalsPayment = null;
-        $paymentTotalAmountByTenantId = 0;
-        $rentalsPayments = \Civi\Api4\RentalsPayment::get(FALSE)
-            ->addSelect('tenant_id', 'SUM(amount)')
-            ->setLimit(25)
-            ->addGroupBy('tenant_id')
-            ->setHaving([
-                ['tenant_id', '=', $tenant_id],
-            ])
-            ->execute();;
-        if ($rentalsPayments) {
-            $rentalsPayment = $rentalsPayments[0];
-        }
-        self::writeLog($rentalsPayment);
-        if ($rentalsPayment) {
-            $paymentTotalAmountByTenantId = $rentalsPayment["SUM:amount"];
-        }
-        return $paymentTotalAmountByTenantId;
+public
+static function getPaymentTotalAmountByTenantId($tenant_id)
+{
+    $rentalsPayment = null;
+    $paymentTotalAmountByTenantId = 0;
+    $rentalsPayments = \Civi\Api4\RentalsPayment::get(FALSE)
+        ->addSelect('tenant_id', 'SUM(amount)')
+        ->setLimit(25)
+        ->addGroupBy('tenant_id')
+        ->setHaving([
+            ['tenant_id', '=', $tenant_id],
+        ])
+        ->execute();;
+    if ($rentalsPayments) {
+        $rentalsPayment = $rentalsPayments[0];
     }
+    self::writeLog($rentalsPayment);
+    if ($rentalsPayment) {
+        $paymentTotalAmountByTenantId = $rentalsPayment["SUM:amount"];
+    }
+    return $paymentTotalAmountByTenantId;
+}
 
 }
 
