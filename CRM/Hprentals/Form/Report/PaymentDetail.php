@@ -29,6 +29,14 @@ class CRM_Hprentals_Form_Report_PaymentDetail extends CRM_Report_Form
 //  protected $_customGroupExtends = array('Membership');
     protected $_customGroupGroupBy = FALSE;
 
+    public function getMethods(){
+        $methods = \Civi\Api4\RentalsMethod::get(FALSE)
+            ->execute()
+            ->indexBy('id')
+            ->column('name');
+        return $methods;
+    }
+
     function __construct()
     {
         $this->_columns = [
@@ -37,7 +45,14 @@ class CRM_Hprentals_Form_Report_PaymentDetail extends CRM_Report_Form
                 'fields' => [
                     'payment_id' => [
                         'name' => 'id',
-                        'title' => E::ts('Rental ID'),
+                        'title' => E::ts('Payment ID'),
+                        'type' => CRM_Utils_Type::T_INT,
+                        'default' => TRUE,
+                        'required' => TRUE,
+                    ],
+                    'code' => [
+                        'name' => 'code',
+                        'title' => E::ts('Code'),
                         'type' => CRM_Utils_Type::T_INT,
                         'default' => TRUE,
                         'required' => TRUE,
@@ -53,6 +68,13 @@ class CRM_Hprentals_Form_Report_PaymentDetail extends CRM_Report_Form
                         'name' => 'amount',
                         'title' => E::ts('Amount'),
                         'type' => CRM_Utils_Type::T_MONEY,
+                        'default' => TRUE,
+                        'required' => TRUE,
+                    ],
+                    'method_id' => [
+                        'name' => 'method_id',
+                        'title' => E::ts('Method'),
+                        'type' => CRM_Utils_Type::T_STRING,
                         'default' => TRUE,
                         'required' => TRUE,
                     ],
@@ -82,22 +104,25 @@ class CRM_Hprentals_Form_Report_PaymentDetail extends CRM_Report_Form
                         'name' => 'amount',
                         'title' => E::ts('Amount'),
                         'operatorType' => CRM_Report_Form::OP_INT],
+                    'method_id' => [
+                        'name' => 'method_id',
+                        'title' => E::ts('Method'),
+                        'type' => CRM_Utils_Type::T_INT,
+                        'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+                        'options' => $this->getMethods(),
+                    ],
                 ],
                 'order_bys' => [
-                    'tr_id' => [
+                    'payment_id' => [
                         'name' => 'id',
-                        'title' => ts('Rental ID'),
+                        'title' => ts('Payment ID'),
                         'default' => TRUE,
                         'default_weight' => '1',
                         'default_order' => 'ASC',
                     ],
-                    'admission' => [
-                        'name' => 'admission',
-                        'title' => ts('Admission'),
-                    ],
-                    'discharge' => [
-                        'name' => 'discharge',
-                        'title' => ts('Discharge'),
+                    'amount' => [
+                        'name' => 'amount',
+                        'title' => ts('Amount'),
                     ],
                     'payment_created_date' => [
                         'title' => ts('Created At'),
@@ -107,6 +132,23 @@ class CRM_Hprentals_Form_Report_PaymentDetail extends CRM_Report_Form
                     ],
                 ],
                 'grouping' => 'rental-fields',
+            ],
+            'civicrm_o8_rental_method' => [
+                'dao' => 'CRM_Hprentals_DAO_RentalsMethod',
+                'fields' =>
+                        [
+                            'name' => [
+                                'title' => ts('Method Name'),
+                                'no_display' => TRUE,
+                                'no_repeat' => FALSE,
+                                'default' => TRUE,
+                                'required' => TRUE,
+                            ],
+                        ],
+                'filters' => [],
+                'grouping' => 'rental-fields',
+                'group_bys' => [
+                ],
             ],
             'civicrm_tenant' => [
                 'dao' => 'CRM_Contact_DAO_Contact',
@@ -123,16 +165,9 @@ class CRM_Hprentals_Form_Report_PaymentDetail extends CRM_Report_Form
                             ],
                         ]
                     ),
-
                 'filters' => $this->getBasicContactFilters(['deceased' => NULL]),
                 'grouping' => 'contact-fields',
                 'group_bys' => [
-//                    'id' => [
-//                        'title' => ts('Contact ID'),
-//                        'default' => TRUE],
-//                    'sort_name' => [
-//                        'title' => ts('Contact Name'),
-//                    ],
                 ],
             ],
             'civicrm_created' => [
@@ -191,6 +226,9 @@ class CRM_Hprentals_Form_Report_PaymentDetail extends CRM_Report_Form
 
         $from = $this->_from;
         $this->_from = $from . "FROM civicrm_o8_rental_payment {$this->_aliases['civicrm_o8_rental_payment']}
+               INNER JOIN civicrm_o8_rental_method {$this->_aliases['civicrm_o8_rental_method']}
+                     ON {$this->_aliases['civicrm_o8_rental_method']}.id 
+                     = {$this->_aliases['civicrm_o8_rental_payment']}.method_id 
                INNER JOIN civicrm_contact {$this->_aliases['civicrm_tenant']}
                      ON {$this->_aliases['civicrm_tenant']}.id 
                      = {$this->_aliases['civicrm_o8_rental_payment']}.tenant_id 
@@ -263,14 +301,23 @@ class CRM_Hprentals_Form_Report_PaymentDetail extends CRM_Report_Form
                 }
             }
 
-            if (array_key_exists('civicrm_o8_rental_payment_rental_id', $row) &&
-                $rows[$rowNum]['civicrm_o8_rental_payment_rental_id']) {
-                $url = CRM_Utils_System::url("civicrm/rentals/rental",
-                    'reset=1&id=' . $row['civicrm_o8_rental_payment_rental_id'] . "&action=preview",
+            if (isset($row['civicrm_o8_rental_payment_payment_id'])) {
+                $url = CRM_Utils_System::url("civicrm/rentals/payment",
+                    'reset=1&id=' . $row['civicrm_o8_rental_payment_payment_id'] . "&action=preview",
                     $this->_absoluteUrl
                 );
-                $rows[$rowNum]['civicrm_o8_rental_payment_rental_id_link'] = $url;
-                $rows[$rowNum]['civicrm_o8_rental_payment_rental_id_hover'] = E::ts("View Summary for this Rental.");
+                $rows[$rowNum]['civicrm_o8_rental_payment_payment_id_link'] = $url;
+                $rows[$rowNum]['civicrm_o8_rental_payment_payment_id_hover'] = E::ts("View Summary for this Payment.");
+                $entryFound = TRUE;
+//                unset($rows[$rowNum]['sort_name']);
+            }
+            if (isset($row['civicrm_o8_rental_payment_code'])) {
+                $url = CRM_Utils_System::url("civicrm/rentals/payment",
+                    'reset=1&id=' . $row['civicrm_o8_rental_payment_payment_id'] . "&action=preview",
+                    $this->_absoluteUrl
+                );
+                $rows[$rowNum]['civicrm_o8_rental_payment_code_link'] = $url;
+                $rows[$rowNum]['civicrm_o8_rental_payment_code_hover'] = E::ts("View Summary for this Payment.");
                 $entryFound = TRUE;
 //                unset($rows[$rowNum]['sort_name']);
             }
@@ -285,6 +332,17 @@ class CRM_Hprentals_Form_Report_PaymentDetail extends CRM_Report_Form
                 $rows[$rowNum]['civicrm_o8_rental_payment_tenant_id_hover'] = E::ts("View Summary for this Contact.");
                 $entryFound = TRUE;
             }
+            if (isset($row['civicrm_o8_rental_payment_method_id']) &&
+                isset($row['civicrm_o8_rental_method_name'])) {
+                $url = CRM_Utils_System::url("civicrm/contact/method",
+                    'reset=1&cid=' . $row['civicrm_o8_rental_payment_method_id'],
+                    $this->_absoluteUrl
+                );
+                $rows[$rowNum]['civicrm_o8_rental_payment_method_id'] = $rows[$rowNum]['civicrm_o8_rental_method_name'];
+                $rows[$rowNum]['civicrm_o8_rental_payment_method_id_link'] = $url;
+                $rows[$rowNum]['civicrm_o8_rental_payment_method_id_hover'] = E::ts("View Summary for this Contact.");
+                $entryFound = TRUE;
+            }
             if (isset($row['civicrm_o8_rental_payment_payment_created_id']) &&
                 isset($row['civicrm_created_created_sort_name'])) {
                 $url = CRM_Utils_System::url("civicrm/contact/view",
@@ -297,12 +355,12 @@ class CRM_Hprentals_Form_Report_PaymentDetail extends CRM_Report_Form
                 $entryFound = TRUE;
             }
             if (isset($row['civicrm_o8_rental_payment_payment_modified_id']) &&
-                isset($row['civicrm_modified_sort_name'])) {
+                isset($row['civicrm_modified_modified_sort_name'])) {
                 $url = CRM_Utils_System::url("civicrm/contact/view",
                     'reset=1&cid=' . $row['civicrm_o8_rental_payment_modified_id'],
                     $this->_absoluteUrl
                 );
-                $rows[$rowNum]['civicrm_o8_rental_payment_payment_modified_id'] = $rows[$rowNum]['civicrm_modified_sort_name'];
+                $rows[$rowNum]['civicrm_o8_rental_payment_payment_modified_id'] = $rows[$rowNum]['civicrm_modified_modified_sort_name'];
                 $rows[$rowNum]['civicrm_o8_rental_payment_payment_modified_id_link'] = $url;
                 $rows[$rowNum]['civicrm_o8_rental_payment_payment_modified_id_hover'] = E::ts("View Summary for this Contact.");
                 $entryFound = TRUE;

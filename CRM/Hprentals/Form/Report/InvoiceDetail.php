@@ -122,7 +122,7 @@ class CRM_Hprentals_Form_Report_InvoiceDetail extends CRM_Report_Form
                     ],
                 ],
                 'order_bys' => [
-                    'tr_id' => [
+                    'invoice_id' => [
                         'name' => 'id',
                         'title' => ts('Invoice ID'),
                         'default' => TRUE,
@@ -297,7 +297,7 @@ class CRM_Hprentals_Form_Report_InvoiceDetail extends CRM_Report_Form
         // custom code to alter rows
         $entryFound = FALSE;
         $checkList = [];
-        U::writeLog($rows, 'rows');
+//        U::writeLog($rows, 'rows');
         foreach ($rows as $rowNum => $row) {
 
             if (!empty($this->_noRepeats) && $this->_outputMode != 'csv') {
@@ -361,12 +361,12 @@ class CRM_Hprentals_Form_Report_InvoiceDetail extends CRM_Report_Form
                 $entryFound = TRUE;
             }
             if (isset($row['civicrm_o8_rental_invoice_invoice_modified_id']) &&
-                isset($row['civicrm_modified_sort_name'])) {
+                isset($row['civicrm_modified_modified_sort_name'])) {
                 $url = CRM_Utils_System::url("civicrm/contact/view",
                     'reset=1&cid=' . $row['civicrm_o8_rental_invoice_modified_id'],
                     $this->_absoluteUrl
                 );
-                $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_modified_id'] = $rows[$rowNum]['civicrm_modified_sort_name'];
+                $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_modified_id'] = $rows[$rowNum]['civicrm_modified_modified_sort_name'];
                 $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_modified_id_link'] = $url;
                 $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_modified_id_hover'] = E::ts("View Summary for this Contact.");
                 $entryFound = TRUE;
