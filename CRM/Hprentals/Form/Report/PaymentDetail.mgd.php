@@ -5,15 +5,16 @@
 // https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_managed
 return [
   [
-    'name' => 'CRM_Hprentals_Form_Report_RentalTenantSummary',
+    'name' => 'CRM_Hprentals_Form_Report_PaymentDetail',
     'entity' => 'ReportTemplate',
     'params' => [
       'version' => 3,
-      'label' => 'Tenant Rentals Summary',
-      'description' => 'HP Rental Tenant Summary (com.octopus8.hprentals)',
-      'class_name' => 'CRM_Hprentals_Form_Report_RentalTenantSummary',
-      'report_url' => 'com.octopus8.hprentals/rentaltenantsummary',
-      'component' => '',
+      'label' => 'Payment Details',
+      'description' => 'HP Rental Payment Details (com.octopus8.hprentals)',
+      'class_name' => 'CRM_Hprentals_Form_Report_PaymentDetail',
+      'report_url' => 'com.octopus8.hprentals/paymentdetail',
+        'component_id' => null,
+
       'grouping' => 'Rentals',
     ],
   ],

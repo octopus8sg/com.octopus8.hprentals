@@ -81,6 +81,8 @@ class CRM_Hprentals_Form_Report_RentalTenantSummary extends CRM_Report_Form
                         'sort_name' => [
                             'title' => ts('Contact Name'),
                             'no_repeat' => TRUE,
+                            'default' => TRUE,
+                            'required' => TRUE,
                         ],
                     ]
                 ),
