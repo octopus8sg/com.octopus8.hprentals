@@ -770,8 +770,9 @@ class CRM_Hprentals_Utils
                 $method = random_int(1,6);
                 $amount = random_int(1,10) * 10;
                 $code = self::generatePaymentNumber('RC');
-//                echo $method;
-//                echo $amount;
+//                print_r($fakeDay);
+//                echo $first_date;
+//                echo $last_date;
 //                echo $code;
                 // If an overlap is found, set a validation error message
                 $payment_api = civicrm_api3('RentalsPayment', 'create', [
@@ -782,6 +783,13 @@ class CRM_Hprentals_Utils
                     'created_date' => $first_date,
                     'created_id' => $fak_id
                 ]);
+                $payment_api = civicrm_api3('RentalsPayment', 'create', [
+                    'id' => $payment_api['id'],
+                    'created_date' => $first_date,
+                    'created_id' => $fak_id,
+                    'modified_id' => $fak_id
+                ]);
+//                print_r($payment_api);
                 $method = random_int(1,6);
                 $amount = random_int(1,10) * 5;
                 $code = self::generatePaymentNumber('RC');
@@ -798,7 +806,13 @@ class CRM_Hprentals_Utils
                     'created_date' => $last_date,
                     'created_id' => $fak_id
                 ]);
-//                echo $payment_api;
+                $payment_api = civicrm_api3('RentalsPayment', 'create', [
+                    'id' => $payment_api['id'],
+                    'created_date' => $last_date,
+                    'created_id' => $fak_id,
+                    'modified_id' => $fak_id
+                ]);
+//                print_r($payment_api);
 //                    self::writeLog($rentals_api, 'create Rentals Api');
             }
             if ($payment_api['is_error']) {

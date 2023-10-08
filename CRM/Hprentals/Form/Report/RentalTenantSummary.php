@@ -9,15 +9,28 @@
  +--------------------------------------------------------------------+
  */
 
+use CRM_Hprentals_Utils as U;
+
 /**
  *
  * @package CRM
  * @copyright CiviCRM LLC https://civicrm.org/licensing
  */
-class CRM_Hprentals_Form_Report_RentalTenantSummary extends CRM_Report_Form {
+class CRM_Hprentals_Form_Report_RentalTenantSummary extends CRM_Report_Form
+{
 
     protected $_charts = [
     ];
+
+    protected $_from_rentals = "";
+
+    protected $_from_invoice = "";
+
+    protected $_from_payment = "";
+
+    protected $_created_date_end_date = null;
+
+    protected $_created_date_start_date = null;
 
     protected $_customGroupExtends = [
     ];
@@ -57,7 +70,8 @@ class CRM_Hprentals_Form_Report_RentalTenantSummary extends CRM_Report_Form {
     /**
      * Class constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->_columns = [
             'civicrm_contact' => [
                 'dao' => 'CRM_Contact_DAO_Contact',
@@ -73,111 +87,81 @@ class CRM_Hprentals_Form_Report_RentalTenantSummary extends CRM_Report_Form {
                 'filters' => $this->getBasicContactFilters(['deceased' => NULL]),
                 'grouping' => 'contact-fields',
                 'group_bys' => [
-                    'id' => ['title' => ts('Contact ID')],
-                    'sort_name' => [
-                        'title' => ts('Contact Name'),
-                    ],
+                    'id' => [
+                        'title' => ts('Contact ID'),
+                        'default' => TRUE],
+//                    'sort_name' => [
+//                        'title' => ts('Contact Name'),
+//                    ],
                 ],
             ],
-//            'civicrm_o8_rental_rental' => [
-//                'dao' => 'CRM_Hprentals_DAO_RentalsRental',
-//                //'bao'           => 'CRM_Hprentals_BAO_RentalsRental',
-////                'fields' => [
-////                    'amount' => [
-////                        'title' => ts('Fund Amount Stats'),
-////                        'default' => TRUE,
-////                        'statistics' => [
-////                            'count' => ts('Funds'),
-////                            'sum' => ts('Fund Aggregate'),
-////                            'avg' => ts('Fund Avg'),
-////                        ],
-////                    ],
-////                ],
-//                'grouping' => 'rental-fields',
-//                'filters' => [
-//                    'admission' => ['operatorType' => CRM_Report_Form::OP_DATE],
-//                    'discharge' => ['operatorType' => CRM_Report_Form::OP_DATE],
-////                    'amount' => [
-////                        'title' => ts('Fund Amount'),
-////                    ],
-////                    'total_sum' => [
-////                        'title' => ts('Fund Aggregate'),
-////                        'type' => CRM_Report_Form::OP_INT,
-////                        'dbAlias' => 'civicrm_o8_rental_payment_amount_sum',
-////                        'having' => TRUE,
-////                    ],
-////                    'total_count' => [
-////                        'title' => ts('Fund Count'),
-////                        'type' => CRM_Report_Form::OP_INT,
-////                        'dbAlias' => 'civicrm_o8_rental_payment_amount_count',
-////                        'having' => TRUE,
-////                    ],
-////                    'total_avg' => [
-////                        'title' => ts('Fund Avg'),
-////                        'type' => CRM_Report_Form::OP_INT,
-////                        'dbAlias' => 'civicrm_o8_rental_payment_amount_avg',
-////                        'having' => TRUE,
-////                    ],
-//                ],
-//                'group_bys' => [
-//                    'admission' => [
-//                        'frequency' => TRUE,
-//                        'default' => TRUE,
-//                        'chart' => TRUE,
-//                    ],
-//                ],
-//            ],
-            'civicrm_o8_rental_payment' => [
-                'dao' => 'CRM_Hprentals_DAO_RentalsPayment',
+            'civicrm_o8_rental_rental' => [
+                'dao' => 'CRM_Hprentals_DAO_RentalsRental',
                 //'bao'           => 'CRM_Hprentals_BAO_RentalsRental',
                 'fields' => [
-                    'amount' => [
-                        'title' => ts('Payment Amount Stats'),
+                    'id' => [
+                        'title' => ts('Rental Amount Stats'),
                         'default' => TRUE,
                         'statistics' => [
-                            'count' => ts('Payments'),
-                            'sum' => ts('Payment Aggregate'),
-                            'avg' => ts('Payment Avg'),
+                            'count' => ts('Rentals'),
                         ],
                     ],
                 ],
                 'grouping' => 'rental-fields',
                 'filters' => [
-                    'created_date' => ['operatorType' => CRM_Report_Form::OP_DATE],
-//                    'discharge' => ['operatorType' => CRM_Report_Form::OP_DATE],
-                    'amount' => [
-                        'title' => ts('Payment Amount'),
+                    'admission' => [
+                        'title' => ts('Rental Admission'),
+                        'operatorType' => CRM_Report_Form::OP_DATE,
+                        'type' => CRM_Utils_Type::T_DATE,
                     ],
-                    'total_sum' => [
-                        'title' => ts('Payment Aggregate'),
-                        'type' => CRM_Report_Form::OP_INT,
-                        'dbAlias' => 'civicrm_o8_rental_payment_amount_sum',
-                        'having' => TRUE,
+                    'discharge' => [
+                        'title' => ts('Rental Discharge'),
+                        'operatorType' => CRM_Report_Form::OP_DATE,
+                        'type' => CRM_Utils_Type::T_DATE,
                     ],
-                    'total_count' => [
-                        'title' => ts('Payment Count'),
-                        'type' => CRM_Report_Form::OP_INT,
-                        'dbAlias' => 'civicrm_o8_rental_payment_amount_count',
-                        'having' => TRUE,
-                    ],
-                    'total_avg' => [
-                        'title' => ts('Payment Avg'),
-                        'type' => CRM_Report_Form::OP_INT,
-                        'dbAlias' => 'civicrm_o8_rental_payment_amount_avg',
-                        'having' => TRUE,
-                    ],
+                    'payment_created_date' => [
+                        'name' => 'created_date',
+                        'title' => ts('Payment & Invoice Date'),
+                        'operatorType' => CRM_Report_Form::OP_DATE,
+                        'type' => CRM_Utils_Type::T_DATE,
+                    ]
                 ],
-                'group_bys' => [
-                    'created_date' => [
-                        'frequency' => TRUE,
+            ],
+            'civicrm_o8_rental_payment' => [
+                'dao' => 'CRM_Hprentals_DAO_RentalsPayment',
+                'fields' => [
+                    'payment_amount' => [
+                        'name' => 'amount',
+                        'title' => ts('Payment Stats'),
                         'default' => TRUE,
-                        'chart' => FALSE,
+                        'statistics' => [
+                            'count' => ts('Payments Count'),
+                            'sum' => ts('Payment Sum'),
+                            'avg' => ts('Payment Avg'),
+                        ],
                     ],
                 ],
+                'grouping' => 'rental-fields',
+            ],
+            'civicrm_o8_rental_invoice' => [
+                'dao' => 'CRM_Hprentals_DAO_RentalsPayment',
+                'fields' => [
+                    'invoice_amount' => [
+                        'name' => 'amount',
+                        'title' => ts('Invoice Stats'),
+                        'default' => TRUE,
+                        'statistics' => [
+                            'count' => ts('Invoices Count'),
+                            'sum' => ts('Invoices Sum'),
+                            'avg' => ts('Invoices Avg'),
+                            'balance' => ts('Balance')
+                        ],
+                    ],
+                ],
+                'grouping' => 'rental-fields',
             ],
 
         ];
-
 
 
         parent::__construct();
@@ -186,9 +170,11 @@ class CRM_Hprentals_Form_Report_RentalTenantSummary extends CRM_Report_Form {
     /**
      * Set select clause.
      */
-    public function select() {
+    public function select()
+    {
         $select = [];
         $this->_columnHeaders = [];
+
         foreach ($this->_columns as $tableName => $table) {
             if (array_key_exists('group_bys', $table)) {
                 foreach ($table['group_bys'] as $fieldName => $field) {
@@ -265,352 +251,384 @@ class CRM_Hprentals_Form_Report_RentalTenantSummary extends CRM_Report_Form {
                                 $this->_columnHeaders["{$tableName}_{$fieldName}_{$stat}"]['title'] = $label;
                                 $this->_columnHeaders["{$tableName}_{$fieldName}_{$stat}"]['type'] = $field['type'];
                                 $this->_statFields[] = "{$tableName}_{$fieldName}_{$stat}";
+                                if ($tableName == 'civicrm_o8_rental_rental') {
+                                    switch (strtolower($stat)) {
+                                        case 'sum':
+                                            $select[] = "SUM({$field['dbAlias']}) as {$tableName}_{$fieldName}_{$stat}";
+                                            break;
+                                        case 'count':
+                                            $select[] = "COUNT({$field['dbAlias']}) as {$tableName}_{$fieldName}_{$stat}";
+                                            break;
+                                        case 'avg':
+                                            $select[] = "ROUND(AVG({$field['dbAlias']}),2) as {$tableName}_{$fieldName}_{$stat}";
+                                            break;
+                                    }
+                                }
                                 switch (strtolower($stat)) {
-                                    case 'sum':
-                                        $select[] = "SUM({$field['dbAlias']}) as {$tableName}_{$fieldName}_{$stat}";
-                                        break;
-
                                     case 'count':
-                                        $select[] = "COUNT({$field['dbAlias']}) as {$tableName}_{$fieldName}_{$stat}";
                                         $this->_columnHeaders["{$tableName}_{$fieldName}_{$stat}"]['type'] = CRM_Utils_Type::T_INT;
                                         break;
-
-                                    case 'avg':
-                                        $select[] = "ROUND(AVG({$field['dbAlias']}),2) as {$tableName}_{$fieldName}_{$stat}";
-                                        break;
                                 }
-                            }
                         }
-                        else {
-                            $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
-                            $this->_columnHeaders["{$tableName}_{$fieldName}"]['type'] = $field['type'] ?? NULL;
-                            $this->_columnHeaders["{$tableName}_{$fieldName}"]['title'] = $field['title'] ?? NULL;
-                        }
+                    } else {
+                        $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
+                        $this->_columnHeaders["{$tableName}_{$fieldName}"]['type'] = $field['type'] ?? NULL;
+                        $this->_columnHeaders["{$tableName}_{$fieldName}"]['title'] = $field['title'] ?? NULL;
                     }
                 }
             }
         }
-
-        $this->_selectClauses = $select;
-        $this->_select = "SELECT " . implode(', ', $select) . " ";
     }
 
-    /**
-     * Set form rules.
-     *
-     * @param array $fields
-     * @param array $files
-     * @param CRM_Report_Form_Contribute_Summary $self
-     *
-     * @return array
-     */
-    public static function formRule($fields, $files, $self) {
-        // Check for searching combination of display columns and
-        // grouping criteria
-        $ignoreFields = ['amount', 'sort_name'];
-        $errors = $self->customDataFormRule($fields, $ignoreFields);
 
-        if (empty($fields['fields']['amount'])) {
-            foreach ([
-                         'count_value',
-                         'sum_value',
-                         'avg_value',
-                     ] as $val) {
-                if (!empty($fields[$val])) {
-                    $errors[$val] = ts("Please select the Amount Statistics");
-                }
+
+$this->_selectClauses = $select;
+$this->_select = "SELECT " . implode(', ', $select) . " ";
+    }
+
+/**
+ * Set form rules.
+ *
+ * @param array $fields
+ * @param array $files
+ * @param CRM_Report_Form_Contribute_Summary $self
+ *
+ * @return array
+ */
+public
+static function formRule($fields, $files, $self)
+{
+    // Check for searching combination of display columns and
+    // grouping criteria
+    $ignoreFields = ['amount', 'sort_name'];
+    $errors = $self->customDataFormRule($fields, $ignoreFields);
+
+    if (empty($fields['fields']['amount'])) {
+        foreach ([
+                     'count_value',
+                     'sum_value',
+                     'avg_value',
+                 ] as $val) {
+            if (!empty($fields[$val])) {
+                $errors[$val] = ts("Please select the Amount Statistics");
             }
         }
-
-        return $errors;
     }
 
-    /**
-     * Set from clause.
-     *
-     * @param string $entity
-     *
-     * @todo fix function signature to match parent. Remove hacky passing of $entity
-     * to acheive unclear results.
-     */
-    public function from($entity = NULL) {
+    return $errors;
+}
 
-        $this->setFromBase('civicrm_contact');
+/**
+ * Set from clause.
+ *
+ * @param string $entity
+ *
+ * @todo fix function signature to match parent. Remove hacky passing of $entity
+ * to acheive unclear results.
+ */
+public
+function from($entity = NULL)
+{
 
-        $this->_from .= "
-             INNER JOIN civicrm_o8_rental_payment   {$this->_aliases['civicrm_o8_rental_payment']}
-                     ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_o8_rental_payment']}.tenant_id 
-             ";
+    $this->setFromBase('civicrm_contact');
+    $from = $this->_from;
+    $this->_from_rentals = $from . "
+             INNER JOIN civicrm_o8_rental_rental {$this->_aliases['civicrm_o8_rental_rental']}
+                     ON {$this->_aliases['civicrm_contact']}.id 
+                     = {$this->_aliases['civicrm_o8_rental_rental']}.tenant_id ";
 
-        //for contribution batches
+    $this->_from_payment = $from . "
+             INNER JOIN civicrm_o8_rental_payment {$this->_aliases['civicrm_o8_rental_payment']}
+                     ON {$this->_aliases['civicrm_contact']}.id = 
+                     {$this->_aliases['civicrm_o8_rental_payment']}.tenant_id ";
 
-    }
+    $this->_from_invoice = $from . "
+             INNER JOIN civicrm_o8_rental_rental {$this->_aliases['civicrm_o8_rental_rental']}
+                     ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_o8_rental_rental']}.tenant_id 
+             INNER JOIN civicrm_o8_rental_invoice   {$this->_aliases['civicrm_o8_rental_invoice']}
+                     ON {$this->_aliases['civicrm_o8_rental_rental']}.id = {$this->_aliases['civicrm_o8_rental_invoice']}.rental_id             ";
 
-    /**
-     * Set group by clause.
-     */
-    public function groupBy() {
-        parent::groupBy();
+    $this->_from = $this->_from_rentals;
+    //for contribution batches
 
-        $isGroupByFrequency = !empty($this->_params['group_bys_freq']);
+}
 
-        if (!empty($this->_params['group_bys']) &&
-            is_array($this->_params['group_bys'])
+/**
+ * Set group by clause.
+ */
+public
+function groupBy()
+{
+    parent::groupBy();
+
+    $isGroupByFrequency = !empty($this->_params['group_bys_freq']);
+
+    if (!empty($this->_params['group_bys']) &&
+        is_array($this->_params['group_bys'])
+    ) {
+
+        if (!empty($this->_statFields) &&
+            (($isGroupByFrequency && count($this->_groupByArray) <= 1) || (!$isGroupByFrequency)) &&
+            !$this->_having
         ) {
+            $this->_rollup = " WITH ROLLUP";
+        }
+        $groupBy = [];
+        foreach ($this->_groupByArray as $key => $val) {
+            if (strpos($val, ';;') !== FALSE) {
+                $groupBy = array_merge($groupBy, explode(';;', $val));
+            } else {
+                $groupBy[] = $this->_groupByArray[$key];
+            }
+        }
+        $this->_groupBy = "GROUP BY " . implode(', ', $groupBy);
+    } else {
+        $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id";
+    }
+    $this->_groupBy .= $this->_rollup;
+}
 
-            if (!empty($this->_statFields) &&
-                (($isGroupByFrequency && count($this->_groupByArray) <= 1) || (!$isGroupByFrequency)) &&
-                !$this->_having
-            ) {
-                $this->_rollup = " WITH ROLLUP";
+    public function storeWhereHavingClauseArray() {
+        parent::storeWhereHavingClauseArray();
+        $whereClauses = $this->_whereClauses;
+        $admission_start_date = $admission_end_date = $discharge_start_date =  $discharge_end_date = null;
+
+        foreach ($whereClauses as $key => $element) {
+            U::writeLog($element, $key);
+            // Check for 'o8_rental_rental_civireport.admission >='
+            if (preg_match('/admission >= (\d{14})/', $element, $matches)) {
+                $admission_start_date = $matches[1];
+                U::writeLog($matches);
             }
-            $groupBy = [];
-            foreach ($this->_groupByArray as $key => $val) {
-                if (strpos($val, ';;') !== FALSE) {
-                    $groupBy = array_merge($groupBy, explode(';;', $val));
-                }
-                else {
-                    $groupBy[] = $this->_groupByArray[$key];
-                }
+
+            // Check for 'o8_rental_rental_civireport.admission <='
+            if (preg_match('/admission <= (\d{14})/', $element, $matches)) {
+                $admission_end_date = $matches[1];
+                U::writeLog($matches);
             }
-            $this->_groupBy = "GROUP BY " . implode(', ', $groupBy);
+
+            if (preg_match('/discharge >= (\d{14})/', $element, $matches)) {
+                $discharge_start_date = $matches[1];
+                U::writeLog($matches);
+            }
+
+            // Check for 'o8_rental_rental_civireport.discharge <='
+            if (preg_match('/discharge <= (\d{14})/', $element, $matches)) {
+                $discharge_end_date = $matches[1];
+                U::writeLog($matches);
+            }
+            if (preg_match('/created_date >= (\d{14})/', $element, $matches)) {
+                $this->_created_date_start_date = $matches[1];
+                U::writeLog($matches);
+                unset($whereClauses[$key]);
+            }
+            if (preg_match('/created_date <= (\d{14})/', $element, $matches)) {
+                $this->_created_date_end_date = $matches[1];
+                U::writeLog($matches);
+                unset($whereClauses[$key]);
+            }
         }
-        else {
-            $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id";
+
+// Check if both dates were found
+        if ($admission_start_date !== null && $admission_end_date !== null) {
+            U::writeLog("Admission Start Date: $admission_start_date\n");
+            U::writeLog("Admission End Date: $admission_end_date\n");
+        } else {
+            U::writeLog("Dates not found in the array.\n");
         }
-        $this->_groupBy .= $this->_rollup;
+//
+//        $this->_whereClauses[] = "{$this->_aliases['civicrm_membership']}.is_test = 0 AND
+//                              {$this->_aliases['civicrm_contact']}.is_deleted = 0";
+        $this->_whereClauses = $whereClauses;
     }
 
-    /**
-     * Store having clauses as an array.
-     */
+/**
+ * Set statistics.
+ *
+ * @param array $rows
+ *
+ * @return array
+ *
+ * @throws \CRM_Core_Exception
+ */
+public
+function statistics(&$rows)
+{
+    $statistics = parent::statistics($rows);
 
-    /**
-     * Set statistics.
-     *
-     * @param array $rows
-     *
-     * @return array
-     *
-     * @throws \CRM_Core_Exception
-     */
-    public function statistics(&$rows) {
-        $statistics = parent::statistics($rows);
+    $group = ' GROUP BY ' . implode(', ', $this->_groupByArray);
 
-        $group = ' GROUP BY ' . implode(', ', $this->_groupByArray);
+    $this->from();
+    $this->customDataFrom();
 
-        $this->from();
-        $this->customDataFrom();
+    // Ensure that Extensions that modify the from statement in the sql also modify it in the statistics.
+    CRM_Utils_Hook::alterReportVar('sql', $this, $this);
 
-        // Ensure that Extensions that modify the from statement in the sql also modify it in the statistics.
-        CRM_Utils_Hook::alterReportVar('sql', $this, $this);
+    $contriQuery = "
+        COUNT({$this->_aliases['civicrm_o8_rental_rental']}.id ) as civicrm_o8_rental_rental_id_count 
+              {$this->_from} {$this->_where}
+        ";
 
-        $contriQuery = "
-      COUNT({$this->_aliases['civicrm_o8_rental_payment']}.amount )        as civicrm_o8_rental_payment_amount_count,
-      SUM({$this->_aliases['civicrm_o8_rental_payment']}.amount )          as civicrm_o8_rental_payment_amount_sum,
-      ROUND(AVG({$this->_aliases['civicrm_o8_rental_payment']}.amount), 2) as civicrm_o8_rental_payment_amount_avg
-      {$this->_from} {$this->_where}
-    ";
+    $contriSQL = "SELECT {$contriQuery} {$group} {$this->_having}";
+    $contriDAO = CRM_Core_DAO::executeQuery($contriSQL);
+    $this->addToDeveloperTab($contriSQL);
 
+    $rentalCount = $tenantCount = 0;
+    while ($contriDAO->fetch()) {
+        $tenantCount += 1;
+        $rentalCount += $contriDAO->civicrm_o8_rental_rental_id_count;
 
-        $contriSQL = "SELECT {$contriQuery} {$group} {$this->_having}";
-        $contriDAO = CRM_Core_DAO::executeQuery($contriSQL);
-        $this->addToDeveloperTab($contriSQL);
-        $currencies = $currAmount = $currAverage = $currCount = [];
-        $totalAmount = $average = $mode = $median = [];
-        $softTotalAmount = $softAverage = $averageCount = $averageSoftCount = [];
-        $softCount = $count = 0;
-        while ($contriDAO->fetch()) {
-            if (!isset($currAmount[$contriDAO->currency])) {
-                $currAmount[$contriDAO->currency] = 0;
-            }
-            if (!isset($currCount[$contriDAO->currency])) {
-                $currCount[$contriDAO->currency] = 0;
-            }
-            if (!isset($currAverage[$contriDAO->currency])) {
-                $currAverage[$contriDAO->currency] = 0;
-            }
-            if (!isset($averageCount[$contriDAO->currency])) {
-                $averageCount[$contriDAO->currency] = 0;
-            }
-            $currAmount[$contriDAO->currency] += $contriDAO->civicrm_o8_rental_payment_amount_sum;
-            $currCount[$contriDAO->currency] += $contriDAO->civicrm_o8_rental_payment_amount_count;
-            $currAverage[$contriDAO->currency] += $contriDAO->civicrm_o8_rental_payment_amount_avg;
-            $averageCount[$contriDAO->currency]++;
-            $count += $contriDAO->civicrm_o8_rental_payment_amount_count;
-
-            if (!in_array($contriDAO->currency, $currencies)) {
-                $currencies[] = $contriDAO->currency;
-            }
-        }
-
-        foreach ($currencies as $currency) {
-            $totalAmount[] = CRM_Utils_Money::format($currAmount[$currency], $currency) .
-                " (" . $currCount[$currency] . ")";
-            $average[] = CRM_Utils_Money::format(($currAverage[$currency] / $averageCount[$currency]), $currency);
-        }
-
-        $groupBy = "\n{$group}, {$this->_aliases['civicrm_o8_rental_payment']}.amount";
-        $orderBy = "\nORDER BY civicrm_o8_rental_payment DESC";
-        $modeSQL = "SELECT MAX(civicrm_o8_rental_payment_amount_count) as civicrm_o8_rental_payment_amount_count,
-      SUBSTRING_INDEX(GROUP_CONCAT(amount ORDER BY mode.civicrm_o8_rental_payment_amount_count DESC SEPARATOR ';'), ';', 1) as amount
-      FROM (SELECT {$this->_aliases['civicrm_o8_rental_payment']}.amount as amount,
-    {$contriQuery} {$groupBy} {$orderBy}) as mode";
-
-//        $mode = $this->calculateMode($modeSQL);
-//        $median = $this->calculateMedian();
-
-        $currencies = $currSoftAmount = $currSoftAverage = $currSoftCount = [];
-
-        if (1) {
-            $statistics['counts']['amount'] = [
-                'title' => ts('Total Amount'),
-                'value' => implode(',  ', $totalAmount),
-                'type' => CRM_Utils_Type::T_STRING,
-            ];
-            $statistics['counts']['count'] = [
-                'title' => ts('Total Payments'),
-                'value' => $count,
-            ];
-            $statistics['counts']['avg'] = [
-                'title' => ts('Average'),
-                'value' => implode(',  ', $average),
-                'type' => CRM_Utils_Type::T_STRING,
-            ];
-//            $statistics['counts']['mode'] = [
-//                'title' => ts('Mode'),
-//                'value' => implode(',  ', $mode),
-//                'type' => CRM_Utils_Type::T_STRING,
-//            ];
-//            $statistics['counts']['median'] = [
-//                'title' => ts('Median'),
-//                'value' => implode(',  ', $median),
-//                'type' => CRM_Utils_Type::T_STRING,
-//            ];
-        }
-        return $statistics;
     }
 
-    /**
-     * Build chart.
-     *
-     * @param array $original_rows
-     */
+//        foreach ($currencies as $currency) {
+//            $totalAmount[] = CRM_Utils_Money::format($currAmount[$currency], $currency) .
+//                " (" . $currCount[$currency] . ")";
+//            $average[] = CRM_Utils_Money::format(($currAverage[$currency] / $averageCount[$currency]), $currency);
+//        }
 
 
-    /**
-     * Alter display of rows.
-     *
-     * Iterate through the rows retrieved via SQL and make changes for display purposes,
-     * such as rendering contacts as links.
-     *
-     * @param array $rows
-     *   Rows generated by SQL, with an array for each row.
-     */
-    public function alterDisplay(&$rows) {
-        $entryFound = FALSE;
-        foreach ($rows as $rowNum => $row) {
-            // make count columns point to detail report
-            if (!empty($this->_params['group_bys']['created_date']) &&
-                !empty($row['civicrm_o8_rental_payment_created_date']) &&
-                CRM_Utils_Array::value('civicrm_o8_rental_payment_created_date', $row) &&
-                !empty($row['civicrm_o8_rental_payment_created_date_subtotal'])
-            ) {
-
-                $dateStart = CRM_Utils_Date::customFormat($row['civicrm_o8_rental_payment_created_date'], '%Y%m%d');
-                $endDate = new DateTime($dateStart);
-                $dateEnd = [];
-
-                list($dateEnd['Y'], $dateEnd['M'], $dateEnd['d']) = explode(':', $endDate->format('Y:m:d'));
-
-                switch (strtolower($this->_params['group_bys_freq']['created_date'])) {
-                    case 'month':
-                        $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'] + 1,
-                            $dateEnd['d'] - 1, $dateEnd['Y']
-                        ));
-                        break;
-
-                    case 'year':
-                        $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'],
-                            $dateEnd['d'] - 1, $dateEnd['Y'] + 1
-                        ));
-                        break;
-
-                    case 'fiscalyear':
-                        $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'],
-                            $dateEnd['d'] - 1, $dateEnd['Y'] + 1
-                        ));
-                        break;
-
-                    case 'yearweek':
-                        $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'],
-                            $dateEnd['d'] + 6, $dateEnd['Y']
-                        ));
-                        break;
-
-                    case 'quarter':
-                        $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'] + 3,
-                            $dateEnd['d'] - 1, $dateEnd['Y']
-                        ));
-                        break;
-                }
-//                $url = '<a target="_blank" href="' . CRM_Utils_System::url('civicrm/contact/view',
-//                        ['reset' => 1, 'cid' => $dao->contact_id]) . '">' .
-//                    $dao->organization_name . '</a>';
-
-//                $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
-//                    "reset=1&force=1&receive_date_from={$dateStart}&receive_date_to={$dateEnd}",
-//                    $this->_absoluteUrl,
-//                    $this->_id,
-//                    $this->_drilldownReport
-//                );
-                $url = "";
-                $rows[$rowNum]['civicrm_o8_rental_payment_created_date_link'] = $url;
-                $rows[$rowNum]['civicrm_o8_rental_payment_created_date_hover'] = ts('List all transaction(s) for this date unit.');
-                $entryFound = TRUE;
-            }
-
-            // make subtotals look nicer
-            if (array_key_exists('civicrm_o8_rental_payment_created_date_subtotal', $row) &&
-                !$row['civicrm_o8_rental_payment_created_date_subtotal']
-            ) {
-                $this->fixSubTotalDisplay($rows[$rowNum], $this->_statFields);
-                $entryFound = TRUE;
-            }
-
-            // convert display name to links
-            if (array_key_exists('civicrm_contact_sort_name', $row) &&
-                array_key_exists('civicrm_contact_id', $row)
-            ) {
-                $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
-                    'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-                    $this->_absoluteUrl, $this->_id, $this->_drilldownReport
-                );
-                $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
-                $rows[$rowNum]['civicrm_contact_sort_name_hover'] = ts("Lists detailed contribution(s) for this record.");
-                $entryFound = TRUE;
-            }
-
-
-
-            // If using campaigns, convert campaign_id to campaign title
-
-
-            // convert batch id to batch title
-            if (!empty($row['civicrm_batch_batch_id']) && !in_array('Subtotal', $rows[$rowNum])) {
-                $rows[$rowNum]['civicrm_batch_batch_id'] = $this->getLabels($row['civicrm_batch_batch_id'], 'CRM_Batch_BAO_EntityBatch', 'batch_id');
-                $entryFound = TRUE;
-            }
-
-            $entryFound = $this->alterDisplayAddressFields($row, $rows, $rowNum, 'contribute/detail', 'List all contribution(s) for this ') ? TRUE : $entryFound;
-            $entryFound = $this->alterDisplayContactFields($row, $rows, $rowNum, 'contribute/detail', 'List all contribution(s) for this ') ? TRUE : $entryFound;
-
-            // skip looking further in rows, if first row itself doesn't
-            // have the column we need
-            if (!$entryFound) {
-                break;
-            }
-        }
+    if (1) {
+        $statistics['counts']['tenants_count'] = [
+            'title' => ts('Total Tenants'),
+            'value' => $tenantCount,
+            'type' => CRM_Utils_Type::T_INT,
+        ];
+        $statistics['counts']['rentals_count'] = [
+            'title' => ts('Total Rentals'),
+            'value' => $rentalCount,
+            'type' => CRM_Utils_Type::T_INT,
+        ];
     }
+    return $statistics;
+}
+
+/**
+ * Build chart.
+ *
+ * @param array $original_rows
+ */
+
+
+/**
+ * Alter display of rows.
+ *
+ * Iterate through the rows retrieved via SQL and make changes for display purposes,
+ * such as rendering contacts as links.
+ *
+ * @param array $rows
+ *   Rows generated by SQL, with an array for each row.
+ */
+public
+function alterDisplay(&$rows)
+{
+
+    $entryFound = FALSE;
+    $total_invoice_amount_sum =
+    $total_invoice_amount_count =
+    $total_invoice_amount_avg =
+    $total_payment_amount_sum =
+    $total_payment_amount_count =
+    $total_payment_amount_avg = 0;
+    $created_date_end_date = $this->_created_date_end_date;
+    $created_date_start_date = $this->_created_date_start_date;
+
+
+    foreach ($rows as $rowNum => $row) {
+        if (isset($row['civicrm_contact_sort_name']) &&
+            isset($row['civicrm_contact_id'])
+        ) {
+            $tenant_id = intval($row['civicrm_contact_id']);
+            $paymentWhere = [
+                ['tenant_id', '=', $tenant_id],
+            ];
+            $invoiceWhere = [
+                ['rental_id.tenant_id', '=', $tenant_id],
+            ];
+            if($created_date_start_date){
+                $paymentWhere[] = ['created_date', '>=', $created_date_start_date];
+                $invoiceWhere[] = ['created_date', '>=', $created_date_start_date];
+            }
+            if($created_date_end_date){
+                $paymentWhere[] = ['created_date', '<=', $created_date_end_date];
+                $invoiceWhere[] = ['created_date', '<=', $created_date_end_date];
+            }
+            $rentalsPayments = civicrm_api4('RentalsPayment', 'get', [
+                'select' => [
+                    'SUM(amount)',
+                    'AVG(amount)',
+                    'COUNT(amount)',
+                ],
+                'where' => $paymentWhere,
+                'checkPermissions' => FALSE,
+                'groupBy' => [
+                    'tenant_id',
+                ],
+            ]);
+            $rentalsInvoices = civicrm_api4('RentalsInvoice', 'get', [
+                'select' => [
+                    'SUM(amount)',
+                    'AVG(amount)',
+                    'COUNT(amount)',
+                    'rental_id.tenant_id'
+                ],
+                'where' => $invoiceWhere,
+                'checkPermissions' => FALSE,
+                'groupBy' => [
+                    'rental_id.tenant_id',
+                ],
+            ]);
+            if(!empty($rentalsPayments)){
+                $rentalsPayments = $rentalsPayments[0];
+            }
+            if(!empty($rentalsInvoices)){
+                $rentalsInvoices = $rentalsInvoices[0];
+            }
+            $payment_amount_sum = $rentalsPayments['SUM:amount'];
+            $payment_amount_count = $rentalsPayments['COUNT:amount'];
+            $payment_amount_avg = $rentalsPayments['AVG:amount'];
+            $invoice_amount_sum = $rentalsInvoices['SUM:amount'];
+            $invoice_amount_count = $rentalsInvoices['COUNT:amount'];
+            $invoice_amount_avg = $rentalsInvoices['AVG:amount'];
+//            U::writeLog($rentalsPayments, '$rentalsPayments');
+//            U::writeLog($payment_amount_sum, '$rentalsPayments');
+//            U::writeLog($payment_amount_count, '$rentalsPayments');
+//            U::writeLog($payment_amount_avg, '$rentalsPayments');
+//            U::writeLog($rentalsInvoices, '$rentalsInvoices');
+            $url = '#';
+            $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
+            $rows[$rowNum]['civicrm_contact_sort_name_hover'] = ts("Lists rentals(s) for this contact.");
+
+            $rows[$rowNum]['civicrm_o8_rental_payment_payment_amount_count'] = $payment_amount_count;
+            $rows[$rowNum]['civicrm_o8_rental_payment_payment_amount_sum'] = $payment_amount_sum;
+            $rows[$rowNum]['civicrm_o8_rental_payment_payment_amount_avg'] = $payment_amount_avg;
+            $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_amount_count'] = $invoice_amount_count;
+            $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_amount_sum'] = $invoice_amount_sum;
+            $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_amount_avg'] = $invoice_amount_avg;
+            $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_amount_balance'] = $payment_amount_sum - $invoice_amount_sum;
+            $total_payment_amount_sum = $total_payment_amount_sum + $payment_amount_sum;
+            $total_invoice_amount_sum = $total_invoice_amount_sum + $invoice_amount_sum;
+            $total_payment_amount_count = $total_payment_amount_count + $payment_amount_count;
+            $total_invoice_amount_count = $total_invoice_amount_count + $invoice_amount_count;
+            $entryFound = TRUE;
+        } else {
+
+            $rows[$rowNum]['civicrm_o8_rental_payment_payment_amount_count'] = $total_payment_amount_count;
+            $rows[$rowNum]['civicrm_o8_rental_payment_payment_amount_sum'] = $total_payment_amount_sum;
+            $total_payment_amount_count = $total_payment_amount_count != 0 ? $total_payment_amount_count : 1;
+            $rows[$rowNum]['civicrm_o8_rental_payment_payment_amount_avg'] = round($total_payment_amount_sum / $total_payment_amount_count);
+            $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_amount_count'] = $total_invoice_amount_count;
+            $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_amount_sum'] = $total_invoice_amount_sum;
+            $total_invoice_amount_count = $total_invoice_amount_count != 0 ? $total_invoice_amount_count : 1;
+            $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_amount_avg'] = round($total_invoice_amount_sum / $total_invoice_amount_count);
+            $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_amount_balance'] = $total_payment_amount_sum - $total_invoice_amount_sum;
+
+        }
+        // have the column we need
+        if (!$entryFound) {
+            break;
+        }
+//        U::writeLog($rows[$rowNum], $rowNum);
+    }
+}
 
 }
