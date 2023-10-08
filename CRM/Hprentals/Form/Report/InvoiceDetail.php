@@ -32,22 +32,39 @@ class CRM_Hprentals_Form_Report_InvoiceDetail extends CRM_Report_Form
     function __construct()
     {
         $this->_columns = [
-            'civicrm_o8_rental_payment' => [
+            'civicrm_o8_rental_invoice' => [
                 'dao' => 'CRM_Hprentals_DAO_RentalsPayment',
                 'fields' => [
-                    'payment_id' => [
+                    'invoice_id' => [
                         'name' => 'id',
-                        'title' => E::ts('Rental ID'),
+                        'title' => E::ts('Invoice ID'),
                         'type' => CRM_Utils_Type::T_INT,
                         'default' => TRUE,
                         'required' => TRUE,
                     ],
-                    'tenant_id' => [
-                        'name' => 'tenant_id',
+                    'code' => [
+                        'name' => 'code',
+                        'title' => E::ts('Code'),
+                        'no_repeat' => FALSE,
+                        'default' => TRUE,
+                        'required' => TRUE,
+                    ],
+                    'rental_id' => [
+                        'name' => 'rental_id',
                         'title' => ts('Contact Name'),
                         'no_repeat' => FALSE,
                         'default' => TRUE,
                         'required' => TRUE,
+                    ],
+                    'start_date' => [
+                        'name' => 'start_date',
+                        'type' => CRM_Utils_Type::T_TIMESTAMP,
+                        'title' => E::ts('Start Date'),
+                    ],
+                    'end_date' => [
+                        'name' => 'end_date',
+                        'type' => CRM_Utils_Type::T_TIMESTAMP,
+                        'title' => E::ts('End Date'),
                     ],
                     'amount' => [
                         'name' => 'amount',
@@ -56,57 +73,78 @@ class CRM_Hprentals_Form_Report_InvoiceDetail extends CRM_Report_Form
                         'default' => TRUE,
                         'required' => TRUE,
                     ],
-                    'payment_created_id' => [
+                    'invoice_created_id' => [
                         'name' => 'created_id',
                         'type' => CRM_Utils_Type::T_INT,
-                        'title' => E::ts('Created By'),
+                        'title' => E::ts('Invoice Created By'),
+                        'default' => TRUE,
+                        'required' => TRUE,
                     ],
-                    'payment_created_date' => [
+                    'invoice_created_date' => [
                         'name' => 'created_date',
                         'type' => CRM_Utils_Type::T_TIMESTAMP,
-                        'title' => E::ts('Created At'),
+                        'title' => E::ts('Invoice Created At'),
+                        'default' => TRUE,
+                        'required' => TRUE,
                     ],
-                    'payment_modified_id' => [
+                    'invoice_modified_id' => [
                         'name' => 'modified_id',
                         'type' => CRM_Utils_Type::T_INT,
-                        'title' => E::ts('Modified By'),
+                        'title' => E::ts('Invoice Modified By'),
+                        'default' => TRUE,
+                        'required' => TRUE,
                     ],
-                    'payment_modified_date' => [
+                    'invoice_modified_date' => [
                         'name' => 'modified_date',
                         'type' => CRM_Utils_Type::T_TIMESTAMP,
-                        'title' => E::ts('Modified At'),
+                        'title' => E::ts('Invoice Modified At'),
+                        'default' => TRUE,
+                        'required' => TRUE,
                     ],
                 ],
                 'filters' => [
                     'amount' => [
                         'name' => 'amount',
                         'title' => E::ts('Amount'),
-                        'operatorType' => CRM_Report_Form::OP_INT],
+                        'operatorType' => CRM_Report_Form::OP_INT
+                    ],
+                    'start_date' => [
+                        'name' => 'start_date',
+                        'title' => E::ts('Start Date'),
+                        'operatorType' => CRM_Report_Form::OP_DATE,
+                        'type' => CRM_Utils_Type::T_DATE
+                    ],
+                    'end_date' => [
+                        'name' => 'end_date',
+                        'title' => E::ts('End Date'),
+                        'operatorType' => CRM_Report_Form::OP_DATE,
+                        'type' => CRM_Utils_Type::T_DATE
+                    ],
                 ],
                 'order_bys' => [
                     'tr_id' => [
                         'name' => 'id',
-                        'title' => ts('Rental ID'),
+                        'title' => ts('Invoice ID'),
                         'default' => TRUE,
                         'default_weight' => '1',
                         'default_order' => 'ASC',
                     ],
-                    'admission' => [
-                        'name' => 'admission',
+                    'start_date' => [
+                        'name' => 'start_date',
                         'title' => ts('Admission'),
                     ],
-                    'discharge' => [
-                        'name' => 'discharge',
+                    'end_date' => [
+                        'name' => 'end_date',
                         'title' => ts('Discharge'),
                     ],
-                    'payment_created_date' => [
+                    'invoice_created_date' => [
                         'title' => ts('Created At'),
                     ],
-                    'payment_modified_date' => [
+                    'invoice_modified_date' => [
                         'title' => ts('Modified At'),
                     ],
                 ],
-                'grouping' => 'rental-fields',
+                'grouping' => 'invoice-fields',
             ],
             'civicrm_tenant' => [
                 'dao' => 'CRM_Contact_DAO_Contact',
@@ -135,7 +173,21 @@ class CRM_Hprentals_Form_Report_InvoiceDetail extends CRM_Report_Form
 //                    ],
                 ],
             ],
-            'civicrm_created' => [
+            'civicrm_o8_rental_rental' => [
+                'dao' => 'CRM_Hprentals_DAO_RentalsRental',
+                'fields' => [
+                    'tenant_id' => [
+                        'no_display' => TRUE,
+                        'name' => 'tenant_id',
+                        'default' => TRUE,
+                        'required' => TRUE,
+                    ],
+                ],
+                'filters' => [
+                ],
+                'grouping' => 'fund-fields',
+            ],
+               'civicrm_created' => [
                 'dao' => 'CRM_Contact_DAO_Contact',
                 'fields' => [
                     'created_sort_name' => [
@@ -190,16 +242,19 @@ class CRM_Hprentals_Form_Report_InvoiceDetail extends CRM_Report_Form
         $this->_from = NULL;
 
         $from = $this->_from;
-        $this->_from = $from . "FROM civicrm_o8_rental_payment {$this->_aliases['civicrm_o8_rental_payment']}
+        $this->_from = $from . "FROM civicrm_o8_rental_invoice {$this->_aliases['civicrm_o8_rental_invoice']}
+               INNER JOIN civicrm_o8_rental_rental {$this->_aliases['civicrm_o8_rental_rental']}
+                     ON {$this->_aliases['civicrm_o8_rental_rental']}.id 
+                     = {$this->_aliases['civicrm_o8_rental_invoice']}.rental_id 
                INNER JOIN civicrm_contact {$this->_aliases['civicrm_tenant']}
                      ON {$this->_aliases['civicrm_tenant']}.id 
-                     = {$this->_aliases['civicrm_o8_rental_payment']}.tenant_id 
+                     = {$this->_aliases['civicrm_o8_rental_rental']}.tenant_id 
                LEFT JOIN civicrm_contact {$this->_aliases['civicrm_created']}
                           ON {$this->_aliases['civicrm_created']}.id =
-                             {$this->_aliases['civicrm_o8_rental_payment']}.created_id
+                             {$this->_aliases['civicrm_o8_rental_invoice']}.created_id
                LEFT JOIN civicrm_contact {$this->_aliases['civicrm_modified']}
                           ON {$this->_aliases['civicrm_modified']}.id =
-                             {$this->_aliases['civicrm_o8_rental_payment']}.modified_id
+                             {$this->_aliases['civicrm_o8_rental_invoice']}.modified_id
                      ";
 
     }
@@ -242,7 +297,7 @@ class CRM_Hprentals_Form_Report_InvoiceDetail extends CRM_Report_Form
         // custom code to alter rows
         $entryFound = FALSE;
         $checkList = [];
-//        U::writeLog($rows, 'rows');
+        U::writeLog($rows, 'rows');
         foreach ($rows as $rowNum => $row) {
 
             if (!empty($this->_noRepeats) && $this->_outputMode != 'csv') {
@@ -263,48 +318,57 @@ class CRM_Hprentals_Form_Report_InvoiceDetail extends CRM_Report_Form
                 }
             }
 
-            if (array_key_exists('civicrm_o8_rental_payment_rental_id', $row) &&
-                $rows[$rowNum]['civicrm_o8_rental_payment_rental_id']) {
-                $url = CRM_Utils_System::url("civicrm/rentals/rental",
-                    'reset=1&id=' . $row['civicrm_o8_rental_payment_rental_id'] . "&action=preview",
+            if (isset($row['civicrm_o8_rental_invoice_invoice_id'])) {
+                $url = CRM_Utils_System::url("civicrm/rentals/invoice",
+                    'reset=1&id=' . $row['civicrm_o8_rental_invoice_invoice_id'] . "&action=preview",
                     $this->_absoluteUrl
                 );
-                $rows[$rowNum]['civicrm_o8_rental_payment_rental_id_link'] = $url;
-                $rows[$rowNum]['civicrm_o8_rental_payment_rental_id_hover'] = E::ts("View Summary for this Rental.");
+                $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_id_link'] = $url;
+                $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_id_hover'] = E::ts("View Summary for this Invoice.");
                 $entryFound = TRUE;
 //                unset($rows[$rowNum]['sort_name']);
             }
-            if (isset($row['civicrm_o8_rental_payment_tenant_id']) &&
+            if (isset($row['civicrm_o8_rental_invoice_code'])) {
+                $url = CRM_Utils_System::url("civicrm/rentals/invoice",
+                    'reset=1&id=' . $row['civicrm_o8_rental_invoice_invoice_id'] . "&action=preview",
+                    $this->_absoluteUrl
+                );
+                $rows[$rowNum]['civicrm_o8_rental_invoice_code_link'] = $url;
+                $rows[$rowNum]['civicrm_o8_rental_invoice_code_hover'] = E::ts("View Summary for this Invoice.");
+                $entryFound = TRUE;
+//                unset($rows[$rowNum]['sort_name']);
+            }
+            if (isset($row['civicrm_o8_rental_invoice_rental_id']) &&
                 isset($row['civicrm_tenant_sort_name'])) {
                 $url = CRM_Utils_System::url("civicrm/contact/view",
-                    'reset=1&cid=' . $row['civicrm_o8_rental_payment_tenant_id'],
+                    'reset=1&cid=' . $row['civicrm_tenant_id'],
                     $this->_absoluteUrl
                 );
-                $rows[$rowNum]['civicrm_o8_rental_payment_tenant_id'] = $rows[$rowNum]['civicrm_tenant_sort_name'];
-                $rows[$rowNum]['civicrm_o8_rental_payment_tenant_id_link'] = $url;
-                $rows[$rowNum]['civicrm_o8_rental_payment_tenant_id_hover'] = E::ts("View Summary for this Contact.");
+                $rows[$rowNum]['civicrm_o8_rental_invoice_rental_id'] = $rows[$rowNum]['civicrm_tenant_sort_name'];
+                $rows[$rowNum]['civicrm_o8_rental_invoice_rental_id_link'] = $url;
+                $rows[$rowNum]['civicrm_o8_rental_invoice_rental_id_hover'] = E::ts("View Summary for this Contact.");
                 $entryFound = TRUE;
             }
-            if (isset($row['civicrm_o8_rental_payment_payment_created_id']) &&
+            if (isset($row['civicrm_o8_rental_invoice_invoice_created_id']) &&
                 isset($row['civicrm_created_created_sort_name'])) {
                 $url = CRM_Utils_System::url("civicrm/contact/view",
-                    'reset=1&cid=' . $row['civicrm_o8_rental_payment_created_id'],
+                    'reset=1&cid=' . $row['civicrm_o8_rental_invoice_created_id'],
                     $this->_absoluteUrl
                 );
-                $rows[$rowNum]['civicrm_o8_rental_payment_payment_created_id'] = $rows[$rowNum]['civicrm_created_created_sort_name'];
-                $rows[$rowNum]['civicrm_o8_rental_payment_payment_created_id_link'] = $url;
-                $rows[$rowNum]['civicrm_o8_rental_payment_payment_created_id_hover'] = E::ts("View Summary for this Contact.");
+                $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_created_id'] = $rows[$rowNum]['civicrm_created_created_sort_name'];
+                $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_created_id_link'] = $url;
+                $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_created_id_hover'] = E::ts("View Summary for this Contact.");
                 $entryFound = TRUE;
             }
-            if (isset($row['civicrm_o8_rental_payment_payment_modified_id']) &&
+            if (isset($row['civicrm_o8_rental_invoice_invoice_modified_id']) &&
                 isset($row['civicrm_modified_sort_name'])) {
                 $url = CRM_Utils_System::url("civicrm/contact/view",
-                    'reset=1&cid=' . $row['civicrm_o8_rental_payment_modified_id'],
+                    'reset=1&cid=' . $row['civicrm_o8_rental_invoice_modified_id'],
                     $this->_absoluteUrl
                 );
-                $rows[$rowNum]['civicrm_o8_rental_payment_payment_modified_id'] = $rows[$rowNum]['civicrm_modified_sort_name'];
-                $rows[$rowNum]['civicrm_o8_rental_payment_payment_modified_id_link'] = $url;
-                $rows[$rowNum]['civicrm_o8_rental_payment_payment_modified_id_hover'] = E::ts("View Summary for this Contact.");
+                $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_modified_id'] = $rows[$rowNum]['civicrm_modified_sort_name'];
+                $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_modified_id_link'] = $url;
+                $rows[$rowNum]['civicrm_o8_rental_invoice_invoice_modified_id_hover'] = E::ts("View Summary for this Contact.");
                 $entryFound = TRUE;
             }
 
