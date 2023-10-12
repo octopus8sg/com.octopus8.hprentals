@@ -24,7 +24,9 @@ return [
                         'discharge',
                     ],
                     'orderBy' => [],
-                    'where' => [],
+                    'where' => [['RentalsRental_Contact_tenant_id_01.is_deleted',
+                        '<>',
+                        '1']],
                     'groupBy' => [],
                     'join' => [
                         [

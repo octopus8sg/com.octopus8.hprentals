@@ -112,7 +112,7 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
     FROM $invoice_table i 
         INNER JOIN $rental_table r on r.id = i.rental_id
         INNER JOIN $tenant_table c on r.tenant_id = c.id
-    AND c.is_deleted = 0
+    AND c.is_deleted <> 1
     WHERE DATE(i.start_date) >= '$start_of_month_str' 
     AND DATE(i.end_date) <= '$end_of_month_str' ";
 
@@ -242,7 +242,7 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
     FROM $payment_table i 
         INNER JOIN $tenant_table c on i.tenant_id = c.id
         INNER JOIN $method_table m on i.method_id = m.id
-    AND c.is_deleted = 0
+    AND c.is_deleted <> 1
     WHERE DATE(i.created_date) >= '$start_of_month_str' 
     AND DATE(i.created_date) <= '$end_of_month_str' ";
 //    U::writeLog($sql, 'payment_sql');
@@ -366,7 +366,7 @@ class CRM_Hprentals_Page_Dashboard extends CRM_Core_Page
       i.tenant_id
     FROM $rental_table i 
         INNER JOIN $tenant_table c on i.tenant_id = c.id
-    WHERE c.is_deleted = 0
+    WHERE c.is_deleted <> 1
 ";
 
         if (isset($tenant_id)) {

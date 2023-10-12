@@ -31,7 +31,9 @@ return [
                         'MONTH(start_date) AS MONTH_start_date',
                     ],
                     'orderBy' => [],
-                    'where' => [],
+                    'where' => [['RentalsInvoice_RentalsRental_rental_id_01_RentalsRental_Contact_tenant_id_01.is_deleted',
+                        '<>',
+                        '1']],
                     'groupBy' => [],
                     'join' => [
                         [
@@ -50,6 +52,7 @@ return [
                                 'RentalsInvoice_RentalsRental_rental_id_01.tenant_id',
                                 '=',
                                 'RentalsInvoice_RentalsRental_rental_id_01_RentalsRental_Contact_tenant_id_01.id',
+
                             ],
                         ],
                     ],
